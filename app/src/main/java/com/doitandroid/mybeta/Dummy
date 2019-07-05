@@ -1,0 +1,53 @@
+package com.doitandroid.myvanillastructure;
+
+InputMethodManager controlManager = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
+        softKeyboard = new SoftKeyboard(coordinatorLayout, controlManager);
+        softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged() {
+@Override
+public void onSoftKeyboardHide() {
+
+        new Handler(Looper.getMainLooper()).post(new Runnable()
+        {
+@Override
+public void run()
+        {
+        coordinatorLayout.fullScroll(ScrollView.FOCUS_DOWN);
+        Toast.makeText(getApplicationContext(), "hide", Toast.LENGTH_LONG).show();
+        //키보드 내려왔을때
+
+
+        }
+        });
+
+        }
+
+@Override
+public void onSoftKeyboardShow() {
+        new Handler(Looper.getMainLooper()).post(new Runnable()
+        {
+@Override
+public void run()
+        {
+        Toast.makeText(getApplicationContext(), "show", Toast.LENGTH_LONG).show();
+//                        main_layout.fullScroll(ScrollView.FOCUS_DOWN);
+
+        coordinatorLayout.post(new Runnable() {
+public void run() {
+        coordinatorLayout.smoothScrollTo(0, coordinatorLayout.getBottom());
+        }
+        });
+        //키보드 올라올 때
+        }
+        });
+        }
+
+
+        });
+
+
+@Override
+public void onDestroy()
+        {
+        super.onDestroy();
+        softKeyboard.unRegisterSoftKeyboardCallback();
+        }

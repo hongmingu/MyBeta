@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#EEF7FD</color>
+    <color name="colorPrimaryDark">#cccccc</color>
+    <color name="colorAccent">#EEF7FD</color>
+    <color name="DarkBlue">#0072b1</color>
+    <color name="bskyblue_white40">#9AD1F2</color>
+    <color name="SkyBlue40">#BCE1F6</color>
+    <color name="SkyBlue10">#EEF7FD</color>
+    <color name="SkyBlue">#58B3E9</color>
+    <color name="White">#ffffff</color>
+    <color name="Black70">#636363</color>
+    <color name="Black40">#A5A5A5</color>
+    <color name="Black">#202020</color>
+</resources>

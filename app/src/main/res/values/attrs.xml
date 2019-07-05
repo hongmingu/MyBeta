@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="InteractiveImageView">
+        <attr name="before_drawable" format="reference|integer" />
+        <attr name="after_drawable" format="reference|integer" />
+        <attr name="play_anim" format="reference|integer" />
+        <attr name="cancel" format="reference|integer" />
+    </declare-styleable>
+</resources>

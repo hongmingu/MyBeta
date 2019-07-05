@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/front_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/White"
+    tools:context=".FrontActivity">
+
+
+    <ImageView
+        android:id="@+id/blue_logo"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dp"
+        app:srcCompat="@drawable/ic_bluelogo" />
+
+
+    <FrameLayout
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <FrameLayout
+            android:id="@+id/btn_login"
+            android:layout_width="120dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_darkblue_radius4dp"
+            android:layout_marginTop="476dp"
+            android:layout_gravity="start">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="13dp"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textColor="@color/White"
+                android:lineSpacingExtra="4sp"
+                android:text="Log in"/>
+
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/btn_signup"
+            android:layout_width="120dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_darkblue_border_radius4dp"
+            android:layout_marginTop="476dp"
+            android:layout_gravity="end">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="13dp"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textColor="@color/DarkBlue"
+                android:lineSpacingExtra="4sp"
+                android:text="Sign up"/>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

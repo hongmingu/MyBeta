@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="260dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center"
+
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="normal"
+        android:textColor="@color/White"
+        android:lineSpacingExtra="5dp"
+        android:textSize="16dp"
+        android:background="@color/SkyBlue"
+
+        android:text="Title" />
+    <TextView
+        android:id="@+id/dialog_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:gravity="center"
+        android:textSize="13dp"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
+        android:textColor="@color/Black"
+        android:lineSpacingExtra="5dp"
+        android:background="@color/White"
+        android:text="content" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/SkyBlue40"/>
+    <TextView
+        android:id="@+id/dialog_positive"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:textSize="13dp"
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="normal"
+        android:gravity="center"
+        android:textColor="@color/DarkBlue"
+        android:lineSpacingExtra="5dp"
+        android:text="OK"
+        android:background="@drawable/bg_white_clicked_10skyblue"/>
+    
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/SkyBlue40"/>
+
+    
+    <TextView
+        android:id="@+id/dialog_negative"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="normal"
+        android:textColor="@color/Black40"
+        android:lineSpacingExtra="5dp"
+        android:text="cancel"
+        android:background="@drawable/bg_white_clicked_10skyblue"/>
+</LinearLayout>
