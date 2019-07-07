@@ -15,11 +15,11 @@
         android:textSize="13dp"
         android:fontFamily="sans-serif"
         android:textStyle="normal"
-        android:textColor="@color/Black"
+        android:textColor="@color/black"
         android:lineSpacingExtra="4dp"
         android:inputType="text"
         android:singleLine="true"
-        android:textColorHint="@color/Black40"
+        android:textColorHint="@color/black_40"
         android:textCursorDrawable="@drawable/cursor_base"/>
 
     <ImageButton

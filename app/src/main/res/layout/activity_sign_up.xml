@@ -5,7 +5,7 @@
     android:id="@+id/signup_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/White"
+    android:background="@color/white"
     tools:context=".SignUpActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -75,7 +75,7 @@
             android:lineSpacingExtra="4sp"
             android:orientation="vertical"
             android:text="password Show/Hide"
-            android:textColor="@color/SkyBlue"
+            android:textColor="@color/skyblue"
             android:textSize="13dp"
             android:textStyle="normal" />
 
@@ -93,7 +93,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:lineSpacingExtra="4sp"
                 android:text="OK"
-                android:textColor="@color/White"
+                android:textColor="@color/white"
                 android:textSize="13dp"
                 android:textStyle="normal" />
 

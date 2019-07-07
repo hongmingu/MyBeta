@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.doitandroid.mybeta.fragment.HomeFragment;
 import com.doitandroid.mybeta.fragment.MyFragment1;
 import com.doitandroid.mybeta.fragment.MyFragment2;
 import com.doitandroid.mybeta.fragment.MyFragment3;
@@ -31,10 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
-    androidx.fragment.app.Fragment fragment1;
-    androidx.fragment.app.Fragment fragment2;
-    androidx.fragment.app.Fragment fragment3;
-    androidx.fragment.app.Fragment fragment4;
+    androidx.fragment.app.Fragment fragment_home;
+    androidx.fragment.app.Fragment fragment_notification;
+    androidx.fragment.app.Fragment fragment_search;
+    androidx.fragment.app.Fragment fragment_user;
 
     FragmentManager fragmentManager;
 
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         // getFragmentManager().beginTransaction().replace(R.id.main_frame, new MyFragment1()).commit();
 
 
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.tb_tb);
         /*button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,71 +87,57 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        FrameLayout home = findViewById(R.id.toolbar_home);
-        FrameLayout certification = findViewById(R.id.toolbar_certification);
-        FrameLayout search = findViewById(R.id.toolbar_search);
-        FrameLayout user = findViewById(R.id.toolbar_user);
+        FrameLayout framelayout_home = findViewById(R.id.tb_fl_home);
+        FrameLayout framelayout_notification = findViewById(R.id.tb_fl_notification);
+        FrameLayout search = findViewById(R.id.tb_fl_search);
+        FrameLayout user = findViewById(R.id.tb_fl_user);
 
-        fragment1 = new MyFragment1();
-        fragment2 = new MyFragment2();
-        fragment3 = new MyFragment3();
-        fragment4 = new MyFragment4();
+        fragment_home = new HomeFragment();
+        fragment_notification = new MyFragment2();
+        fragment_search = new MyFragment3();
+        fragment_user = new MyFragment4();
 
         fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.main_frame, fragment2).commit();
 
-        fragmentManager.beginTransaction().add(R.id.main_frame, fragment1).commit();
-        fragmentManager.beginTransaction().show(fragment2).commit();
-        fragmentManager.beginTransaction().hide(fragment1).commit();
+        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_notification).commit();
+        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home).commit();
+
+        fragmentManager.beginTransaction().show(fragment_notification).commit();
+        fragmentManager.beginTransaction().hide(fragment_home).commit();
 
 
-        home.setOnClickListener(new View.OnClickListener() {
+        framelayout_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(fragment1 == null){
-                    fragment1 = new MyFragment1();
-                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment1).commit();
-
+                if(fragment_home == null){
+                    fragment_home = new HomeFragment();
+                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home).commit();
                 }
 
-                if(fragment1 != null){
-                    fragmentManager.beginTransaction().show(fragment1).commit();
+                if(fragment_home != null){
+                    fragmentManager.beginTransaction().show(fragment_home).commit();
                 }
 
-                if(fragment2 != null){
-                    fragmentManager.beginTransaction().hide(fragment2).commit();
+                if(fragment_notification != null){
+                    fragmentManager.beginTransaction().hide(fragment_notification).commit();
                 }
-//                interface_set.setVisibility(View.VISIBLE);
-
-
-
-
-/*                getFragmentManager().beginTransaction().hide(fragment2).commit();
-                getFragmentManager().beginTransaction().hide(fragment1).commit();
-                getFragmentManager().beginTransaction().hide(fragment3).commit();
-                getFragmentManager().beginTransaction().hide(fragment4).commit();
-//
-//                getFragmentManager().beginTransaction().add(R.id.main_frame, fragment1).commit();
-                getFragmentManager().beginTransaction().show(fragment1).commit();
-                // getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment1).commit();*/
             }
         });
-        certification.setOnClickListener(new View.OnClickListener() {
+        framelayout_notification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(fragment2 == null){
-                    fragment2 = new MyFragment2();
-                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment2).commit();
+                if(fragment_notification == null){
+                    fragment_notification = new MyFragment2();
+                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_notification).commit();
 
                 }
-                if(fragment1 != null){
-                    fragmentManager.beginTransaction().hide(fragment1).commit();
+                if(fragment_home != null){
+                    fragmentManager.beginTransaction().hide(fragment_home).commit();
                 }
 
-                if(fragment2 != null){
-                    fragmentManager.beginTransaction().show(fragment2).commit();
+                if(fragment_notification != null){
+                    fragmentManager.beginTransaction().show(fragment_notification).commit();
                 }
 
 //                interface_set.setVisibility(View.INVISIBLE);
@@ -158,42 +145,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-/*        getFragmentManager().beginTransaction().add(R.id.main_frame, fragment1).commit();
-        getFragmentManager().beginTransaction().add(R.id.main_frame, fragment2).commit();
-        getFragmentManager().beginTransaction().add(R.id.main_frame, fragment3).commit();
-        getFragmentManager().beginTransaction().add(R.id.main_frame, fragment4).commit();*/
+/*        getFragmentManager().beginTransaction().add(R.id.main_frame, fragment_home).commit();
+        getFragmentManager().beginTransaction().add(R.id.main_frame, fragment_notification).commit();
+        getFragmentManager().beginTransaction().add(R.id.main_frame, fragment_search).commit();
+        getFragmentManager().beginTransaction().add(R.id.main_frame, fragment_user).commit();*/
 /*
         if(current_fragment.equals("first")){
-            if(fragment1 == null){
-                fragment1 = new MyFragment1();
-                fragmentManager.beginTransaction().add(R.id.main_frame, fragment1).commit();
+            if(fragment_home == null){
+                fragment_home = new MyFragment1();
+                fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home).commit();
 
             }
-            if(fragment1 != null){
-                fragmentManager.beginTransaction().show(fragment1).commit();
+            if(fragment_home != null){
+                fragmentManager.beginTransaction().show(fragment_home).commit();
             }
 
-            if(fragment2 != null){
-                fragmentManager.beginTransaction().hide(fragment2).commit();
+            if(fragment_notification != null){
+                fragmentManager.beginTransaction().hide(fragment_notification).commit();
             }
 
-            if(fragment3 != null){
-                fragmentManager.beginTransaction().hide(fragment3).commit();
+            if(fragment_search != null){
+                fragmentManager.beginTransaction().hide(fragment_search).commit();
             }
 
-            if(fragment4 != null){
-                fragmentManager.beginTransaction().hide(fragment4).commit();
+            if(fragment_user != null){
+                fragmentManager.beginTransaction().hide(fragment_user).commit();
             }
-            // getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment1).commit();
+            // getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment_home).commit();
 
         } else if (current_fragment.equals("second")){
-            getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment2).commit();
+            getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment_notification).commit();
 
         } else if (current_fragment.equals("third")){
-            getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment3).commit();
+            getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment_search).commit();
 
         } else if (current_fragment.equals("fourth")){
-            getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment4).commit();
+            getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment_user).commit();
 
         }*/
 

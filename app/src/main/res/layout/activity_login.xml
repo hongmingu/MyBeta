@@ -5,7 +5,7 @@
     android:id="@+id/login_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/White"
+    android:background="@color/white"
     tools:context=".LoginActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -70,7 +70,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:lineSpacingExtra="4sp"
                 android:text="Log in"
-                android:textColor="@color/White"
+                android:textColor="@color/white"
                 android:textSize="13dp"
                 android:textStyle="normal" />
 

@@ -1,9 +1,9 @@
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/toolbar"
+    android:id="@+id/tb_tb"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="@color/SkyBlue"
+    android:background="@color/skyblue"
     android:elevation="4dp"
     app:contentInsetStart="0dp"
     app:contentInsetStartWithNavigation="0dp">
@@ -13,18 +13,20 @@
         android:layout_height="match_parent">
 
         <FrameLayout
-            android:id="@+id/toolbar_home"
+            android:id="@+id/tb_fl_home"
             android:layout_width="72dp"
             android:layout_height="match_parent"
             android:background="@drawable/bg_skyblue100_clicked_skyblue_bright">
 
             <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/tb_lav_home"
+                app:lottie_rawRes="@raw/icon_home"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"/>
         </FrameLayout>
         <FrameLayout
-            android:id="@+id/toolbar_certification"
+            android:id="@+id/tb_fl_notification"
             android:layout_marginStart="72dp"
             android:layout_width="72dp"
             android:layout_height="match_parent"
@@ -37,7 +39,7 @@
                 android:background="@drawable/ic_certi1_press" />
         </FrameLayout>
         <FrameLayout
-            android:id="@+id/toolbar_search"
+            android:id="@+id/tb_fl_search"
             android:layout_marginStart="144dp"
             android:layout_width="72dp"
             android:layout_height="match_parent"
@@ -51,7 +53,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/toolbar_user"
+            android:id="@+id/tb_fl_user"
             android:layout_gravity="end"
             android:layout_marginEnd="0dp"
             android:layout_width="72dp"

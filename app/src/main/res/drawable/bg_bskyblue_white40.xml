@@ -13,7 +13,7 @@
                 android:width="2dp"
                 android:color="#AD2F2F" />
             -->
-            <solid android:color="@color/bskyblue_white40"/>
+            <solid android:color="@color/b_skyblue_white_40"/>
             <!--
             <corners android:radius="4dp"/>
             -->

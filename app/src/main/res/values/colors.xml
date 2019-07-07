@@ -3,13 +3,28 @@
     <color name="colorPrimary">#EEF7FD</color>
     <color name="colorPrimaryDark">#cccccc</color>
     <color name="colorAccent">#EEF7FD</color>
-    <color name="DarkBlue">#0072b1</color>
-    <color name="bskyblue_white40">#9AD1F2</color>
-    <color name="SkyBlue40">#BCE1F6</color>
-    <color name="SkyBlue10">#EEF7FD</color>
-    <color name="SkyBlue">#58B3E9</color>
-    <color name="White">#ffffff</color>
-    <color name="Black70">#636363</color>
-    <color name="Black40">#A5A5A5</color>
-    <color name="Black">#202020</color>
+
+    <!--main color-->
+    <color name="darkblue">#0072b1</color>
+    <color name="skyblue">#58B3E9</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#202020</color>
+
+    <!--skyblue-->
+    <color name="skyblue_40">#BCE1F6</color>
+    <color name="skyblue_10">#EEF7FD</color>
+
+    <!--blue-->
+    <color name="blue_70">#4B9BC8</color>
+
+    <!--black-->
+    <color name="black_70">#636363</color>
+    <color name="black_40">#A5A5A5</color>
+    <color name="black_10">#E9E9E9</color>
+    <color name="black_4">#F6F6F6</color>
+
+    <!--b_skyblue_white-->
+    <color name="b_skyblue_white_70">#CDE8F9</color>
+    <color name="b_skyblue_white_40">#9AD1F2</color>
+
 </resources>

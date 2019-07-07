@@ -6,7 +6,7 @@
     android:id="@+id/front_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/White"
+    android:background="@color/white"
     tools:context=".FrontActivity">
 
 
@@ -38,7 +38,7 @@
                 android:textSize="13dp"
                 android:fontFamily="sans-serif-medium"
                 android:textStyle="normal"
-                android:textColor="@color/White"
+                android:textColor="@color/white"
                 android:lineSpacingExtra="4sp"
                 android:text="Log in"/>
 
@@ -57,7 +57,7 @@
                 android:textSize="13dp"
                 android:fontFamily="sans-serif-medium"
                 android:textStyle="normal"
-                android:textColor="@color/DarkBlue"
+                android:textColor="@color/darkblue"
                 android:lineSpacingExtra="4sp"
                 android:text="Sign up"/>
 
