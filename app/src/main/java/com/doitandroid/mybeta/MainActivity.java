@@ -3,6 +3,7 @@ package com.doitandroid.mybeta;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,10 +11,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.doitandroid.mybeta.fragment.HomeFragment;
 import com.doitandroid.mybeta.fragment.MyFragment1;
 import com.doitandroid.mybeta.fragment.MyFragment2;
@@ -21,14 +24,16 @@ import com.doitandroid.mybeta.fragment.MyFragment3;
 import com.doitandroid.mybeta.fragment.MyFragment4;
 import com.doitandroid.mybeta.utils.UtilsCollection;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    String current_fragment = "first";
+    String current_fragment = "home";
     Toolbar toolbar;
-    DrawerLayout drawerLayout;
-    Button button;
 
-    FrameLayout btn_home, btn_certi, btn_search, btn_user;
+    FrameLayout btn_home, btn_noti, btn_search, btn_user;
+
+    FrameLayout ping_wrapper;
+
+    LottieAnimationView lav_home, lav_noti, lav_search, lav_user;
 
     RecyclerView recyclerView;
 
@@ -70,27 +75,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
-        // getFragmentManager().beginTransaction().replace(R.id.main_frame, new MyFragment1()).commit();
-
-
         toolbar = findViewById(R.id.tb_tb);
-        /*button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-            }
-        });*/
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        FrameLayout framelayout_home = findViewById(R.id.tb_fl_home);
-        FrameLayout framelayout_notification = findViewById(R.id.tb_fl_notification);
-        FrameLayout search = findViewById(R.id.tb_fl_search);
-        FrameLayout user = findViewById(R.id.tb_fl_user);
+        btn_home = findViewById(R.id.tb_fl_home);
+        btn_noti = findViewById(R.id.tb_fl_notification);
+        btn_search = findViewById(R.id.tb_fl_search);
+        btn_user = findViewById(R.id.tb_fl_user);
+
+        btn_home.setOnClickListener(this);
+        btn_noti.setOnClickListener(this);
+
+        lav_home = findViewById(R.id.tb_lav_home);
+        lav_noti = findViewById(R.id.tb_lav_notification);
+        lav_search =findViewById(R.id.tb_lav_search);
+        lav_user = findViewById(R.id.tb_lav_user);
 
         fragment_home = new HomeFragment();
         fragment_notification = new MyFragment2();
@@ -102,13 +103,90 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().add(R.id.main_frame, fragment_notification).commit();
         fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home).commit();
 
-        fragmentManager.beginTransaction().show(fragment_notification).commit();
-        fragmentManager.beginTransaction().hide(fragment_home).commit();
+//        fragmentManager.beginTransaction().show(fragment_notification).commit();
+//        fragmentManager.beginTransaction().hide(fragment_home).commit();
 
 
-        framelayout_home.setOnClickListener(new View.OnClickListener() {
+        ping_wrapper = findViewById(R.id.main_ping_wrapper);
+        btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+            }
+        });
+        // fragment init
+
+        if(fragment_home == null){
+            fragment_home = new HomeFragment();
+            fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home).commit();
+        }
+
+        if(fragment_home != null){
+            fragmentManager.beginTransaction().show(fragment_home).commit();
+        }
+
+        if(fragment_notification != null){
+            fragmentManager.beginTransaction().hide(fragment_notification).commit();
+        }
+
+    }
+    private void lottie_tb_released_case(String tb_tab_before){
+        switch (tb_tab_before){
+            case "home":
+                lottie_tb_play(lav_home, 2.4f);
+                break;
+            case "noti":
+                lottie_tb_play(lav_noti, 2.4f);
+                break;
+            case "search":
+                break;
+            case "user":
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void lottie_tb_clicked_case(String tb_tab) {
+
+        switch (tb_tab){
+            case "home":
+                lottie_tb_play(lav_home, -2.4f);
+                break;
+            case "noti":
+                lottie_tb_play(lav_noti, -2.4f);
+                break;
+            case "search":
+                break;
+            case "user":
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void lottie_tb_play(LottieAnimationView lottieAnimationView, Float speed) {
+        lottieAnimationView.pauseAnimation();
+        lottieAnimationView.setMinAndMaxProgress(0f, 1f);
+        lottieAnimationView.setSpeed(speed);
+        lottieAnimationView.playAnimation();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch(v.getId()){
+
+            case R.id.tb_fl_home: /** Start a new Activity MyCards.java */
+                if(current_fragment.equals("home")){
+                    return;
+                }
+
+                Log.d("MainActivityOnClick", "home");
+
+                lottie_tb_released_case(current_fragment);
+                lottie_tb_clicked_case("home");
+
                 if(fragment_home == null){
                     fragment_home = new HomeFragment();
                     fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home).commit();
@@ -121,11 +199,20 @@ public class MainActivity extends AppCompatActivity {
                 if(fragment_notification != null){
                     fragmentManager.beginTransaction().hide(fragment_notification).commit();
                 }
-            }
-        });
-        framelayout_notification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+                current_fragment = "home";
+                break;
+
+            case R.id.tb_fl_notification: /** AlerDialog when click on Exit */
+
+
+                if(current_fragment.equals("noti")){
+                    return;
+                }
+
+                Log.d("MainActivityOnClick", "noti");
+                lottie_tb_released_case(current_fragment);
+                lottie_tb_clicked_case("noti");
 
                 if(fragment_notification == null){
                     fragment_notification = new MyFragment2();
@@ -140,65 +227,11 @@ public class MainActivity extends AppCompatActivity {
                     fragmentManager.beginTransaction().show(fragment_notification).commit();
                 }
 
-//                interface_set.setVisibility(View.INVISIBLE);
-//                getFragmentManager().beginTransaction().replace(R.id.main_frame, new MyFragment2()).commit();
-            }
-        });
+                current_fragment = "noti";
+                break;
+            default:
 
-/*        getFragmentManager().beginTransaction().add(R.id.main_frame, fragment_home).commit();
-        getFragmentManager().beginTransaction().add(R.id.main_frame, fragment_notification).commit();
-        getFragmentManager().beginTransaction().add(R.id.main_frame, fragment_search).commit();
-        getFragmentManager().beginTransaction().add(R.id.main_frame, fragment_user).commit();*/
-/*
-        if(current_fragment.equals("first")){
-            if(fragment_home == null){
-                fragment_home = new MyFragment1();
-                fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home).commit();
-
-            }
-            if(fragment_home != null){
-                fragmentManager.beginTransaction().show(fragment_home).commit();
-            }
-
-            if(fragment_notification != null){
-                fragmentManager.beginTransaction().hide(fragment_notification).commit();
-            }
-
-            if(fragment_search != null){
-                fragmentManager.beginTransaction().hide(fragment_search).commit();
-            }
-
-            if(fragment_user != null){
-                fragmentManager.beginTransaction().hide(fragment_user).commit();
-            }
-            // getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment_home).commit();
-
-        } else if (current_fragment.equals("second")){
-            getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment_notification).commit();
-
-        } else if (current_fragment.equals("third")){
-            getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment_search).commit();
-
-        } else if (current_fragment.equals("fourth")){
-            getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment_user).commit();
-
-        }*/
-
-//        search.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getFragmentManager().beginTransaction().replace(R.id.main_frame, new MyFragment3()).commit();
-//            }
-//        });
-//        user.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getFragmentManager().beginTransaction().replace(R.id.main_frame, new MyFragment4()).commit();
-//            }
-//        });
-
-
-
-
+        }
     }
+
 }

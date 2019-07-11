@@ -42,11 +42,22 @@
         android:layout_marginBottom="12dp"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:elevation="100dp"
+        android:elevation="150dp"
         android:outlineProvider="none"
         android:background="@drawable/ic_add_post">
 
     </FrameLayout>
+    <FrameLayout
+        android:id="@+id/main_ping_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:elevation="120dp"
+        android:outlineProvider="none"
+        android:background="#2200ff"
+        android:visibility="invisible">
+
+    </FrameLayout>
+
 
     <LinearLayout
         android:id="@+id/main_frame"

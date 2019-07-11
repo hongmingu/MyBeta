@@ -15,8 +15,7 @@
         <FrameLayout
             android:id="@+id/tb_fl_home"
             android:layout_width="72dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_skyblue100_clicked_skyblue_bright">
+            android:layout_height="match_parent">
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/tb_lav_home"
@@ -29,27 +28,30 @@
             android:id="@+id/tb_fl_notification"
             android:layout_marginStart="72dp"
             android:layout_width="72dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_skyblue100_clicked_skyblue_bright">
+            android:layout_height="match_parent">
 
-            <ImageView
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/tb_lav_notification"
+                app:lottie_rawRes="@raw/icon_home"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_certi1_press" />
+                android:layout_gravity="center"/>
+
         </FrameLayout>
+
+
         <FrameLayout
             android:id="@+id/tb_fl_search"
             android:layout_marginStart="144dp"
             android:layout_width="72dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_skyblue100_clicked_skyblue_bright">
+            android:layout_height="match_parent">
 
-            <ImageView
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/tb_lav_search"
+                app:lottie_rawRes="@raw/icon_home"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_search_default" />
+                android:layout_gravity="center"/>
         </FrameLayout>
 
         <FrameLayout
@@ -57,14 +59,14 @@
             android:layout_gravity="end"
             android:layout_marginEnd="0dp"
             android:layout_width="72dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_skyblue100_clicked_skyblue_bright">
+            android:layout_height="match_parent">
 
-            <ImageView
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/tb_lav_user"
+                app:lottie_rawRes="@raw/icon_home"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_user_default" />
+                android:layout_gravity="center"/>
         </FrameLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
