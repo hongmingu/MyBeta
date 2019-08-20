@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AddPostActivity">
+
+    <include layout="@layout/tool_bar_exit" />
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <!--여기서 visibility 를 gone 으로 조정하면 된다.-->
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_marginTop="@dimen/add_post_ping_wrapper_margin_top"
+            android:layout_marginStart="@dimen/add_post_ping_wrapper_margin_start"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_post_ping_wrapper_height">
+            <RelativeLayout
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/add_post_ping_wrapper_padding"
+                android:background="@color/skyblue_40">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/add_post_tv"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:lineSpacingExtra="5sp"
+                    android:text="인사합니다! \n
+                이런일이 있나요"
+                    android:textColor="@color/darkblue"
+                    android:textSize="@dimen/text_normal"
+                    android:textStyle="normal" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_toRightOf="@id/add_post_tv"
+                    android:layout_marginLeft="@dimen/add_post_ping_space"
+                    android:layout_width="@dimen/add_post_ping_width"
+                    android:layout_height="@dimen/add_post_ping_width"
+                    android:layout_centerVertical="true"
+                    android:src="@color/green"/>
+
+
+            </RelativeLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/add_post_ll_padding_start"
+            android:paddingEnd="@dimen/add_post_ll_padding_start"
+            android:paddingTop="@dimen/add_post_ll_padding_top"
+            android:paddingBottom="@dimen/add_post_ll_padding_top"
+            android:layout_weight="1">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/add_post_et_padding"
+                android:hint="add text"
+                android:gravity="top"
+                android:backgroundTint="@color/transparent"/>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/add_post_complete_cl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/add_post_complete_margin_end"
+            android:layout_marginBottom="@dimen/add_post_complete_margin_bottom">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/add_post_complete_btn_width"
+                android:layout_height="@dimen/add_post_complete_btn_width"
+                android:src="@android:color/holo_orange_light"/>
+
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

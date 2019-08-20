@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PingSearchActivity">
+
+    <!--add post btn-->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/ping_search_addpost"
+        android:layout_width="@dimen/home_add_post_width"
+        android:layout_height="@dimen/home_add_post_width"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="@dimen/home_add_post_margin_bottom"
+        android:elevation="@dimen/home_add_post_elevation"
+        android:outlineProvider="none">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_add_post" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

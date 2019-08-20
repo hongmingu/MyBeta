@@ -10,66 +10,335 @@
 
 
     <include layout="@layout/tool_bar" />
+
+    <!--home feed btn-->
     <FrameLayout
         android:id="@+id/main_homefeed"
+        android:layout_width="126dp"
+        android:layout_height="56dp"
         android:layout_gravity="bottom|start"
-        android:layout_marginBottom="12dp"
-        android:layout_marginStart="56dp"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:elevation="100dp"
-        android:outlineProvider="none"
-        android:background="@drawable/ic_homefeed_off">
+        android:elevation="@dimen/home_follow_feed_btn_elevation"
+        android:outlineProvider="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/home_following_feed_width"
+                android:layout_height="@dimen/home_following_feed_width"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_homefeed_off" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_white_radius2dp"
+                android:text="@string/feed_following"
+                android:textColor="@color/skyblue"
+                android:textSize="@dimen/text_ex_small" />
+
+        </LinearLayout>
+
 
     </FrameLayout>
 
+    <!--follow feed btn-->
     <FrameLayout
         android:id="@+id/main_followfeed"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="56dp"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:elevation="100dp"
-        android:outlineProvider="none"
-        android:background="@drawable/ic_followfeed_off">
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/main_addpost"
-        android:layout_gravity="bottom|center"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="56dp"
         android:layout_marginBottom="12dp"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:elevation="150dp"
-        android:outlineProvider="none"
-        android:background="@drawable/ic_add_post">
-
-    </FrameLayout>
-    <FrameLayout
-        android:id="@+id/main_ping_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:elevation="120dp"
-        android:outlineProvider="none"
-        android:background="#2200ff"
-        android:visibility="invisible">
+        android:background="@drawable/ic_followfeed_off"
+        android:elevation="@dimen/home_follow_feed_btn_elevation"
+        android:outlineProvider="none">
 
     </FrameLayout>
 
+    <!--add post btn-->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_addpost"
+        android:layout_width="@dimen/home_add_post_width"
+        android:layout_height="@dimen/home_add_post_width"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="@dimen/home_add_post_margin_bottom"
+        android:elevation="@dimen/home_add_post_elevation"
+        android:outlineProvider="none">
 
-    <LinearLayout
-        android:id="@+id/main_frame"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_add_post" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+    <!--home ping swiping text-->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_ping_swiping_text_cl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="@dimen/home_ping_swiping_text_bottom_margin"
+        android:elevation="@dimen/home_pings_swiping_text_elevation"
+        android:outlineProvider="none"
+        android:visibility="invisible"
+        android:animateLayoutChanges="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="@color/white"
+            android:lineSpacingExtra="4sp"
+            android:text="click it to send"
+            android:background="@drawable/bg_grey_radius4dp"
+            />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <!--ping clicked other cover overlay-->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_whole_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="48dp"
-        android:elevation="0dp"
-        android:orientation="vertical">
-        <!--프래그먼트를 넣을 수 있는 액자-->
+        android:elevation="@dimen/home_whole_wrapper_elevation"
+        android:outlineProvider="none"
+        android:visibility="invisible">
 
 
-    </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_ping_progress_bar_cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/home_ping_dim_wrapper_height"
+        android:elevation="@dimen/home_pings_progress_bar_elevation"
+        android:outlineProvider="none"
+        android:visibility="invisible">
+        <!--scaleY = target Height dp / 4-->
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/home_ping_progress_bar_height"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:max="1000"
+            android:progressBackgroundTint="@color/transparent"
+            android:scaleY="4"
+            android:progressTint="@color/green"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+    <!--home feed dim wrapper-->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_dim_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/home_ping_dim_wrapper_height"
+        android:layout_gravity="bottom"
+        android:background="@color/skyblue_40"
+        android:elevation="@dimen/home_pings_dim_elevation"
+        android:outlineProvider="none"
+        android:visibility="invisible">
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/home_ping_recent_bottom_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <HorizontalScrollView
+                android:id="@+id/main_recent_hsv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/main_recent_hsv_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Space
+                        android:id="@+id/space_recent_1"
+                        android:layout_width="@dimen/home_ping_recent_space"
+                        android:layout_height="match_parent" />
+                    <Space
+                        android:id="@+id/space_recent_2"
+                        android:layout_width="@dimen/home_ping_recent_space"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/home_ping_recent_text_bottom_margin"
+            android:layout_marginStart="@dimen/home_ping_recent_start_margin"
+            android:layout_gravity="start|bottom"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_normal"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textColor="@color/black"
+                android:lineSpacingExtra="5sp"
+                android:text="RECENT"
+                />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+        <!-- ping dim wrapper search bar -->
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/main_dim_wrapper_search_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/home_ping_search_top_margin"
+            >
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_gravity="center_horizontal"
+                android:layout_width="@dimen/home_ping_search_width"
+                android:layout_height="@dimen/home_ping_search_height"
+                android:background="@drawable/bg_white_radius4dp"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="@dimen/home_ping_search_icon_margin_end"
+                android:layout_width="@dimen/home_ping_search_icon_width"
+                android:layout_height="@dimen/home_ping_search_icon_width"
+                android:src="@drawable/bg_darkblue_radius4dp"/>
+
+            <TextView
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginStart="@dimen/home_ping_search_text_margin_start"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_normal"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="@color/darkblue"
+                android:lineSpacingExtra="5sp"
+                android:text="search"
+                />
+
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="@dimen/home_ping_one_more_click_bottom_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_small"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="@color/black_40"
+                android:lineSpacingExtra="4sp"
+                android:text="one more click to ping it"/>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="@dimen/home_ping_selected_top_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/home_ping_selected_height"
+            android:paddingStart="@dimen/home_ping_selected_side_padding"
+            android:paddingEnd="@dimen/home_ping_selected_side_padding">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/main_ping_tv"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_normal"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="@color/white"
+                android:lineSpacingExtra="5sp"
+                android:text=""
+                android:padding="4dp"
+                android:background="@drawable/bg_green_radius4dp"
+                />
+
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/home_ping_instant_send_btn_margin_bottom"
+            android:layout_marginEnd="@dimen/home_ping_instant_send_btn_margin_end">
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="@dimen/home_ping_instant_send_btn_width"
+                android:layout_height="@dimen/home_ping_instant_send_btn_width"
+                app:lottie_rawRes="@raw/icon_home"/>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <!--home pings-->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_ping_fl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="@dimen/home_ping_bottom_margin"
+        android:elevation="@dimen/home_pings_elevation"
+        android:outlineProvider="none">
+        <HorizontalScrollView
+            android:id="@+id/main_hsv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/main_hsv_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Space
+                    android:id="@+id/space_1"
+                    android:layout_width="@dimen/home_ping_line_space"
+                    android:layout_height="match_parent" />
+                <Space
+                    android:id="@+id/space_2"
+                    android:layout_width="@dimen/home_ping_line_space"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <!--home feed fragment frame-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/home_frame_margin_top"
+        android:elevation="@dimen/home_fragment_frame_elevation"
+        android:outlineProvider="none">
+
+        <LinearLayout
+            android:id="@+id/main_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

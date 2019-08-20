@@ -3,10 +3,5 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/skyblue_10">
-    <TextView
-        android:id="@+id/tv_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="some Word"/>
+    android:id="@+id/home_f_rv_i_ll">
 </LinearLayout>

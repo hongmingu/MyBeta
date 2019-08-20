@@ -1,6 +1,7 @@
-<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/tb_tb"
+    android:id="@+id/btb_tb"
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:background="#9C27B0"
@@ -23,26 +24,26 @@
                 android:src="@drawable/ic_bluelogo"/>
         </FrameLayout>
         <FrameLayout
-            android:id="@+id/tb_fl_home"
+            android:id="@+id/btb_fl_home"
             android:layout_marginStart="52dp"
             android:layout_width="52dp"
             android:layout_height="match_parent">
 
             <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/tb_lav_home"
+                android:id="@+id/btb_lav_home"
                 app:lottie_rawRes="@raw/icon_home"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"/>
         </FrameLayout>
         <FrameLayout
-            android:id="@+id/tb_fl_notification"
+            android:id="@+id/btb_fl_notification"
             android:layout_marginStart="104dp"
             android:layout_width="52dp"
             android:layout_height="match_parent">
 
             <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/tb_lav_notification"
+                android:id="@+id/btb_lav_notification"
                 app:lottie_rawRes="@raw/icon_home"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -52,13 +53,13 @@
 
 
         <FrameLayout
-            android:id="@+id/tb_fl_search"
+            android:id="@+id/btb_fl_search"
             android:layout_marginStart="156dp"
             android:layout_width="52dp"
             android:layout_height="match_parent">
 
             <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/tb_lav_search"
+                android:id="@+id/btb_lav_search"
                 app:lottie_rawRes="@raw/icon_home"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -66,14 +67,14 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/tb_fl_user"
+            android:id="@+id/btb_fl_user"
             android:layout_gravity="end"
             android:layout_marginEnd="0dp"
             android:layout_width="52dp"
             android:layout_height="match_parent">
 
             <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/tb_lav_user"
+                android:id="@+id/btb_lav_user"
                 app:lottie_rawRes="@raw/icon_home"
                 android:layout_width="24dp"
                 android:layout_height="24dp"

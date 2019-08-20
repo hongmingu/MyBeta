@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.adapter.MyRecyclerViewAdapter;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
@@ -34,8 +36,18 @@ public class MyFragment2 extends Fragment {
             Log.d("for문", String.valueOf(i));
         }
 
+
+        JsonObject jsonObject = new JsonObject();
         string_list.add("who");
         // 그리드뷰로 만든다.
+        Button button = rootView.findViewById(R.id.fragment2_btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         RecyclerView recyclerView = rootView.findViewById(R.id.fragment2_recyclerview);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());

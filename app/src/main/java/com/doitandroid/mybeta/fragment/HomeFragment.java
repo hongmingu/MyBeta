@@ -1,11 +1,13 @@
 package com.doitandroid.mybeta.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.doitandroid.mybeta.MainActivity;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.adapter.MyRecyclerViewAdapter;
 
@@ -21,11 +24,13 @@ import java.util.UUID;
 
 public class HomeFragment extends Fragment {
     TextView tv_count;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment1, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
 
 
         ArrayList<String> string_list = new ArrayList<>();
@@ -37,7 +42,17 @@ public class HomeFragment extends Fragment {
         }
 
         string_list.add("who");
+
+        final Activity activity = (MainActivity)getActivity();
         // 그리드뷰로 만든다.
+        Button button = rootView.findViewById(R.id.fragment1_btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) activity).noti_btn_clicked();
+            }
+        });
+
         RecyclerView recyclerView = rootView.findViewById(R.id.fragment1_recyclerview);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());

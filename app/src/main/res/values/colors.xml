@@ -9,13 +9,15 @@
     <color name="skyblue">#58B3E9</color>
     <color name="white">#ffffff</color>
     <color name="black">#202020</color>
+    <color name="green">#009F73</color>
 
     <!--skyblue-->
     <color name="skyblue_40">#BCE1F6</color>
     <color name="skyblue_10">#EEF7FD</color>
+    <color name="skyblue_4">#F8FCFF</color>
 
-    <!--blue-->
-    <color name="blue_70">#4B9BC8</color>
+    <!--darkblue-->
+    <color name="darkblue_70">#4B9BC8</color>
 
     <!--black-->
     <color name="black_70">#636363</color>
@@ -23,8 +25,12 @@
     <color name="black_10">#E9E9E9</color>
     <color name="black_4">#F6F6F6</color>
 
+
     <!--b_skyblue_white-->
     <color name="b_skyblue_white_70">#CDE8F9</color>
     <color name="b_skyblue_white_40">#9AD1F2</color>
+
+    <!--transparent-->
+    <color name="transparent">#00000000</color>
 
 </resources>

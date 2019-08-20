@@ -7,4 +7,97 @@
     <dimen name="text_very_big">18dp</dimen>
     <dimen name="text_big">16dp</dimen>
     <dimen name="text_small">12dp</dimen>
+    <dimen name="text_ex_small">10dp</dimen>
+
+
+
+
+    <dimen name="home_frame_margin_top">48dp</dimen>
+
+
+    <dimen name="home_add_post_width">48dp</dimen>
+    <dimen name="home_add_post_margin_bottom">16dp</dimen>
+
+    <!--ping long click progress bar-->
+    <dimen name="home_ping_progress_bar_height">16dp</dimen>
+    <dimen name="home_ping_progress_bar_max">16dp</dimen>
+
+    <!--home ping-->
+    <dimen name="home_ping_width">40dp</dimen>
+    <dimen name="home_ping_under_space">4dp</dimen>
+    <dimen name="home_ping_under_bar_width">24dp</dimen>
+    <dimen name="home_ping_under_bar_height">4dp</dimen>
+    <dimen name="home_ping_under_bar_radius">4dp</dimen>
+    <dimen name="home_ping_search_height">24dp</dimen>
+    <dimen name="home_ping_search_width">336dp</dimen>
+    <dimen name="home_ping_search_icon_width">24dp</dimen>
+    <dimen name="home_ping_search_icon_margin_end">12dp</dimen>
+    <dimen name="home_ping_search_text_margin_start">20dp</dimen>
+
+
+    <dimen name="home_ping_line_space">96dp</dimen>
+
+
+    <dimen name="home_ping_space">24dp</dimen>
+    <dimen name="home_ping_recent_space">32dp</dimen>
+    <dimen name="home_ping_recent_bottom_margin">218dp</dimen>
+    <dimen name="home_ping_recent_start_margin">12dp</dimen>
+    <dimen name="home_ping_recent_text_bottom_margin">278dp</dimen>
+    <dimen name="home_ping_search_top_margin">12dp</dimen>
+    <dimen name="home_ping_search_side_padding">12dp</dimen>
+
+    <dimen name="home_ping_selected_top_margin">159dp</dimen>
+    <dimen name="home_ping_selected_height">54dp</dimen>
+    <dimen name="home_ping_selected_side_padding">12dp</dimen>
+
+    <dimen name="home_ping_one_more_click_bottom_margin">190dp</dimen>
+
+
+    <dimen name="home_ping_bottom_margin">76dp</dimen>
+    <dimen name="home_ping_swiping_text_bottom_margin">140dp</dimen>
+
+    <dimen name="home_ping_instant_send_btn_width">36dp</dimen>
+    <dimen name="home_ping_instant_send_btn_margin_end">24dp</dimen>
+    <dimen name="home_ping_instant_send_btn_margin_bottom">22dp</dimen>
+
+
+
+    <dimen name="home_ping_dim_wrapper_height">345dp</dimen>
+
+    <dimen name="home_following_feed_width">30dp</dimen>
+
+    <!--add post activity-->
+    <dimen name="add_post_complete_margin_bottom">16dp</dimen>
+    <dimen name="add_post_complete_margin_end">12dp</dimen>
+    <dimen name="add_post_complete_btn_width">48dp</dimen>
+
+    <dimen name="add_post_ping_wrapper_ll_margin_top">48dp</dimen>
+
+    <dimen name="add_post_ping_wrapper_margin_top">16dp</dimen>
+    <dimen name="add_post_ping_wrapper_margin_start">12dp</dimen>
+    <dimen name="add_post_ping_wrapper_height">65dp</dimen>
+    <dimen name="add_post_ping_wrapper_padding">12dp</dimen>
+    <dimen name="add_post_ping_space">8dp</dimen>
+    <dimen name="add_post_ping_width">32dp</dimen>
+
+    <dimen name="add_post_ll_padding_top">16dp</dimen>
+    <dimen name="add_post_ll_padding_start">12dp</dimen>
+
+    <dimen name="add_post_et_padding">12dp</dimen>
+
+
+    <!--elevation-->
+    <dimen name="home_fragment_frame_elevation">10dp</dimen>
+
+    <dimen name="home_follow_feed_btn_elevation">20dp</dimen>
+    <dimen name="home_pings_swiping_text_elevation">20dp</dimen>
+
+    <dimen name="home_whole_wrapper_elevation">20dp</dimen>
+
+    <dimen name="home_pings_dim_elevation">24dp</dimen>
+    <dimen name="home_pings_progress_bar_elevation">24dp</dimen>
+
+    <dimen name="home_pings_elevation">30dp</dimen>
+    <dimen name="home_add_post_elevation">30dp</dimen>
+
 </resources>
