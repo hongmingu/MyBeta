@@ -12,92 +12,103 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/signup_back"
-            android:layout_width="60dp"
-            android:layout_height="42dp"
+            android:layout_width="@dimen/front_back_wrapper_width"
+            android:layout_height="@dimen/front_back_wrapper_height"
             android:background="@drawable/bg_white_clicked_10skyblue">
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_gravity="center"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/front_back_icon_width"
+                android:layout_height="@dimen/front_back_icon_width"
                 android:background="@drawable/ic_back_skyblue100"/>
-        </FrameLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-        <ImageView
-            android:id="@+id/reg_blue_logo"
-            android:layout_width="60dp"
-            android:layout_height="45dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="80dp"
-            app:srcCompat="@drawable/ic_bluelogo" />
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="@dimen/front_logo_width"
+            android:layout_height="@dimen/front_logo_height"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="@dimen/front_logo_margin_top">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/red_blue_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_bluelogo" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 
         <com.doitandroid.mybeta.customview.ClearableEditText
             android:id="@+id/reg_full_name"
-            android:layout_width="260dp"
-            android:layout_height="36dp"
+            android:layout_width="@dimen/front_clear_edittext_width"
+            android:layout_height="@dimen/front_clear_edittext_height"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="290dp"
+            android:layout_marginTop="@dimen/sign_up_clear_edittext_fullname_margin_top"
             android:background="@null">
 
         </com.doitandroid.mybeta.customview.ClearableEditText>
 
         <com.doitandroid.mybeta.customview.ClearableEditText
             android:id="@+id/reg_email"
-            android:layout_width="260dp"
-            android:layout_height="36dp"
+            android:layout_width="@dimen/front_clear_edittext_width"
+            android:layout_height="@dimen/front_clear_edittext_height"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="338dp"
+            android:layout_marginTop="@dimen/sign_up_clear_edittext_email_margin_top"
             android:background="@null">
 
         </com.doitandroid.mybeta.customview.ClearableEditText>
 
         <com.doitandroid.mybeta.customview.ClearableEditText
             android:id="@+id/reg_password"
-            android:layout_width="260dp"
-            android:layout_height="36dp"
+            android:layout_width="@dimen/front_clear_edittext_width"
+            android:layout_height="@dimen/front_clear_edittext_height"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="386dp"
+            android:layout_marginTop="@dimen/sign_up_clear_edittext_password_margin_top"
             android:background="@null">
 
         </com.doitandroid.mybeta.customview.ClearableEditText>
 
-        <TextView
-            android:id="@+id/reg_password_hide_show"
-            android:layout_width="260dp"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="@dimen/front_ok_btn_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="429dp"
-            android:fontFamily="sans-serif"
-            android:gravity="end"
-            android:lineSpacingExtra="4sp"
-            android:orientation="vertical"
-            android:text="password Show/Hide"
-            android:textColor="@color/skyblue"
-            android:textSize="13dp"
-            android:textStyle="normal" />
+            android:layout_marginTop="@dimen/sign_up_show_hide_password_margin_top"
+            >
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/reg_password_hide_show"
+                android:layout_gravity="end"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="@color/darkblue"
+                android:lineSpacingExtra="5sp"
+                android:text="password Show/Hide"/>
 
-        <FrameLayout
-            android:layout_width="260dp"
-            android:layout_height="36dp"
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="@dimen/front_ok_btn_width"
+            android:layout_height="@dimen/front_ok_btn_height"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="476dp"
+            android:layout_marginTop="@dimen/front_ok_btn_margin_top"
             android:background="@drawable/bg_darkblue_radius4dp">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="sans-serif-medium"
-                android:lineSpacingExtra="4sp"
+                android:lineSpacingExtra="5sp"
                 android:text="OK"
                 android:textColor="@color/white"
-                android:textSize="13dp"
+                android:textSize="@dimen/text_normal"
                 android:textStyle="normal" />
 
-        </FrameLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

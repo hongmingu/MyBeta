@@ -1,6 +1,9 @@
 package com.doitandroid.mybeta;
 
-public class Constants {
+public class ConstantStrings {
+    public static final String TRAY_COLOR = "#cccccc";
+    public static final String INIT_APP = "init_app";
+    public static final String AUTO_LOGIN = "auto_login";
 
     public static final String ACTION = ".action";
     public static final String DATA_KEY_1 = ".data_key_1";

@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/bg_register_edittext">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_register_edittext"
+    android:paddingStart="@dimen/clearable_editttext_padding_side"
+    android:paddingEnd="@dimen/clearable_editttext_padding_side">
 
     <EditText
         android:id="@+id/clearable_edit_text_edit_text"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:paddingEnd="36dp"
+        android:layout_height="match_parent"
+        android:paddingEnd="@dimen/clearable_editttext_inner_edittext_padding_end"
+        android:paddingStart="@dimen/clearable_editttext_inner_edittext_padding_start"
         android:background="@null"
-        android:padding="8dp"
         android:gravity="center_vertical"
-        android:textSize="13dp"
+        android:textSize="@dimen/text_normal"
         android:fontFamily="sans-serif"
         android:textStyle="normal"
         android:textColor="@color/black"
-        android:lineSpacingExtra="4dp"
+        android:lineSpacingExtra="5sp"
         android:inputType="text"
         android:singleLine="true"
         android:textColorHint="@color/black_40"
@@ -24,12 +26,10 @@
 
     <ImageButton
         android:id="@+id/clearable_edit_text_btn"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:padding="0dp"
+        android:layout_width="@dimen/clearable_editttext_icon_width"
+        android:layout_height="@dimen/clearable_editttext_icon_width"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="8dp"
         android:background="@drawable/ic_clear_x_padded_70blue"/>
 
 

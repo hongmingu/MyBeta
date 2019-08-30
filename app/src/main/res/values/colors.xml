@@ -2,7 +2,8 @@
 <resources>
     <color name="colorPrimary">#EEF7FD</color>
     <color name="colorPrimaryDark">#cccccc</color>
-    <color name="colorAccent">#EEF7FD</color>
+    <!--colorAccent - darkblue_70 - ex: cursor 물방울-->
+    <color name="colorAccent">#4B9BC8</color>
 
     <!--main color-->
     <color name="darkblue">#0072b1</color>

@@ -10,60 +10,64 @@
     tools:context=".FrontActivity">
 
 
-    <ImageView
-        android:id="@+id/blue_logo"
-        android:layout_width="60dp"
-        android:layout_height="45dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="80dp"
-        app:srcCompat="@drawable/ic_bluelogo" />
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="@dimen/front_logo_width"
+        android:layout_height="@dimen/front_logo_height"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="@dimen/front_logo_margin_top">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/blue_logo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_bluelogo" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-    <FrameLayout
-        android:layout_width="260dp"
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="@dimen/front_btn_wrapper_width"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="@dimen/front_btn_wrapper_margin_top">
 
-        <FrameLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/btn_login"
-            android:layout_width="120dp"
-            android:layout_height="36dp"
+            android:layout_width="@dimen/front_btn_width"
+            android:layout_height="@dimen/front_btn_height"
             android:background="@drawable/bg_darkblue_radius4dp"
-            android:layout_marginTop="476dp"
             android:layout_gravity="start">
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="13dp"
+                android:textSize="@dimen/text_normal"
                 android:fontFamily="sans-serif-medium"
                 android:textStyle="normal"
                 android:textColor="@color/white"
-                android:lineSpacingExtra="4sp"
+                android:lineSpacingExtra="5sp"
                 android:text="Log in"/>
 
-        </FrameLayout>
-        <FrameLayout
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/btn_signup"
-            android:layout_width="120dp"
-            android:layout_height="36dp"
+            android:layout_width="@dimen/front_btn_width"
+            android:layout_height="@dimen/front_btn_height"
             android:background="@drawable/bg_darkblue_border_radius4dp"
-            android:layout_marginTop="476dp"
             android:layout_gravity="end">
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="13dp"
+                android:textSize="@dimen/text_normal"
                 android:fontFamily="sans-serif-medium"
                 android:textStyle="normal"
                 android:textColor="@color/darkblue"
-                android:lineSpacingExtra="4sp"
+                android:lineSpacingExtra="5sp"
                 android:text="Sign up"/>
 
-        </FrameLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    </FrameLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
 

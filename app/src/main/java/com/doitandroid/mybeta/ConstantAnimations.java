@@ -26,7 +26,7 @@ public class ConstantAnimations {
             }});
 
     public static final Map<String, Integer> map = Collections.unmodifiableMap(
-            new HashMap<String, Integer>(){
+            new HashMap<String, Integer>() {
                 {
                     put("1", R.raw.icon_home);
                     put("2", R.raw.icon_home);
@@ -46,7 +46,7 @@ public class ConstantAnimations {
     );
 
     public static final Map<String, String> textMap = Collections.unmodifiableMap(
-            new HashMap<String, String>(){
+            new HashMap<String, String>() {
                 {
                     put("1", "안녕하세요");
                     put("2", "싸인을보내 시그널보내");
@@ -61,6 +61,27 @@ public class ConstantAnimations {
                     put("11", "찌리찌리찌리");
                     put("12", "콧노래가 나오다가 나도몰래");
                     put("13", "이대로 사라져버리면안되염이대로 사라져버리면안되염이대로 사라져버리면안되염");
+                }
+            }
+    );
+
+    public static final List<PingItem> pingList = Collections.unmodifiableList(
+            new ArrayList<PingItem>() {
+                {
+                    add(new PingItem("1", "안녕하세요", R.raw.icon_home));
+                    add(new PingItem("2", "싸인을보내", R.raw.home_sample_bodymovin));
+                    add(new PingItem("3", "소용이없네 \n 헤이헤이", R.raw.home_test));
+                    add(new PingItem("4", "cause Im lost in", R.raw.icon_home));
+                    add(new PingItem("5", "sleep", R.raw.ping_base_hi));
+                    add(new PingItem("6", "The feeling wont let me", R.raw.ping_base_hi2));
+                    add(new PingItem("7", "Lit up heaven in me", R.raw.ping_base_hi3));
+                    add(new PingItem("8", "Something in you", R.raw.ping_base_hi4));
+                    add(new PingItem("9", "안녕하세요 추워", R.raw.ping_base_hi5));
+                    add(new PingItem("10", "넘넘추워 아 더워", R.raw.ping_base_hi6));
+                    add(new PingItem("11", "안녕하세요 찌리찌리찌리 더워", R.raw.ping_base_hi7));
+                    add(new PingItem("12", "안녕하세요 아 더워", R.raw.ping_base_hi8));
+                    add(new PingItem("13", "이대로 사라져버리면안되염이대로 사라져버리면안되염이대로 사라져버리면안되염", R.raw.ping_base_hi9));
+                    // etc
                 }
             }
     );

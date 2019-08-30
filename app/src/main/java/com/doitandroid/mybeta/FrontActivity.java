@@ -1,6 +1,7 @@
 package com.doitandroid.mybeta;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -12,7 +13,7 @@ import android.widget.FrameLayout;
 import com.doitandroid.mybeta.utils.UtilsCollection;
 
 public class FrontActivity extends AppCompatActivity {
-    FrameLayout btn_login, btn_signup;
+    CoordinatorLayout btn_login, btn_signup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

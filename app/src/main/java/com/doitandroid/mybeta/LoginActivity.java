@@ -1,6 +1,7 @@
 package com.doitandroid.mybeta;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,7 +24,7 @@ import com.doitandroid.mybeta.utils.UtilsCollection;
 public class LoginActivity extends AppCompatActivity {
     private BackPressCloseHandler backPressCloseHandler;
     ClearableEditText login_account, login_password;
-    FrameLayout btn_back, btn_complete;
+    CoordinatorLayout btn_back, btn_complete;
     ScrollView main_layout;
     Activity activity;
 

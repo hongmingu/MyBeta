@@ -9,7 +9,56 @@
     <dimen name="text_small">12dp</dimen>
     <dimen name="text_ex_small">10dp</dimen>
 
+    <!--FrontActivity-->
+    <dimen name="front_logo_margin_top">100dp</dimen>
 
+    <dimen name="front_logo_width">80dp</dimen>
+    <dimen name="front_logo_height">60dp</dimen>
+
+    <dimen name="front_btn_wrapper_margin_top">468dp</dimen>
+    <dimen name="front_btn_wrapper_width">260dp</dimen>
+    <dimen name="front_btn_width">116dp</dimen>
+    <dimen name="front_btn_height">48dp</dimen>
+
+    <!--LoginActivity-->
+    <dimen name="front_back_wrapper_height">48dp</dimen>
+    <dimen name="front_back_wrapper_width">52dp</dimen>
+    <dimen name="front_back_icon_width">24dp</dimen>
+
+    <dimen name="front_clear_edittext_width">288dp</dimen>
+    <dimen name="front_clear_edittext_height">48dp</dimen>
+
+
+    <dimen name="login_clear_edittext_username_margin_top">317dp</dimen>
+    <dimen name="login_clear_edittext_password_margin_top">377dp</dimen>
+
+    <dimen name="front_ok_btn_margin_top">468dp</dimen>
+
+    <dimen name="front_ok_btn_width">288dp</dimen>
+    <dimen name="front_ok_btn_height">48dp</dimen>
+
+    <!--SignUpActivity-->
+
+    <dimen name="sign_up_clear_edittext_fullname_margin_top">257dp</dimen>
+    <dimen name="sign_up_clear_edittext_email_margin_top">317dp</dimen>
+    <dimen name="sign_up_clear_edittext_password_margin_top">377dp</dimen>
+
+    <dimen name="sign_up_show_hide_password_margin_top">437dp</dimen>
+
+    <!--Dialog-->
+    <dimen name="dialog_static_height">48dp</dimen>
+    <dimen name="dialog_content_padding">16dp</dimen>
+
+
+    <!--ClearableEditText-->
+    <dimen name="clearable_editttext_padding_side">24dp</dimen>
+    <dimen name="clearable_editttext_padding_top_bottom">12dp</dimen>
+    <dimen name="clearable_editttext_icon_width">24dp</dimen>
+    <dimen name="clearable_editttext_inner_edittext_padding_end">36dp</dimen>
+    <dimen name="clearable_editttext_inner_edittext_padding_start">0dp</dimen>
+
+
+    <!--MainActivity-->
 
 
     <dimen name="home_frame_margin_top">48dp</dimen>

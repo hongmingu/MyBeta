@@ -85,10 +85,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList<HomePingItem> homePingItemArrayList, homePingItemRecentArrayList;
     HomePingAdapater homePingAdapater;
 
-    HomePingItemDecoration homePingItemDecoration;
-    HomePingItemNarrowDecoration homePingItemNarrowDecoration;
-
-
     UtilsCollection utilsCollection;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,12 +95,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         UtilsCollection utilsCollection = new UtilsCollection(this);
-        utilsCollection.makeStatusBarColor("#cccccc");
+        utilsCollection.makeStatusBarColor(ConstantStrings.TRAY_COLOR);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // 자동 로그인 구현
-        SharedPreferences sp = getSharedPreferences("init_app", MODE_PRIVATE);
-        if (sp.getInt("auto_login", 0) == 0) {
+        SharedPreferences sp = getSharedPreferences(ConstantStrings.INIT_APP, MODE_PRIVATE);
+
+        Log.d(TAG, "gotmeworking"+ sp.getInt(ConstantStrings.AUTO_LOGIN, ConstantIntegers.IS_NOT_LOGINED));
+        if (sp.getInt(ConstantStrings.AUTO_LOGIN, ConstantIntegers.IS_NOT_LOGINED) != ConstantIntegers.IS_LOGINED) {
             Intent intent = new Intent(this, FrontActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             /*intent.addFlags(
@@ -216,6 +214,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         }
+        Log.d(TAG, homePingItemArrayList.size() + "");
+
+        for (PingItem pingItem:ConstantAnimations.pingList){
+
+            if (pingItem.testID("4")){
+                Log.d(TAG, "equals 4");
+                Log.d(TAG, pingItem.getPingText());
+                homePingItemArrayList.add(0, new HomePingItem(pingItem.getPingRes(), pingItem.getPingID(), false));
+                homePingItemRecentArrayList.add(0, new HomePingItem(pingItem.getPingRes(), pingItem.getPingID(), false));
+            }
+        }
+        Log.d(TAG, homePingItemArrayList.size() + "");
 
         home_ping_ll = findViewById(R.id.main_hsv_ll);
 
@@ -555,9 +565,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.main_addpost: /* add post activity open */
                 Intent intent_add_post = new Intent(this, AddPostActivity.class);
 
-                intent_add_post.putExtra(Constants.INTENT_HAS_PING, currentPingClicked);
+                intent_add_post.putExtra(ConstantStrings.INTENT_HAS_PING, currentPingClicked);
                 if (currentPingClicked){
-                    intent_add_post.putExtra(Constants.INTENT_PING_NUM, current_ping_num);
+                    intent_add_post.putExtra(ConstantStrings.INTENT_PING_NUM, current_ping_num);
                 }
 
                 startActivityForResult(intent_add_post, REQUEST_ADD_POST);

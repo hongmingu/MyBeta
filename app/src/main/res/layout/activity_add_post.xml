@@ -61,11 +61,13 @@
             android:paddingTop="@dimen/add_post_ll_padding_top"
             android:paddingBottom="@dimen/add_post_ll_padding_top"
             android:layout_weight="1">
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/add_post_et_padding"
                 android:hint="add text"
+                android:textColor="@color/black"
                 android:gravity="top"
                 android:backgroundTint="@color/transparent"/>
 
