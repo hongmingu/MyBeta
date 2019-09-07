@@ -58,6 +58,13 @@
     <dimen name="clearable_editttext_inner_edittext_padding_start">0dp</dimen>
 
 
+    <!--UserFragment-->
+    <dimen name="profile_fragment_hamburger_wrapper_height">48dp</dimen>
+    <dimen name="profile_fragment_hamburger_wrapper_width">52dp</dimen>
+
+    <dimen name="profile_fragment_hamburger_width">24dp</dimen>
+
+
     <!--MainActivity-->
 
 

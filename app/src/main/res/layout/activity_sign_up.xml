@@ -91,6 +91,7 @@
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/signup_ok"
             android:layout_width="@dimen/front_ok_btn_width"
             android:layout_height="@dimen/front_ok_btn_height"
             android:layout_gravity="center_horizontal"

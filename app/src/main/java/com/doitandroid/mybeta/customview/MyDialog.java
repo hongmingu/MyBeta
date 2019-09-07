@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.doitandroid.mybeta.R;
 
@@ -17,7 +18,7 @@ public class MyDialog extends Dialog {
 
     private Context context;
 
-    private TextView textView_title, textView_content, textView_positive, textView_negative;
+    private AppCompatTextView textView_title, textView_content, textView_positive, textView_negative;
 
     private String title, content, positive, negative;
 

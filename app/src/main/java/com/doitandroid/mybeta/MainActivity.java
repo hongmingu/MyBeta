@@ -1,5 +1,6 @@
 package com.doitandroid.mybeta;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,12 +24,17 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.Space;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.doitandroid.mybeta.fragment.NotiFragment;
+import com.doitandroid.mybeta.fragment.SearchFragment;
+import com.doitandroid.mybeta.fragment.UserFragment;
 import com.doitandroid.mybeta.homeping.HomePingAdapater;
 import com.doitandroid.mybeta.fragment.HomeFragment;
 import com.doitandroid.mybeta.fragment.MyFragment2;
@@ -130,12 +137,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         fragment_home = new HomeFragment();
-        fragment_notification = new MyFragment2();
-        fragment_search = new MyFragment3();
-        fragment_user = new MyFragment4();
+        fragment_notification = new NotiFragment();
+        fragment_search = new SearchFragment();
+        fragment_user = new UserFragment();
 
         fragmentManager = getSupportFragmentManager();
 
+        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_user).commit();
+        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_search).commit();
         fragmentManager.beginTransaction().add(R.id.main_frame, fragment_notification).commit();
         fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home).commit();
 
@@ -159,6 +168,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (fragment_notification != null) {
             fragmentManager.beginTransaction().hide(fragment_notification).commit();
+        }
+        if (fragment_search != null) {
+            fragmentManager.beginTransaction().hide(fragment_search).commit();
+        }
+        if (fragment_user != null) {
+            fragmentManager.beginTransaction().hide(fragment_user).commit();
         }
 
 
@@ -415,6 +430,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btn_home.setOnClickListener(this);
         btn_noti.setOnClickListener(this);
+        btn_search.setOnClickListener(this);
+        btn_user.setOnClickListener(this);
 
         // main ping ll
         main_ping_fl = findViewById(R.id.main_ping_fl);
@@ -501,8 +518,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 lottie_tb_play(lav_noti, 2.4f);
                 break;
             case "search":
+                lottie_tb_play(lav_search, 2.4f);
+
                 break;
             case "user":
+                lottie_tb_play(lav_user, 2.4f);
                 break;
             default:
                 break;
@@ -519,8 +539,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 lottie_tb_play(lav_noti, -2.4f);
                 break;
             case "search":
+                lottie_tb_play(lav_search, -2.4f);
                 break;
             case "user":
+                lottie_tb_play(lav_user, -2.4f);
+
                 break;
             default:
                 break;
@@ -540,7 +563,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
 
             case R.id.tb_fl_home:
-                home_btn_clicked();
+//                home_btn_clicked();
+                tb_btn_clicked(ConstantStrings.FRAGMENT_HOME);
+
                 pingPositionArrange();
 
                 //                HomePingItem inithomePingItem = new HomePingItem(ConstantAnimations.list.get(0), false);
@@ -559,8 +584,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.tb_fl_notification:
-                noti_btn_clicked();
+                tb_btn_clicked(ConstantStrings.FRAGMENT_NOTI);
+//                noti_btn_clicked();
                 break;
+
+            case R.id.tb_fl_user:
+                tb_btn_clicked(ConstantStrings.FRAGMENT_USER);
+//                user_btn_clicked();
+                break;
+            case R.id.tb_fl_search:
+                tb_btn_clicked(ConstantStrings.FRAGMENT_SEARCH);
+                break;
+
 
             case R.id.main_addpost: /* add post activity open */
                 Intent intent_add_post = new Intent(this, AddPostActivity.class);
@@ -594,6 +629,98 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             default:
 
         }
+    }
+
+    private void user_btn_clicked() {
+
+
+    }
+
+    private void tb_btn_clicked(String clicked) {
+        if (current_fragment.equals(clicked)) {
+            return;
+        }
+
+        lottie_tb_released_case(current_fragment);
+        lottie_tb_clicked_case(clicked);
+        // 이게 추가된 부분.
+
+        ArrayList<Fragment> fragments = null;
+
+
+        switch (clicked){
+            case ConstantStrings.FRAGMENT_HOME:
+
+                if (fragment_home == null) {
+                    fragment_home = new HomeFragment();
+                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home).commit();
+                }
+                fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment != null && fragment.isVisible()) {
+                        fragmentManager.beginTransaction().hide(fragment).commit();
+
+                    }
+                }
+                if (fragment_home != null) {
+                    fragmentManager.beginTransaction().show(fragment_home).commit();
+                }
+                break;
+            case ConstantStrings.FRAGMENT_NOTI:
+                if (fragment_notification == null) {
+                    fragment_notification = new NotiFragment();
+                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_notification).commit();
+                }
+                fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment != null && fragment.isVisible()) {
+                        fragmentManager.beginTransaction().hide(fragment).commit();
+
+                    }
+                }
+                if (fragment_notification != null) {
+                    fragmentManager.beginTransaction().show(fragment_notification).commit();
+                }
+                break;
+            case ConstantStrings.FRAGMENT_SEARCH:
+                if (fragment_search == null) {
+                    fragment_search = new SearchFragment();
+                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_search).commit();
+                }
+                fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment != null && fragment.isVisible()) {
+                        fragmentManager.beginTransaction().hide(fragment).commit();
+
+                    }
+                }
+                if (fragment_search != null) {
+                    fragmentManager.beginTransaction().show(fragment_search).commit();
+                }
+                break;
+            case ConstantStrings.FRAGMENT_USER:
+                if (fragment_user == null) {
+                    fragment_user = new UserFragment();
+                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_user).commit();
+                }
+                fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment != null && fragment.isVisible()) {
+                        fragmentManager.beginTransaction().hide(fragment).commit();
+
+                    }
+                }
+                if (fragment_user != null) {
+                    fragmentManager.beginTransaction().show(fragment_user).commit();
+                }
+                break;
+        }
+
+//        Fragment current_frag = fragmentManager.findFragmentById(R.id.main_frame);
+//        Log.d("Main_Fragment", current_frag.getClass().getSimpleName());
+//                fragmentManager.beginTransaction().hide(current_frag).commit();
+
+        current_fragment = clicked;
     }
 
     public void pingPositionArrange() {
@@ -654,6 +781,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         current_fragment = "noti";
     }
 
+    public void openSettingActivity(){
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivityForResult(intent, ConstantIntegers.REQUEST_SETTING_ACTIVITY);
+        overridePendingTransition(R.anim.slide_left_in, R.anim.stay); //
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+
+                case ConstantIntegers.REQUEST_SETTING_ACTIVITY:
+
+                    if (data.getIntExtra(ConstantStrings.INTENT_LOGOUT_INFO, ConstantIntegers.RESULT_CANCELED) == ConstantIntegers.RESULT_LOGOUTTED){
+                        //logout됨
+                        logout();
+                        Toast.makeText(this, "is logout", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        //logout 안됨
+                    }
+
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void logout() {
+
+        SharedPreferences sp = getSharedPreferences(ConstantStrings.INIT_APP, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(ConstantStrings.AUTO_LOGIN, ConstantIntegers.IS_NOT_LOGINED);
+        editor.putString(ConstantStrings.TOKEN, ConstantStrings.REMOVE_TOKEN);
+        editor.commit();
+
+        Intent intent = new Intent(this, FrontActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
+    }
+
+
     public void home_btn_clicked() {
         if (current_fragment.equals("home")) {
             return;
@@ -704,6 +878,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int pxToDp(Context context, int px){
         return px / (context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
+
+
 }
 
 

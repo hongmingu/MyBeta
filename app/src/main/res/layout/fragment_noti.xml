@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/profile_fragment_hamburger_wrapper_height">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/user_fragment_setting_btn"
+            android:layout_width="@dimen/profile_fragment_hamburger_width"
+            android:layout_height="@dimen/profile_fragment_hamburger_width"
+            android:src="@drawable/bg_darkblue_radius4dp"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <ScrollView
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/skyblue_4">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/fragment1_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="fragment home btn"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment1_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+
+    </ScrollView>
+</androidx.appcompat.widget.LinearLayoutCompat>

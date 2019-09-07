@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingActivity">
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/setting_exit"
+        android:layout_width="@dimen/front_back_wrapper_width"
+        android:layout_height="@dimen/front_back_wrapper_height"
+        android:background="@drawable/bg_white_clicked_10skyblue">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_gravity="center"
+            android:layout_width="@dimen/front_back_icon_width"
+            android:layout_height="@dimen/front_back_icon_width"
+            android:background="@drawable/ic_back_skyblue100"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/setting_logout"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:background="@color/skyblue_40"
+        android:text="LogoUt"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

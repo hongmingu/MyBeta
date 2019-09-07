@@ -18,14 +18,25 @@ import android.widget.ScrollView;
 import com.doitandroid.mybeta.customview.ClearableEditText;
 import com.doitandroid.mybeta.customview.MyDialog;
 import com.doitandroid.mybeta.customview.MyDialogListener;
+import com.doitandroid.mybeta.rest.APIInterface;
+import com.doitandroid.mybeta.rest.NotLoggedInAPIClient;
 import com.doitandroid.mybeta.utils.BackPressCloseHandler;
 import com.doitandroid.mybeta.utils.UtilsCollection;
+import com.google.gson.JsonObject;
 
-public class LoginActivity extends AppCompatActivity {
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private BackPressCloseHandler backPressCloseHandler;
     ClearableEditText login_account, login_password;
     CoordinatorLayout btn_back, btn_complete;
     ScrollView main_layout;
+    APIInterface apiInterface;
+
     Activity activity;
 
     @Override
@@ -39,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         utilsCollection.makeStatusBarColor("#cccccc");
 
         ////////////////////////////////////////////////////////////////////////////////////////////
+        apiInterface = NotLoggedInAPIClient.getClient().create(APIInterface.class);
 
         activity = this;
         main_layout = findViewById(R.id.login_layout);
@@ -48,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onGlobalLayout() {
                 int viewHeight = main_layout.getMeasuredHeight();
                 int contentHeight = main_layout.getChildAt(0).getHeight();
-                if(viewHeight - contentHeight < 0) {
+                if (viewHeight - contentHeight < 0) {
 
                     View lastChild = main_layout.getChildAt(main_layout.getChildCount() - 1);
                     int bottom = lastChild.getBottom() + main_layout.getPaddingBottom();
@@ -70,39 +82,8 @@ public class LoginActivity extends AppCompatActivity {
         login_password.setHint("password");
         login_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
-        btn_back = findViewById(R.id.login_back);
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-
-        btn_back = findViewById(R.id.login_complete);
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                SharedPreferences sp = getSharedPreferences("init_app", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putInt("auto_login", 1);
-                editor.commit();
-
-                Intent intent = new Intent(activity, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            /*intent.addFlags(
-                    Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                    Intent.FLAG_ACTIVITY_NO_HISTORY |
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                    Intent.FLAG_ACTIVITY_NEW_TASK
-            );*/
-
-
-                startActivity(intent);
-            }
-        });
+        findViewById(R.id.login_back).setOnClickListener(this);
+        findViewById(R.id.login_complete).setOnClickListener(this);
 
         backPressCloseHandler = new BackPressCloseHandler(this);
     }
@@ -111,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         String login_account_trim = login_account.getText().toString().trim();
         String login_password_raw = login_password.getText().toString();
-        if (!(login_account_trim.equals("") && login_password_raw.equals(""))){
+        if (!(login_account_trim.equals("") && login_password_raw.equals(""))) {
             MyDialog dialog = new MyDialog(this, "Go back", "Really?", "okay--", "noooo");
             dialog.setDialogListener(new MyDialogListener() {
                 @Override
@@ -136,4 +117,75 @@ public class LoginActivity extends AppCompatActivity {
         // this.finishAffinity();
 
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.login_back:
+                onBackPressed();
+
+
+                break;
+            case R.id.login_complete:
+
+                String account_str = login_account.getEditText().getText().toString().trim();
+                String password_str = login_password.getEditText().getText().toString();
+                RequestBody account = RequestBody.create(MediaType.parse("multipart/form-data"), account_str);
+                RequestBody password = RequestBody.create(MediaType.parse("multipart/form-data"), password_str);
+
+                Call<JsonObject> call = apiInterface.log_in(account, password);
+                call.enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        if (response.isSuccessful()) {
+                            JsonObject jsonObject = response.body();
+
+                            if (jsonObject != null) {
+                                Integer rc = jsonObject.get("rc").getAsInt();
+                                JsonObject content = jsonObject.get("content").getAsJsonObject();
+
+                                if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                                    // sign up 실패
+                                    call.cancel();
+                                    return;
+                                }
+                                SharedPreferences sp = getSharedPreferences(ConstantStrings.INIT_APP, MODE_PRIVATE);
+
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putInt(ConstantStrings.AUTO_LOGIN, ConstantIntegers.IS_LOGINED);
+                                editor.putString(ConstantStrings.TOKEN, content.get("token").getAsString());
+                                editor.commit();
+
+                                Intent intent = new Intent(activity, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        call.cancel();
+
+                    }
+                });
+
+                break;
+            default:
+                break;
+        }
+    }
 }
+
+/*
+    intent.addFlags(
+            Intent.FLAG_ACTIVITY_SINGLE_TOP |
+            Intent.FLAG_ACTIVITY_CLEAR_TOP |
+            Intent.FLAG_ACTIVITY_NO_HISTORY |
+            Intent.FLAG_ACTIVITY_CLEAR_TASK |
+            Intent.FLAG_ACTIVITY_NEW_TASK
+    );
+*/

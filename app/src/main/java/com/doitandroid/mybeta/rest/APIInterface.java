@@ -23,13 +23,13 @@ public interface APIInterface {
 //    Call<ArrayList<TestResource>> getTestJson(@Part MultipartBody.Part file, @Part("description") RequestBody description);
 
     @Multipart
-    @POST("/u/test_json/")
+    @POST("u/test_json/")
     Call<ArrayList<JsonObject>> getTestJson(@Part MultipartBody.Part file, @Part("description") RequestBody description, @Part("second") RequestBody second);
 
     //google의 json
 
     @Multipart
-    @POST("/u/test_token/")
+    @POST("u/test_token/")
     Call<ArrayList<JsonObject>> getTestToken(@Part("description") RequestBody description);
 
 /*
@@ -39,6 +39,18 @@ public interface APIInterface {
 */
 
     @Multipart
-    @POST("/u/test_json_dic/")
+    @POST("u/test_json_dic/")
     Call<ArrayList<JsonObject>> getTestJsonText(@Part("description") RequestBody description, @Part("title") RequestBody title);
+
+    /* Sign Up */
+    @Multipart
+    @POST("r/rest/sign_up/")
+    Call<JsonObject> sign_up(@Part("full_name") RequestBody full_name, @Part("email") RequestBody email, @Part("password") RequestBody password);
+
+    /* Log In */
+
+    @Multipart
+    @POST("r/rest/log_in/")
+    Call<JsonObject> log_in(@Part("account") RequestBody account, @Part("password") RequestBody password);
+
 }
