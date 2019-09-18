@@ -53,4 +53,14 @@ public interface APIInterface {
     @POST("r/rest/log_in/")
     Call<JsonObject> log_in(@Part("account") RequestBody account, @Part("password") RequestBody password);
 
+    /* refresh for you Pings */
+
+    @POST("r/rest/refresh_for_you_pings/")
+    Call<JsonObject> refresh_for_you_pings();
+
+    /* refresh recommend Pings */
+
+    @POST("r/rest/refresh_recommend_pings/")
+    Call<JsonObject> refresh_recommend_pings();
+
 }

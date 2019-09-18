@@ -78,32 +78,6 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-
-    <!--home ping swiping text-->
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/main_ping_swiping_text_cl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="@dimen/home_ping_swiping_text_bottom_margin"
-        android:elevation="@dimen/home_pings_swiping_text_elevation"
-        android:outlineProvider="none"
-        android:visibility="invisible"
-        android:animateLayoutChanges="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_small"
-            android:fontFamily="sans-serif"
-            android:textStyle="normal"
-            android:textColor="@color/white"
-            android:lineSpacingExtra="4sp"
-            android:text="click it to send"
-            android:background="@drawable/bg_grey_radius4dp"
-            />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
     <!--ping clicked other cover overlay-->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_whole_wrapper"
@@ -112,215 +86,243 @@
         android:elevation="@dimen/home_whole_wrapper_elevation"
         android:outlineProvider="none"
         android:visibility="invisible">
-
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/main_ping_progress_bar_cl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/home_ping_dim_wrapper_height"
-        android:elevation="@dimen/home_pings_progress_bar_elevation"
-        android:outlineProvider="none"
-        android:visibility="invisible">
-        <!--scaleY = target Height dp / 4-->
-        <ProgressBar
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/home_ping_progress_bar_height"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:max="1000"
-            android:progressBackgroundTint="@color/transparent"
-            android:scaleY="4"
-            android:progressTint="@color/green"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <!--home feed dim wrapper-->
+
+    <!--main feed dim wrapper-->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_dim_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/home_ping_dim_wrapper_height"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/skyblue_40"
         android:elevation="@dimen/home_pings_dim_elevation"
         android:outlineProvider="none"
-        android:visibility="invisible">
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="@dimen/home_ping_recent_bottom_margin"
+        android:visibility="visible">
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <HorizontalScrollView
-                android:id="@+id/main_recent_hsv"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- dim wrapper -->
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none">
+                android:background="@color/skyblue_40">
 
-                <LinearLayout
-                    android:id="@+id/main_recent_hsv_ll"
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <Space
-                        android:id="@+id/space_recent_1"
-                        android:layout_width="@dimen/home_ping_recent_space"
-                        android:layout_height="match_parent" />
-                    <Space
-                        android:id="@+id/space_recent_2"
-                        android:layout_width="@dimen/home_ping_recent_space"
-                        android:layout_height="match_parent" />
+                    android:orientation="vertical">
 
-                </LinearLayout>
+                    <androidx.coordinatorlayout.widget.CoordinatorLayout
+                        android:id="@+id/main_dim_wrapper_search_cl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:gravity="center_vertical"
+                                android:paddingStart="@dimen/home_ping_search_text_margin_start"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:textSize="@dimen/text_normal"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="@color/darkblue"
+                                android:lineSpacingExtra="5sp"
+                                android:text="search more pings"
+                                android:background="@drawable/bg_white_border_topbottom_darkblue"/>
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_alignParentEnd="true"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:background="@color/darkblue"/>
 
-            </HorizontalScrollView>
+                        </RelativeLayout>
+                    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    <!-- progress bar -->
+                    <androidx.coordinatorlayout.widget.CoordinatorLayout
+                        android:id="@+id/main_ping_progress_bar_cl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:elevation="@dimen/home_pings_progress_bar_elevation"
+                        android:outlineProvider="none"
+                        android:visibility="visible">
+                        <!--scaleY = target Height dp / 4-->
+                        <ProgressBar
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/home_ping_progress_bar_height"
+                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                            android:max="1000"
+                            android:progress="600"
+                            android:progressBackgroundTint="@color/transparent"
+                            android:scaleY="4"
+                            android:progressTint="@color/darkblue"/>
+                    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    <androidx.coordinatorlayout.widget.CoordinatorLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:paddingStart="@dimen/default12"
+                        android:paddingEnd="@dimen/default12">
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <Space
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/default8" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_small"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="@color/black_40"
+                                android:lineSpacingExtra="4sp"
+                                android:text="long press icon to ping it"/>
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    <androidx.coordinatorlayout.widget.CoordinatorLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:paddingStart="@dimen/default12"
+                        android:paddingEnd="@dimen/default12">
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <Space
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/default8" />
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_normal"
+                                android:fontFamily="sans-serif"
+                                android:textStyle="normal"
+                                android:textColor="@color/darkblue"
+                                android:lineSpacingExtra="5sp"
+                                android:lines="2"
+                                android:text="안녕하세요 오늘은 날씨가 좋군요. \n 이 밤 그날의 반딧불을 떠올려"
+                                />
+                            <Space
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/default12" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    <!-- recent pings -->
+                    <androidx.coordinatorlayout.widget.CoordinatorLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:paddingStart="@dimen/default12"
+                        android:paddingEnd="@dimen/default12">
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_normal"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="@color/black"
+                                android:lineSpacingExtra="5sp"
+                                android:text="RECOMMEND"/>
+                            <Space
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/default12" />
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:id="@+id/main_ping_recommend_ll"
+                                android:gravity="center_horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="56dp"
+                                android:orientation="horizontal">
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+                            <Space
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/default12" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+                    <androidx.coordinatorlayout.widget.CoordinatorLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:paddingStart="@dimen/default12"
+                        android:paddingEnd="@dimen/default12">
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_normal"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="normal"
+                                android:textColor="@color/black"
+                                android:lineSpacingExtra="5sp"
+                                android:text="FOR YOU"/>
+                            <Space
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/home_for_you_space_bottom" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/home_ping_recent_text_bottom_margin"
-            android:layout_marginStart="@dimen/home_ping_recent_start_margin"
-            android:layout_gravity="start|bottom"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_normal"
-                android:fontFamily="sans-serif-medium"
-                android:textStyle="normal"
-                android:textColor="@color/black"
-                android:lineSpacingExtra="5sp"
-                android:text="RECENT"
-                />
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
-        <!-- ping dim wrapper search bar -->
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/main_dim_wrapper_search_cl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/home_ping_search_top_margin"
-            >
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_gravity="center_horizontal"
-                android:layout_width="@dimen/home_ping_search_width"
-                android:layout_height="@dimen/home_ping_search_height"
-                android:background="@drawable/bg_white_radius4dp"/>
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="@dimen/home_ping_search_icon_margin_end"
-                android:layout_width="@dimen/home_ping_search_icon_width"
-                android:layout_height="@dimen/home_ping_search_icon_width"
-                android:src="@drawable/bg_darkblue_radius4dp"/>
-
-            <TextView
-                android:layout_gravity="center_vertical|start"
-                android:layout_marginStart="@dimen/home_ping_search_text_margin_start"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_normal"
-                android:fontFamily="sans-serif"
-                android:textStyle="normal"
-                android:textColor="@color/darkblue"
-                android:lineSpacingExtra="5sp"
-                android:text="search"
-                />
-
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="@dimen/home_ping_one_more_click_bottom_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_small"
-                android:fontFamily="sans-serif"
-                android:textStyle="normal"
-                android:textColor="@color/black_40"
-                android:lineSpacingExtra="4sp"
-                android:text="one more click to ping it"/>
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_gravity="top|center_horizontal"
-            android:layout_marginTop="@dimen/home_ping_selected_top_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/home_ping_selected_height"
-            android:paddingStart="@dimen/home_ping_selected_side_padding"
-            android:paddingEnd="@dimen/home_ping_selected_side_padding">
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/main_ping_tv"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_normal"
-                android:fontFamily="sans-serif"
-                android:textStyle="normal"
-                android:textColor="@color/white"
-                android:lineSpacingExtra="5sp"
-                android:text=""
-                android:padding="4dp"
-                android:background="@drawable/bg_green_radius4dp"
-                />
-
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@color/green"
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="@dimen/home_ping_instant_send_btn_margin_bottom"
-            android:layout_marginEnd="@dimen/home_ping_instant_send_btn_margin_end">
-            <com.airbnb.lottie.LottieAnimationView
-                android:layout_width="@dimen/home_ping_instant_send_btn_width"
-                android:layout_height="@dimen/home_ping_instant_send_btn_width"
-                app:lottie_rawRes="@raw/icon_home"/>
+            android:layout_marginBottom="22dp"
+            android:layout_marginEnd="24dp">
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <!--home pings-->
+    <!--home default pings-->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_ping_fl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="@dimen/home_ping_bottom_margin"
+
+        android:paddingStart="@dimen/default12"
+        android:paddingEnd="@dimen/default12"
+
         android:elevation="@dimen/home_pings_elevation"
         android:outlineProvider="none">
-        <HorizontalScrollView
-            android:id="@+id/main_hsv"
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/main_ping_for_you_ll"
+            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none">
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/main_hsv_ll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Space
-                    android:id="@+id/space_1"
-                    android:layout_width="@dimen/home_ping_line_space"
-                    android:layout_height="match_parent" />
-                <Space
-                    android:id="@+id/space_2"
-                    android:layout_width="@dimen/home_ping_line_space"
-                    android:layout_height="match_parent" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-            </LinearLayout>
-
-        </HorizontalScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <!--home feed fragment frame-->

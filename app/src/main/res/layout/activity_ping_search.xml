@@ -4,7 +4,115 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PingSearchActivity">
+    tools:context=".PingSearchActivity"
+    android:background="@color/white">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_white_border_skyblue"/>
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_alignParentEnd="true"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@color/skyblue"/>
+
+                </RelativeLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+            <!-- progress bar -->
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/main_ping_progress_bar_cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/home_pings_progress_bar_elevation"
+                android:outlineProvider="none"
+                android:visibility="visible">
+                <!--scaleY = target Height dp / 4-->
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/home_ping_progress_bar_height"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:max="1000"
+                    android:progress="600"
+                    android:progressBackgroundTint="@color/transparent"
+                    android:scaleY="4"
+                    android:progressTint="@color/darkblue"/>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:paddingStart="@dimen/default12"
+                android:paddingEnd="@dimen/default12">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/default8" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_small"
+                        android:fontFamily="sans-serif"
+                        android:textStyle="normal"
+                        android:textColor="@color/black_40"
+                        android:lineSpacingExtra="4sp"
+                        android:text="long press icon to ping it"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:paddingStart="@dimen/default12"
+                android:paddingEnd="@dimen/default12">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/default8" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_normal"
+                        android:fontFamily="sans-serif"
+                        android:textStyle="normal"
+                        android:textColor="@color/darkblue"
+                        android:lineSpacingExtra="5sp"
+                        android:lines="2"
+                        android:text="안녕하세요 오늘은 날씨가 좋군요. \n 이 밤 그날의 반딧불을 떠올려"
+                        />
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/default12" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <!--add post btn-->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -23,4 +131,11 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_gravity="bottom"
+        android:elevation="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

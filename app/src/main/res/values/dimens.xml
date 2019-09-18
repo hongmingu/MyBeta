@@ -75,20 +75,23 @@
     <dimen name="home_add_post_margin_bottom">16dp</dimen>
 
     <!--ping long click progress bar-->
-    <dimen name="home_ping_progress_bar_height">16dp</dimen>
+    <dimen name="home_ping_progress_bar_height">8dp</dimen>
     <dimen name="home_ping_progress_bar_max">16dp</dimen>
 
     <!--home ping-->
-    <dimen name="home_ping_width">40dp</dimen>
-    <dimen name="home_ping_under_space">4dp</dimen>
-    <dimen name="home_ping_under_bar_width">24dp</dimen>
+    <dimen name="home_for_you_space_bottom">148dp</dimen>
+
+
+    <dimen name="home_ping_width">44dp</dimen>
+    <dimen name="home_ping_under_space">8dp</dimen>
+    <dimen name="home_ping_under_bar_width">32dp</dimen>
     <dimen name="home_ping_under_bar_height">4dp</dimen>
     <dimen name="home_ping_under_bar_radius">4dp</dimen>
     <dimen name="home_ping_search_height">24dp</dimen>
     <dimen name="home_ping_search_width">336dp</dimen>
     <dimen name="home_ping_search_icon_width">24dp</dimen>
     <dimen name="home_ping_search_icon_margin_end">12dp</dimen>
-    <dimen name="home_ping_search_text_margin_start">20dp</dimen>
+    <dimen name="home_ping_search_text_margin_start">12dp</dimen>
 
 
     <dimen name="home_ping_line_space">96dp</dimen>
@@ -155,5 +158,12 @@
 
     <dimen name="home_pings_elevation">30dp</dimen>
     <dimen name="home_add_post_elevation">30dp</dimen>
+
+    <!-- default dp -->
+    <dimen name="default16">16dp</dimen>
+    <dimen name="default12">12dp</dimen>
+    <dimen name="default8">8dp</dimen>
+    <dimen name="default6">6dp</dimen>
+    <dimen name="default4">4dp</dimen>
 
 </resources>

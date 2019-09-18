@@ -2,6 +2,11 @@ package com.doitandroid.mybeta.rest;
 
 
 
+import android.content.SharedPreferences;
+
+import com.doitandroid.mybeta.ConstantIntegers;
+import com.doitandroid.mybeta.ConstantStrings;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -17,15 +22,15 @@ public class LoggedInAPIClient {
     private static Retrofit retrofit;
     private static String base_url = ConstantREST.URL_HOME;
 
-    public static Retrofit getClient() {
+    public static Retrofit getClient(final String token) {
 
         Interceptor token_interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                String token = "Token 513ac4bc0a81418ff70794452e55ae63ef0e6b06";
+                String auth_token = "Token "+ token ;
 
                 Request request;
-                request = chain.request().newBuilder().addHeader("Authorization", token).build();
+                request = chain.request().newBuilder().addHeader("Authorization", auth_token).build();
 
                 return chain.proceed(request);
             }

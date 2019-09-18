@@ -1,41 +1,41 @@
 package com.doitandroid.mybeta;
 
 public class PingItem {
-    String PingID;
-    String PingText;
-    Integer PingRes;
+    String pingID;
+    String pingText;
+    Integer pingRes;
 
     public PingItem(String pingID, String pingText, Integer pingRes) {
-        PingID = pingID;
-        PingText = pingText;
-        PingRes = pingRes;
+        this.pingID = pingID;
+        this.pingText = pingText;
+        this.pingRes = pingRes;
     }
 
     public String getPingID() {
-        return PingID;
+        return pingID;
     }
 
     public void setPingID(String pingID) {
-        PingID = pingID;
+        this.pingID = pingID;
     }
 
     public String getPingText() {
-        return PingText;
+        return pingText;
     }
 
     public void setPingText(String pingText) {
-        PingText = pingText;
+        this.pingText = pingText;
     }
 
     public Integer getPingRes() {
-        return PingRes;
+        return pingRes;
     }
 
     public void setPingRes(Integer pingRes) {
-        PingRes = pingRes;
+        this.pingRes = pingRes;
     }
 
     public Boolean testID(String testID){
-        return PingID.equals(testID);
+        return pingID.equals(testID);
     }
 }

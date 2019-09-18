@@ -46,12 +46,12 @@ public class HomeFragment extends Fragment {
         final Activity activity = (MainActivity)getActivity();
         // 그리드뷰로 만든다.
         Button button = rootView.findViewById(R.id.fragment1_btn);
-        button.setOnClickListener(new View.OnClickListener() {
+        /*button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((MainActivity) activity).noti_btn_clicked();
             }
-        });
+        });*/
 
         RecyclerView recyclerView = rootView.findViewById(R.id.fragment1_recyclerview);
 

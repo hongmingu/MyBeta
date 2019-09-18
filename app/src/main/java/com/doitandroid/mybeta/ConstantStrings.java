@@ -30,4 +30,10 @@ public class ConstantStrings {
     public static final String INTENT_PING_NUM = "ping_num";
 
     public static final String INTENT_LOGOUT_INFO = "logout";
+
+
+    /* view TAG */
+
+    public static final String TAG_WIDE_VISIBLE = "tag_wide_visible";
+
 }
