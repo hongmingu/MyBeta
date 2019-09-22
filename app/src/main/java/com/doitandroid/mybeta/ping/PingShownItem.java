@@ -1,6 +1,7 @@
 package com.doitandroid.mybeta.ping;
 
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -64,6 +65,14 @@ public class PingShownItem {
 
     public Integer getResInteger() {
         return resInteger;
+    }
+
+    public String getPingText() {
+        return pingText;
+    }
+
+    public String getPingID() {
+        return pingID;
     }
 
 }

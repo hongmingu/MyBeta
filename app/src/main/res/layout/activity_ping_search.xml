@@ -16,25 +16,37 @@
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <RelativeLayout
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:background="@drawable/bg_white_border_skyblue"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="48dp"
+                        android:layout_width="52dp"
                         android:layout_height="48dp"
-                        android:background="@color/skyblue"/>
+                        android:background="@color/green"/>
 
-                </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_white_border_skyblue"/>
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@color/skyblue"/>
+
+                    </RelativeLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
             <!-- progress bar -->
             <androidx.coordinatorlayout.widget.CoordinatorLayout
-                android:id="@+id/main_ping_progress_bar_cl"
+                android:id="@+id/home_ping_progress_bar_cl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="@dimen/home_pings_progress_bar_elevation"
@@ -106,6 +118,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/default12" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/search_ping_ll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+                </ScrollView>
+
+
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
@@ -128,6 +153,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ic_add_post" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@color/green"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="22dp"
+        android:layout_marginEnd="24dp"
+        android:elevation="30dp"
+        android:outlineProvider="none">
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

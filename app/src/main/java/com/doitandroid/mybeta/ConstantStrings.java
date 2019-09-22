@@ -26,8 +26,12 @@ public class ConstantStrings {
 
 
     /* intent */
+    public static final String INTENT_REQUEST_CODE = "request_code";
+    public static final String INTENT_NO_PING = "no_ping";
+
     public static final String INTENT_HAS_PING = "has_ping";
     public static final String INTENT_PING_NUM = "ping_num";
+    public static final String INTENT_PING_SHOWN_ITEM_ID = "ping_to_send";
 
     public static final String INTENT_LOGOUT_INFO = "logout";
 

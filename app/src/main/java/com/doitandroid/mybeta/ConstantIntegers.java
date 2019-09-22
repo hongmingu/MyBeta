@@ -20,11 +20,14 @@ public final class ConstantIntegers {
 
     /* request codes */
 
-    public final static int REQUEST_SETTING_ACTIVITY= 200;
+    public final static int REQUEST_SETTING_ACTIVITY= 300;
+    public final static int REQUEST_ADD_POST = 301;
 
     /* result codes */
 
-    public final static int RESULT_LOGOUTTED= 200;
+    public final static int RESULT_SUCCESS = 200;
+
+    public final static int RESULT_LOGOUTTED= 400;
     public final static int RESULT_CANCELED= 404;
 
 

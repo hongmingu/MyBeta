@@ -80,7 +80,7 @@
 
     <!--ping clicked other cover overlay-->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/main_whole_wrapper"
+        android:id="@+id/home_overlay_wrapper_cl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="@dimen/home_whole_wrapper_elevation"
@@ -91,7 +91,7 @@
 
     <!--main feed dim wrapper-->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/main_dim_wrapper"
+        android:id="@+id/home_ping_dim_wrapper_cl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -103,7 +103,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- dim wrapper -->
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -143,7 +142,6 @@
                     </androidx.coordinatorlayout.widget.CoordinatorLayout>
                     <!-- progress bar -->
                     <androidx.coordinatorlayout.widget.CoordinatorLayout
-                        android:id="@+id/main_ping_progress_bar_cl"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:elevation="@dimen/home_pings_progress_bar_elevation"
@@ -201,6 +199,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/default8" />
                             <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/home_ping_preview_tv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="@dimen/text_normal"
@@ -209,7 +208,6 @@
                                 android:textColor="@color/darkblue"
                                 android:lineSpacingExtra="5sp"
                                 android:lines="2"
-                                android:text="안녕하세요 오늘은 날씨가 좋군요. \n 이 밤 그날의 반딧불을 떠올려"
                                 />
                             <Space
                                 android:layout_width="match_parent"
@@ -287,6 +285,7 @@
 
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/home_ping_instant_send_btn"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:background="@color/green"
