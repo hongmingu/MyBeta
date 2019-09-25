@@ -63,4 +63,9 @@ public interface APIInterface {
     @POST("r/rest/refresh_recommend_pings/")
     Call<JsonObject> refresh_recommend_pings();
 
+    /* refresh search content pings */
+
+    @POST("r/rest/refresh_search_content_pings/")
+    Call<JsonObject> refresh_search_content_pings();
+
 }

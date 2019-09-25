@@ -104,6 +104,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/default8" />
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/ping_search_preview_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_normal"
@@ -112,24 +113,24 @@
                         android:textColor="@color/darkblue"
                         android:lineSpacingExtra="5sp"
                         android:lines="2"
-                        android:text="안녕하세요 오늘은 날씨가 좋군요. \n 이 밤 그날의 반딧불을 떠올려"
-                        />
+                        android:text="안녕하세요 오늘은 날씨가 좋군요. \n 이 밤 그날의 반딧불을 떠올려"/>
                     <Space
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/default12" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:id="@+id/search_ping_ll"
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content">
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/ping_search_ll"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-                </ScrollView>
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </ScrollView>
 
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

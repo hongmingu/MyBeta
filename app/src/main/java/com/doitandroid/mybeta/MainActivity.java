@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         for (final PingShownItem pingShownItem : recommendPingShownItemArrayList) {
 
                             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                            View view = inflater.inflate(R.layout.home_ping_recyclerview_item, main_ping_recommend_ll, false);
+                            View view = inflater.inflate(R.layout.ping_recyclerview_item, main_ping_recommend_ll, false);
                             pingShownItem.setView(view);
                             pingShownItem.getLottieAnimationView().setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -338,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         for (final PingShownItem pingShownItem : forYouPingShownItemArrayList) {
 
                             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                            View view = inflater.inflate(R.layout.home_ping_recyclerview_item, main_ping_for_you_ll, false);
+                            View view = inflater.inflate(R.layout.ping_recyclerview_item, main_ping_for_you_ll, false);
                             pingShownItem.setView(view);
                             pingShownItem.getLottieAnimationView().setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -813,7 +813,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
  * for (final HomePingItem addItem: homePingItemArrayList){
  * <p>
  * LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
- * View view = inflater.inflate(R.layout.home_ping_recyclerview_item, main_ping_for_you_ll, false);
+ * View view = inflater.inflate(R.layout.ping_recyclerview_item, main_ping_for_you_ll, false);
  * <p>
  * addItem.setView(view);
  * <p>
