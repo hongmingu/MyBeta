@@ -61,7 +61,8 @@ public class PingSearchActivity extends AppCompatActivity {
 
         refreshSearchContentPings();
     }
-    private void refreshSearchContentPings(){
+
+    private void refreshSearchContentPings() {
         Call<JsonObject> call = apiInterface.refresh_search_content_pings();
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -78,81 +79,111 @@ public class PingSearchActivity extends AppCompatActivity {
 
                         JsonArray contentArray = jsonObject.get("content").getAsJsonArray();
 
-                        for (JsonElement jsonElement: contentArray){
+                        for (JsonElement jsonElement : contentArray) {
                             JsonObject item = jsonElement.getAsJsonObject();
                             String optName = item.get("opt").toString();
 
-                            LinearLayoutCompat linearLayoutCompat = new LinearLayoutCompat(context);
+                            LinearLayoutCompat upLinearLayoutCompat = new LinearLayoutCompat(context);
                             LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            linearLayoutCompat.setOrientation(LinearLayoutCompat.VERTICAL);
-                            linearLayoutCompat.setLayoutParams(params);
+                            upLinearLayoutCompat.setOrientation(LinearLayoutCompat.VERTICAL);
+                            upLinearLayoutCompat.setLayoutParams(params);
 
                             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                            View view = inflater.inflate(R.layout.opt_text_item, linearLayoutCompat, false);
+                            View view = inflater.inflate(R.layout.opt_text_item, upLinearLayoutCompat, false);
                             AppCompatTextView opt_tv = view.findViewById(R.id.opt_text_item_tv);
                             opt_tv.setText(optName);
 
                             //opt tv 넣고
-                            linearLayoutCompat.addView(view);
+                            upLinearLayoutCompat.addView(view);
 
                             JsonArray pingArray = item.getAsJsonArray("pings");
+                            int pingArraySize = pingArray.size();
+                            for (int i = 0; i < (5 - (pingArraySize % 5)) % 5; i++) {
+                                pingArray.add("nonePing");
+                                Log.d(TAG, "pingArray by: "+ (5 - (pingArray.size() % 5))% 5);
+
+                            }
+                            Log.d(TAG, "pingArray: "+ pingArray.toString());
 
                             ArrayList<LinearLayoutCompat> linearLayoutCompatArrayList = new ArrayList<>();
                             int pingIndex = 0;
 
-                            for (JsonElement pingJsonElement: pingArray){
+                            for (JsonElement pingJsonElement : pingArray) {
                                 String gotPingID = pingJsonElement.getAsString();
                                 List<PingItem> pingConstant = ConstantAnimations.pingList;
                                 // Constant 리스트에서 정보를 파악함.
-                                pingIndex ++;
-                                if ((pingIndex - 1)%5 == 0){
+                                pingIndex++;
+                                if ((pingIndex - 1) % 5 == 0) {
                                     LinearLayoutCompat pingLinearLayout = new LinearLayoutCompat(context);
 
-                                    Log.d(TAG, pingIndex+" here");
+                                    Log.d(TAG, pingIndex + " here");
                                     LinearLayoutCompat.LayoutParams pingLayoutParams = new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                     pingLinearLayout.setLayoutParams(pingLayoutParams);
                                     pingLinearLayout.setOrientation(LinearLayoutCompat.HORIZONTAL);
                                     pingLinearLayout.setGravity(Gravity.CENTER_HORIZONTAL);
                                     linearLayoutCompatArrayList.add(pingLinearLayout);
                                 }
-                                for (PingItem pingItem : pingConstant) {
-                                    Log.d(TAG, pingIndex+"");
 
-                                    if (pingItem.getPingID().equals(gotPingID)) {
-                                        final PingShownItem pingShownItem = new PingShownItem(gotPingID);
+                                if (gotPingID.equals("nonePing")){
+                                    LinearLayoutCompat gotLayout = linearLayoutCompatArrayList.get(linearLayoutCompatArrayList.size() - 1);
+                                    Space fakePing = new Space(getApplicationContext());
+                                    fakePing.setLayoutParams(new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.home_ping_width), getResources().getDimensionPixelSize(R.dimen.home_ping_width)));
+                                    gotLayout.addView(fakePing);
+                                    if (pingIndex % 5 != 0) {
+                                        Space space = new Space(getApplicationContext());
+                                        space.setLayoutParams(new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.home_ping_space), ViewGroup.LayoutParams.MATCH_PARENT));
+                                        gotLayout.addView(space);
+                                    }
+                                } else {
+                                    for (PingItem pingItem : pingConstant) {
+                                        Log.d(TAG, pingIndex + "");
 
-                                        allPingShownItemArrayList.add(pingShownItem);
-                                        Log.d(TAG, pingIndex+" and size: " + (linearLayoutCompatArrayList.size() - 1));
 
-                                        LinearLayoutCompat gotLayout = linearLayoutCompatArrayList.get(linearLayoutCompatArrayList.size() - 1);
-                                        LayoutInflater pingInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                                        View pingView = pingInflater.inflate(R.layout.ping_recyclerview_item, gotLayout, false);
+                                        if (pingItem.getPingID().equals(gotPingID)) {
+                                            final PingShownItem pingShownItem = new PingShownItem(gotPingID);
 
-                                        pingShownItem.setView(pingView);
-                                        pingShownItem.getLottieAnimationView().setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                removeAllClicked();
-                                                pingShownItem.setIsClicked(true);
-                                                pingShownItem.playAnimation();
-                                                ping_search_preview_tv.setText(pingShownItem.getPingText());
-                                                currentPingShownItem = pingShownItem;
+                                            allPingShownItemArrayList.add(pingShownItem);
+                                            Log.d(TAG, pingIndex + " and size: " + (linearLayoutCompatArrayList.size() - 1));
+
+                                            LinearLayoutCompat gotLayout = linearLayoutCompatArrayList.get(linearLayoutCompatArrayList.size() - 1);
+                                            LayoutInflater pingInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                            View pingView = pingInflater.inflate(R.layout.ping_recyclerview_item, gotLayout, false);
+
+                                            pingShownItem.setView(pingView);
+                                            pingShownItem.getLottieAnimationView().setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    removeAllClicked();
+                                                    pingShownItem.setIsClicked(true);
+                                                    pingShownItem.playAnimation();
+                                                    ping_search_preview_tv.setText(pingShownItem.getPingText());
+                                                    currentPingShownItem = pingShownItem;
+                                                }
+                                            });
+
+                                            gotLayout.addView(pingView);
+
+                                            if (pingIndex % 5 != 0) {
+                                                Space space = new Space(getApplicationContext());
+                                                space.setLayoutParams(new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.home_ping_space), ViewGroup.LayoutParams.MATCH_PARENT));
+                                                gotLayout.addView(space);
                                             }
-                                        });
-
-                                        gotLayout.addView(pingView);
-                                        gotLayout.setOrientation(LinearLayoutCompat.HORIZONTAL);
 
 
-
+                                        }
                                     }
                                 }
+
+
                             }
-                            for (LinearLayoutCompat linearLayoutItem: linearLayoutCompatArrayList){
-                                linearLayoutCompat.addView(linearLayoutItem);
+                            for (LinearLayoutCompat linearLayoutItem : linearLayoutCompatArrayList) {
+                                upLinearLayoutCompat.addView(linearLayoutItem);
+                                Space space = new Space(getApplicationContext());
+                                space.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.default12)));
+                                upLinearLayoutCompat.addView(space);
                             }
 
-                            ping_search_ll.addView(linearLayoutCompat);
+                            ping_search_ll.addView(upLinearLayoutCompat);
 
                         }
 
@@ -186,7 +217,7 @@ public class PingSearchActivity extends AppCompatActivity {
         utilsCollection.makeStatusBarColor(ConstantStrings.TRAY_COLOR);
     }
 
-    private APIInterface getApiInterface(){
+    private APIInterface getApiInterface() {
         SharedPreferences sp = getSharedPreferences(ConstantStrings.INIT_APP, MODE_PRIVATE);
         String auth_token = sp.getString(ConstantStrings.TOKEN, ConstantStrings.REMOVE_TOKEN);
         APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
@@ -195,7 +226,7 @@ public class PingSearchActivity extends AppCompatActivity {
 
 
     public void removeAllClicked() {
-        for (PingShownItem item: allPingShownItemArrayList){
+        for (PingShownItem item : allPingShownItemArrayList) {
             item.setIsClicked(false);
         }
     }
