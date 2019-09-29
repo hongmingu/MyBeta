@@ -30,6 +30,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/ping_search_et"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
                             android:background="@drawable/bg_white_border_skyblue"/>

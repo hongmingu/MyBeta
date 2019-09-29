@@ -1,20 +1,25 @@
 package com.doitandroid.mybeta;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Space;
+import android.widget.Toast;
 
 import com.doitandroid.mybeta.ping.PingShownItem;
 import com.doitandroid.mybeta.rest.APIInterface;
@@ -31,7 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PingSearchActivity extends AppCompatActivity {
+public class PingSearchActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
 
     final static private String TAG = "PingSearchAtyTAG";
     APIInterface apiInterface;
@@ -42,8 +47,9 @@ public class PingSearchActivity extends AppCompatActivity {
     Context context;
 
     AppCompatTextView ping_search_preview_tv;
-    PingShownItem currentPingShownItem;
+    AppCompatEditText ping_search_et;
 
+    PingShownItem currentPingShownItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,9 @@ public class PingSearchActivity extends AppCompatActivity {
         ping_search_preview_tv = findViewById(R.id.ping_search_preview_tv);
 
         allPingShownItemArrayList = new ArrayList<>();
+
+        ping_search_et = findViewById(R.id.ping_search_et);
+        ping_search_et.setOnKeyListener(this);
 
         refreshSearchContentPings();
     }
@@ -203,6 +212,46 @@ public class PingSearchActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+
+        /*switch (requestCode) {
+
+            case ConstantIntegers.REQUEST_SETTING_ACTIVITY:
+                switch (resultCode){
+                    case ConstantIntegers.RESULT_SUCCESS:
+                        break;
+                    default:
+                        break;
+                }
+
+                if (data.getIntExtra(ConstantStrings.INTENT_LOGOUT_INFO, ConstantIntegers.RESULT_CANCELED) == ConstantIntegers.RESULT_LOGOUTTED) {
+                    //logout됨
+                    logout();
+                    Toast.makeText(this, "is logout", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    //logout 안됨
+                }
+
+
+                break;
+            default:
+                break;
+        }*/
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+
+                case ConstantIntegers.REQUEST_SETTING_ACTIVITY:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
 
     @Override
     public void finish() {
@@ -230,4 +279,47 @@ public class PingSearchActivity extends AppCompatActivity {
             item.setIsClicked(false);
         }
     }
+
+    public void openSearchResultActivity(String search_word){
+        String trimmed_search_word = search_word.trim();
+        Intent search_result_intent = new Intent(this, PingSearchResultActivity.class);
+        search_result_intent.putExtra(ConstantStrings.INTENT_PING_SEARCH_WORD, trimmed_search_word);
+        startActivityForResult(search_result_intent, ConstantIntegers.REQUEST_SEARCH_RESULT);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        switch (v.getId()){
+            case R.id.ping_search_et:
+                if (event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    switch (keyCode)
+                    {
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+
+                            openSearchResultActivity(ping_search_et.getEditableText().toString());
+                            Toast.makeText(getApplicationContext(), "enter", Toast.LENGTH_SHORT).show();
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        return false;
+    }
+
+
 }

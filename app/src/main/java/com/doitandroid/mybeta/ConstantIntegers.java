@@ -22,6 +22,7 @@ public final class ConstantIntegers {
 
     public final static int REQUEST_SETTING_ACTIVITY= 300;
     public final static int REQUEST_ADD_POST = 301;
+    public final static int REQUEST_SEARCH_RESULT = 302;
 
     /* result codes */
 

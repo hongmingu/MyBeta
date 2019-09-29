@@ -33,6 +33,8 @@ public class ConstantStrings {
     public static final String INTENT_PING_NUM = "ping_num";
     public static final String INTENT_PING_SHOWN_ITEM_ID = "ping_to_send";
 
+    public static final String INTENT_PING_SEARCH_WORD = "ping_search_word";
+
     public static final String INTENT_LOGOUT_INFO = "logout";
 
 
