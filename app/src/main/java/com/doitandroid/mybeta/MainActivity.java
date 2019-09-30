@@ -14,6 +14,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,10 +24,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Space;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.doitandroid.mybeta.customview.MyDialog;
+import com.doitandroid.mybeta.customview.MyDialogListener;
 import com.doitandroid.mybeta.fragment.NotiFragment;
 import com.doitandroid.mybeta.fragment.SearchFragment;
 import com.doitandroid.mybeta.fragment.UserFragment;
@@ -42,6 +47,8 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     CoordinatorLayout main_ping_fl, main_ping_swiping_text_cl, home_overlay_wrapper_cl, home_ping_dim_wrapper_cl, main_ping_progress_bar_cl, main_ping_search;
 
     LottieAnimationView lav_home, lav_noti, lav_search, lav_user;
+
+    ProgressBar home_ping_dim_wrapper_pb;
+    ProgressThread progressThread;
 
     androidx.fragment.app.Fragment fragment_home;
     androidx.fragment.app.Fragment fragment_notification;
@@ -361,11 +371,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         // 처음 누를 때
                                         Log.d(TAG, "ACTION_DOWN");
                                         currentPingIsPressed = true;
+
+                                        progressThread = new ProgressThread();
+                                        if (pingShownItem.getIsClicked()){
+                                            progressThread.start();
+                                        }
                                     } else if (event.getAction() == event.ACTION_MOVE){
                                         // 움직일 떄
                                     } else if (event.getAction() == event.ACTION_UP){
                                         // 떨어질 때
                                         currentPingIsPressed = false;
+
+                                        if (progressThread != null){
+                                            progressThread.stopThread();
+
+                                        }
+                                        progressThread = null;
                                     }
 
                                     return false;
@@ -468,6 +489,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         home_overlay_wrapper_cl.setOnClickListener(this);
         home_ping_dim_wrapper_cl.setOnClickListener(this);
+
+
+        home_ping_dim_wrapper_pb = findViewById(R.id.home_ping_dim_wrapper_pb);
 
 
 //        rv_ping = findViewById(R.id.main_ping_rv);
@@ -784,7 +808,151 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return px / (context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
+    public void sendInstantPing(String pingID){
 
+        final MyDialog dialog = new MyDialog(this, "뒤로가기", "작업중인 내용이 있다", "뒤로갈래잉", "안갈래잉");
+        dialog.setDialogListener(new MyDialogListener() {
+            @Override
+            public void onPositiveClicked() {
+            }
+
+            @Override
+            public void onNegativeClicked() {
+
+            }
+        });
+        dialog.show();
+
+
+        RequestBody requestPingID = RequestBody.create(MediaType.parse("multipart/form-data"), pingID);
+
+        Call<JsonObject> call = apiInterface.send_instant_ping(requestPingID);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject jsonObject = response.body();
+                    if (jsonObject != null) {
+                        int rc = jsonObject.get("rc").getAsInt();
+                        String content = jsonObject.get("content").getAsString();
+
+                        if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                            // sign up 실패
+                            call.cancel();
+                            return;
+                        }
+
+                        // 접속 성공.
+
+                    }
+
+                }
+
+                dialog.dismiss();
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                call.cancel();
+
+            }
+        });
+
+
+    }
+
+
+
+    class ProgressThread extends Thread {
+
+        boolean stopped;
+        int i = 0;
+
+        public ProgressThread() {
+            this.stopped = false;
+        }
+
+        public void stopThread() {
+            Message message = progressHandler.obtainMessage();
+//                 메시지 ID 설정
+            message.what = ConstantIntegers.STOP_PROGRESS;
+//                 메시지 내용 설정
+//
+            progressHandler.sendMessage(message);
+            this.stopped = true;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+
+            while (stopped == false) {
+                i++;
+                if(i >= 1001){
+                    stopThread();
+                    Message message = sendPingHandler.obtainMessage();
+                    message.what = ConstantIntegers.SEND_INSTANT_PING;
+                    sendPingHandler.sendMessage(message);
+                    return;
+                }
+//                 메시지 얻어오기
+                Message message = progressHandler.obtainMessage();
+//                 메시지 ID 설정
+                message.what = ConstantIntegers.SEND_PROGRESS;
+//                 메시지 내용 설정
+                message.arg1 = i;
+//                 메시지 내용 설정
+                String information = i + " x 100 밀리초 째 Thread 동작 중입니다.";
+                message.obj = information;
+//                 메시지 전달
+                progressHandler.sendMessage(message);
+                try {
+//                 1초 씩 딜레이 부여 1초: 1000millis
+                    sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        }
+    }
+
+    public Handler progressHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case ConstantIntegers.TOUCH_DOWN:
+                    Toast.makeText(getApplicationContext(), "Touch down", Toast.LENGTH_SHORT).show();
+                    //원하는 기능
+                    break;
+                case ConstantIntegers.SEND_PROGRESS:
+                    home_ping_dim_wrapper_pb.setProgress(msg.arg1);
+
+                    break;
+                case ConstantIntegers.STOP_PROGRESS:
+                    Log.d(TAG, "STOP_PROGRESS");
+                    home_ping_dim_wrapper_pb.setProgress(0);
+                    Log.d(TAG, "STOP_PROGRESS_COMPLETE");
+                    break;
+
+            }
+        }
+    };
+
+    public Handler sendPingHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case ConstantIntegers.SEND_INSTANT_PING:
+                    sendInstantPing(currentPingShownItem.getPingID());
+                    //원하는 기능
+                    break;
+
+            }
+        }
+    };
 }
 
 

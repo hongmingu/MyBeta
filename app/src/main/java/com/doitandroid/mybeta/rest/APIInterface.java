@@ -73,4 +73,10 @@ public interface APIInterface {
     @POST("r/rest/refresh_ping_search_result/")
     Call<JsonObject> refresh_ping_search_result(@Part("search_word") RequestBody search_word);
 
+
+    /* send instant ping */
+    @Multipart
+    @POST("r/rest/send_instant_ping/")
+    Call<JsonObject> send_instant_ping(@Part("ping_id") RequestBody ping_id);
+
 }

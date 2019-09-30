@@ -12,12 +12,15 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Space;
+import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.doitandroid.mybeta.ping.PingShownItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
@@ -36,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PingSearchResultActivity extends AppCompatActivity {
+public class PingSearchResultActivity extends AppCompatActivity implements View.OnKeyListener {
     final static private String TAG = "PingSearchResultAty";
 
     Context context;
@@ -60,6 +63,7 @@ public class PingSearchResultActivity extends AppCompatActivity {
         apiInterface = getApiInterface();
 
         ping_search_result_et = findViewById(R.id.ping_search_result_et);
+        ping_search_result_et.setOnKeyListener(this);
         ping_search_result_preview_tv = findViewById(R.id.ping_search_result_preview_tv);
         ping_search_result_ll = findViewById(R.id.ping_search_result_ll);
 
@@ -76,7 +80,20 @@ public class PingSearchResultActivity extends AppCompatActivity {
         refreshPingSearchResult(gotPingSearchWord);
     }
 
-    private void refreshPingSearchResult(String pingSearchWord) {
+    private void refreshPingSearchResult(final String pingSearchWord) {
+        ping_search_result_preview_tv.setText("");
+        ping_search_result_et.setText(pingSearchWord);
+        ping_search_result_et.setSelection(pingSearchWord.length());
+/*
+
+        ping_search_result_et.post(new Runnable() {
+            @Override
+            public void run() {
+                ping_search_result_et.setSelection(pingSearchWord.length());
+            }
+        });
+*/
+        ping_search_result_ll.removeAllViews();
 
         RequestBody requestPingSearchWord = RequestBody.create(MediaType.parse("multipart/form-data"), pingSearchWord);
 
@@ -166,6 +183,7 @@ public class PingSearchResultActivity extends AppCompatActivity {
                                             }
                                         });
 
+
                                         gotLayout.addView(pingView);
 
                                         if (pingIndex % 5 != 0) {
@@ -223,4 +241,31 @@ public class PingSearchResultActivity extends AppCompatActivity {
             item.setIsClicked(false);
         }
     }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        switch (v.getId()){
+            case R.id.ping_search_result_et:
+                if (event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    switch (keyCode)
+                    {
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+
+                            refreshPingSearchResult(ping_search_result_et.getEditableText().toString());
+                            Toast.makeText(getApplicationContext(), "enter", Toast.LENGTH_SHORT).show();
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        return false;
+    }
+
 }

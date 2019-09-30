@@ -4,6 +4,15 @@ public final class ConstantIntegers {
     public final static int SUCCESS = 1;
     public final static int FAIL = 1;
 
+    /* handler int */
+
+    public final static int TOUCH_DOWN = 1001;
+    public final static int TOUCH_UP = 1002;
+    public final static int SEND_PROGRESS = 1003;
+    public final static int STOP_PROGRESS = 1004;
+
+    public final static int SEND_INSTANT_PING = 1005;
+
     /* rest responses */
 
     public final static int SUCCEED_RESPONSE = 10002;

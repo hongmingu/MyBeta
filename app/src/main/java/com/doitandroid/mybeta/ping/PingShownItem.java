@@ -14,6 +14,8 @@ public class PingShownItem {
     String pingID;
     String pingText;
     Boolean isClicked;
+
+
     View view;
     LottieAnimationView lottieAnimationView;
 
@@ -75,4 +77,7 @@ public class PingShownItem {
         return pingID;
     }
 
+    public Boolean getIsClicked() {
+        return isClicked;
+    }
 }
