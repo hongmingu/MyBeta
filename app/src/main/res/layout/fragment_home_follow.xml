@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/skyblue_4">
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -13,11 +13,11 @@
             android:layout_height="wrap_content"
             android:text="fragment home btn"/>
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/fragment1_recyclerview"
+            android:id="@+id/home_follow_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
         </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </ScrollView>

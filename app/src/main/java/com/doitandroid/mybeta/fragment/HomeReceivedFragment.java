@@ -22,7 +22,7 @@ import com.doitandroid.mybeta.adapter.MyRecyclerViewAdapter;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class HomeFragment extends Fragment {
+public class HomeReceivedFragment extends Fragment {
     TextView tv_count;
 
 
@@ -30,12 +30,12 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home_received, container, false);
 
 
         ArrayList<String> string_list = new ArrayList<>();
 
-        for (int i=0; i<105; i++ ) {
+        for (int i=0; i<10; i++ ) {
             String uuid = UUID.randomUUID().toString().replace("-", "");
             string_list.add("some word goodgood twice " + uuid);
             Log.d("for문", String.valueOf(i));
@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment {
             }
         });*/
 
-        RecyclerView recyclerView = rootView.findViewById(R.id.fragment1_recyclerview);
+        RecyclerView recyclerView = rootView.findViewById(R.id.home_received_recyclerview);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // 어댑터를 연결시킨다.

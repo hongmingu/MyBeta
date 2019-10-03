@@ -31,14 +31,16 @@ import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.doitandroid.mybeta.customview.MyDialog;
 import com.doitandroid.mybeta.customview.MyDialogListener;
+import com.doitandroid.mybeta.fragment.HomeReceivedFragment;
 import com.doitandroid.mybeta.fragment.NotiFragment;
 import com.doitandroid.mybeta.fragment.SearchFragment;
 import com.doitandroid.mybeta.fragment.UserFragment;
 import com.doitandroid.mybeta.homeping.HomePingAdapater;
-import com.doitandroid.mybeta.fragment.HomeFragment;
+import com.doitandroid.mybeta.fragment.HomeFollowFragment;
 import com.doitandroid.mybeta.ping.PingShownItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.doitandroid.mybeta.utils.UtilsCollection;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     String current_fragment = "home";
     String current_ping_num;
-    Boolean currentPingIsWide, currentPingIsPressed;
+    Boolean currentPingIsWide, currentPingIsPressed, currentFragmentHomeFollow;
 
     int window_width, ping_small_wrapper_width, space_width, pingXdiffer, pingXdifferPx, pingAndSpacePx, pingPxDp;
     Toolbar toolbar;
@@ -82,7 +84,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ProgressBar home_ping_dim_wrapper_pb;
     ProgressThread progressThread;
 
-    androidx.fragment.app.Fragment fragment_home;
+    androidx.fragment.app.Fragment fragment_home_follow;
+    androidx.fragment.app.Fragment fragment_home_received;
     androidx.fragment.app.Fragment fragment_notification;
     androidx.fragment.app.Fragment fragment_search;
     androidx.fragment.app.Fragment fragment_user;
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     HomePingAdapater homePingAdapater;
 
     APIInterface apiInterface;
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
 
     @Override
@@ -117,6 +121,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         currentPingIsWide = false;
         currentPingIsPressed = false;
+        currentFragmentHomeFollow = true;
+
+        // todo: 각 포스트 내용 받을 클래스 만들고 그 클래스를 이용한 어레이리스트 설정.
+        singleton.homeFollowingList = new ArrayList<>();
+
 
         setFragments();
 
@@ -142,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // showHomeInterface();
 
         // main whole wrapper cover on
+
 
 
     }
@@ -268,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setFragments() {
-        fragment_home = new HomeFragment();
+        fragment_home_follow = new HomeFollowFragment();
         fragment_notification = new NotiFragment();
         fragment_search = new SearchFragment();
         fragment_user = new UserFragment();
@@ -278,19 +288,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentManager.beginTransaction().add(R.id.main_frame, fragment_user).commit();
         fragmentManager.beginTransaction().add(R.id.main_frame, fragment_search).commit();
         fragmentManager.beginTransaction().add(R.id.main_frame, fragment_notification).commit();
-        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home).commit();
+        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_received).commit();
+        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_follow).commit();
 
 
-        if (fragment_home == null) {
-            fragment_home = new HomeFragment();
-            fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home).commit();
+        if (fragment_home_follow == null) {
+            fragment_home_follow = new HomeFollowFragment();
+            fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_follow).commit();
         }
 
-        if (fragment_home != null) {
-            fragmentManager.beginTransaction().show(fragment_home).commit();
+        if (fragment_home_follow != null) {
+            fragmentManager.beginTransaction().show(fragment_home_follow).commit();
 
         }
 
+        if (fragment_home_received != null) {
+            fragmentManager.beginTransaction().hide(fragment_home_received).commit();
+        }
         if (fragment_notification != null) {
             fragmentManager.beginTransaction().hide(fragment_notification).commit();
         }
@@ -654,22 +668,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (clicked) {
             case ConstantStrings.FRAGMENT_HOME:
+                if (currentFragmentHomeFollow){
 
-                if (fragment_home == null) {
-                    fragment_home = new HomeFragment();
-                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home).commit();
-                }
-                fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment != null && fragment.isVisible()) {
-                        fragmentManager.beginTransaction().hide(fragment).commit();
-
+                    if (fragment_home_follow == null) {
+                        fragment_home_follow = new HomeFollowFragment();
+                        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_follow).commit();
                     }
+                    fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
+                    for (Fragment fragment : fragments) {
+                        if (fragment != null && fragment.isVisible()) {
+                            fragmentManager.beginTransaction().hide(fragment).commit();
+
+                        }
+                    }
+                    if (fragment_home_follow != null) {
+                        fragmentManager.beginTransaction().show(fragment_home_follow).commit();
+                    }
+                    break;
+
+                } else {
+
+                    if (fragment_home_received == null) {
+                        fragment_home_received = new HomeReceivedFragment();
+                        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_received).commit();
+                    }
+                    fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
+                    for (Fragment fragment : fragments) {
+                        if (fragment != null && fragment.isVisible()) {
+                            fragmentManager.beginTransaction().hide(fragment).commit();
+
+                        }
+                    }
+                    if (fragment_home_received != null) {
+                        fragmentManager.beginTransaction().show(fragment_home_received).commit();
+                    }
+                    break;
                 }
-                if (fragment_home != null) {
-                    fragmentManager.beginTransaction().show(fragment_home).commit();
-                }
-                break;
+
+
+
             case ConstantStrings.FRAGMENT_NOTI:
                 if (fragment_notification == null) {
                     fragment_notification = new NotiFragment();

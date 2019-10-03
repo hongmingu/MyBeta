@@ -1,11 +1,13 @@
 package com.doitandroid.mybeta.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -13,34 +15,44 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.doitandroid.mybeta.MainActivity;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.adapter.MyRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class MyFragment1 extends Fragment {
-    //app 버전?
-
+public class HomeFollowFragment extends Fragment {
     TextView tv_count;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        Log.d("fragment1_STATE", "onCreateView");
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment1, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home_follow, container, false);
 
 
         ArrayList<String> string_list = new ArrayList<>();
 
         for (int i=0; i<105; i++ ) {
             String uuid = UUID.randomUUID().toString().replace("-", "");
-            string_list.add("some word goodgood twice " + i);
+            string_list.add("some word goodgood twice " + uuid);
             Log.d("for문", String.valueOf(i));
         }
 
         string_list.add("who");
+
+        final Activity activity = (MainActivity)getActivity();
         // 그리드뷰로 만든다.
+        Button button = rootView.findViewById(R.id.fragment1_btn);
+        /*button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) activity).noti_btn_clicked();
+            }
+        });*/
+
         RecyclerView recyclerView = rootView.findViewById(R.id.home_follow_recyclerview);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -149,4 +161,5 @@ public class MyFragment1 extends Fragment {
 
 
     }
+
 }

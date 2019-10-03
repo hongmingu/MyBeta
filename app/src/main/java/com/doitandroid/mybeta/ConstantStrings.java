@@ -7,7 +7,7 @@ public class ConstantStrings {
     public static final String TOKEN = "token";
     public static final String REMOVE_TOKEN = "none";
 
-    public static final String FRAGMENT_HOME = "home";
+    public static final String FRAGMENT_HOME = "home_follow";
     public static final String FRAGMENT_NOTI = "noti";
     public static final String FRAGMENT_SEARCH = "search";
     public static final String FRAGMENT_USER = "user";
