@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int window_width, ping_small_wrapper_width, space_width, pingXdiffer, pingXdifferPx, pingAndSpacePx, pingPxDp;
     Toolbar toolbar;
 
-    FrameLayout btn_home, btn_noti, btn_search, btn_user;
+    FrameLayout btn_home, btn_noti, btn_search, btn_user, home_follow, home_received;
 
     CoordinatorLayout btn_add_post;
 
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     ArrayList<PingShownItem> forYouPingShownItemArrayList, allPingShownItemArrayList, recommendPingShownItemArrayList;
     ArrayList<View> wrapperVisibleArrayList;
+    ArrayList<Fragment> fragments;
     PingShownItem currentPingShownItem;
 
     AppCompatTextView home_ping_preview_tv;
@@ -279,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setFragments() {
         fragment_home_follow = new HomeFollowFragment();
+        fragment_home_received = new HomeReceivedFragment();
         fragment_notification = new NotiFragment();
         fragment_search = new SearchFragment();
         fragment_user = new UserFragment();
@@ -487,6 +489,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_search.setOnClickListener(this);
         btn_user.setOnClickListener(this);
 
+        home_follow = findViewById(R.id.home_follow_feed);
+        home_received = findViewById(R.id.home_received_feed);
+
+        home_follow.setOnClickListener(this);
+        home_received.setOnClickListener(this);
+
         // main ping ll
         main_ping_for_you_ll = findViewById(R.id.main_ping_for_you_ll);
         main_ping_recommend_ll = findViewById(R.id.main_ping_recommend_ll);
@@ -646,6 +654,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.home_ping_instant_send_btn:
                 break;
+            case R.id.home_follow_feed:
+
+                if (fragment_home_follow == null) {
+                    fragment_home_follow = new HomeFollowFragment();
+                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_follow).commit();
+                }
+                fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment != null && fragment.isVisible()) {
+                        fragmentManager.beginTransaction().hide(fragment).commit();
+
+                    }
+                }
+                if (fragment_home_follow != null) {
+                    fragmentManager.beginTransaction().show(fragment_home_follow).commit();
+                }
+                currentFragmentHomeFollow = true;
+
+                break;
+            case R.id.home_received_feed:
+
+
+                if (fragment_home_received == null) {
+                    fragment_home_received = new HomeReceivedFragment();
+                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_received).commit();
+                }
+                fragments  = (ArrayList<Fragment>) fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment != null && fragment.isVisible()) {
+                        fragmentManager.beginTransaction().hide(fragment).commit();
+
+                    }
+                }
+                if (fragment_home_received != null) {
+                    fragmentManager.beginTransaction().show(fragment_home_received).commit();
+                }
+                currentFragmentHomeFollow = false;
+                break;
 
             default:
 
@@ -663,7 +709,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lottie_tb_clicked_case(clicked);
         // 이게 추가된 부분.
 
-        ArrayList<Fragment> fragments = null;
 
 
         switch (clicked) {

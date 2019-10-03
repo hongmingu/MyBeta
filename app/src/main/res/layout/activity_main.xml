@@ -13,7 +13,7 @@
 
     <!--home feed btn-->
     <FrameLayout
-        android:id="@+id/main_homefeed"
+        android:id="@+id/home_follow_feed"
         android:layout_width="126dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|start"
@@ -48,7 +48,7 @@
 
     <!--follow feed btn-->
     <FrameLayout
-        android:id="@+id/main_followfeed"
+        android:id="@+id/home_received_feed"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="bottom|end"
