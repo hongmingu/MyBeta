@@ -1,8 +1,11 @@
 package com.doitandroid.mybeta.utils;
 
+import com.doitandroid.mybeta.itemclass.FeedItem;
+
 import java.util.ArrayList;
 
 public class InitializationOnDemandHolderIdiom {
+    public ArrayList<FeedItem> followFeedList, receivedFeedList;
 
     public ArrayList<String> homeFollowingList;
 

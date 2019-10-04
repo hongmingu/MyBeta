@@ -41,5 +41,9 @@ public final class ConstantIntegers {
     public final static int RESULT_CANCELED= 404;
 
 
+    /* feed opt */
+    public final static int DEFAULT_PING = 1;
+    public final static int TO_CLICK = 2;
+
 
 }

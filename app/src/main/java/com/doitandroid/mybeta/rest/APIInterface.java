@@ -79,4 +79,8 @@ public interface APIInterface {
     @POST("r/rest/send_instant_ping/")
     Call<JsonObject> send_instant_ping(@Part("ping_id") RequestBody ping_id);
 
+    /* get follow feed */
+    @POST("r/rest/get_follow_feed/")
+    Call<JsonObject> get_follow_feed();
+
 }
