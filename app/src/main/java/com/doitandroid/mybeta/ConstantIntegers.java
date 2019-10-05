@@ -42,8 +42,8 @@ public final class ConstantIntegers {
 
 
     /* feed opt */
-    public final static int DEFAULT_PING = 1;
-    public final static int TO_CLICK = 2;
+    public final static int OPT_DEFAULT_PING = 1;
+    public final static int OPT_TO_CLICK = 2;
 
 
 }

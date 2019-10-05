@@ -26,6 +26,7 @@ import com.doitandroid.mybeta.MainActivity;
 import com.doitandroid.mybeta.PingItem;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.adapter.MyRecyclerViewAdapter;
+import com.doitandroid.mybeta.itemclass.FeedItem;
 import com.doitandroid.mybeta.ping.PingShownItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
@@ -123,6 +124,11 @@ public class HomeFollowFragment extends Fragment {
 
                         // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
                         Log.d(TAG, content.toString());
+                        for (JsonElement feedElement: content){
+                            JsonObject feedObject = feedElement.getAsJsonObject();
+                            FeedItem feedItem = new FeedItem(feedObject);
+
+                        }
 
                         // 접속 성공.
 
