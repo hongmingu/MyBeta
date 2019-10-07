@@ -25,6 +25,7 @@ import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.MainActivity;
 import com.doitandroid.mybeta.PingItem;
 import com.doitandroid.mybeta.R;
+import com.doitandroid.mybeta.adapter.HomeFollowAdapter;
 import com.doitandroid.mybeta.adapter.MyRecyclerViewAdapter;
 import com.doitandroid.mybeta.itemclass.FeedItem;
 import com.doitandroid.mybeta.ping.PingShownItem;
@@ -72,11 +73,11 @@ public class HomeFollowFragment extends Fragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // 어댑터를 연결시킨다.
-        MyRecyclerViewAdapter myRecyclerViewAdapter = new MyRecyclerViewAdapter(singleton.homeFollowingList);
+        HomeFollowAdapter homeFollowAdapter= new HomeFollowAdapter(singleton.followFeedList, getContext());
 
         // 리사이클러뷰에 연결한다.
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(myRecyclerViewAdapter);
+        recyclerView.setAdapter(homeFollowAdapter);
 //        final InteractiveImageView interactiveImageView = rootView.findViewById(R.id.iiv_home);
 //        interactiveImageView.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -127,6 +128,8 @@ public class HomeFollowFragment extends Fragment {
                         for (JsonElement feedElement: content){
                             JsonObject feedObject = feedElement.getAsJsonObject();
                             FeedItem feedItem = new FeedItem(feedObject);
+                            singleton.followFeedList.add(feedItem);
+
 
                         }
 
