@@ -287,16 +287,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         fragmentManager = getSupportFragmentManager();
 
-        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_user).commit();
-        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_search).commit();
-        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_notification).commit();
-        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_received).commit();
-        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_follow).commit();
+        fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_user).commit();
+        fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_search).commit();
+        fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_notification).commit();
+        fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_received).commit();
+        fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_follow).commit();
 
 
         if (fragment_home_follow == null) {
             fragment_home_follow = new HomeFollowFragment();
-            fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_follow).commit();
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_follow).commit();
         }
 
         if (fragment_home_follow != null) {
@@ -658,7 +658,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 if (fragment_home_follow == null) {
                     fragment_home_follow = new HomeFollowFragment();
-                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_follow).commit();
+                    fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_follow).commit();
                 }
                 fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
@@ -678,7 +678,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 if (fragment_home_received == null) {
                     fragment_home_received = new HomeReceivedFragment();
-                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_received).commit();
+                    fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_received).commit();
                 }
                 fragments  = (ArrayList<Fragment>) fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
@@ -717,7 +717,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     if (fragment_home_follow == null) {
                         fragment_home_follow = new HomeFollowFragment();
-                        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_follow).commit();
+                        fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_follow).commit();
                     }
                     fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
                     for (Fragment fragment : fragments) {
@@ -735,7 +735,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     if (fragment_home_received == null) {
                         fragment_home_received = new HomeReceivedFragment();
-                        fragmentManager.beginTransaction().add(R.id.main_frame, fragment_home_received).commit();
+                        fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_received).commit();
                     }
                     fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
                     for (Fragment fragment : fragments) {
@@ -755,7 +755,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case ConstantStrings.FRAGMENT_NOTI:
                 if (fragment_notification == null) {
                     fragment_notification = new NotiFragment();
-                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_notification).commit();
+                    fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_notification).commit();
                 }
                 fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
@@ -771,7 +771,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case ConstantStrings.FRAGMENT_SEARCH:
                 if (fragment_search == null) {
                     fragment_search = new SearchFragment();
-                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_search).commit();
+                    fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_search).commit();
                 }
                 fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
@@ -787,7 +787,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case ConstantStrings.FRAGMENT_USER:
                 if (fragment_user == null) {
                     fragment_user = new UserFragment();
-                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment_user).commit();
+                    fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_user).commit();
                 }
                 fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {

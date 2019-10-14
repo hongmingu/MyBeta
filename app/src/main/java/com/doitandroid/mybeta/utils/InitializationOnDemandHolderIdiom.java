@@ -1,5 +1,8 @@
 package com.doitandroid.mybeta.utils;
 
+import android.content.Context;
+
+import com.doitandroid.mybeta.adapter.HomeFollowAdapter;
 import com.doitandroid.mybeta.itemclass.FeedItem;
 
 import java.util.ArrayList;
@@ -9,7 +12,11 @@ public class InitializationOnDemandHolderIdiom {
 
     public ArrayList<String> homeFollowingList;
 
+    public HomeFollowAdapter homeFollowAdapter;
+    public Context context;
+
     private InitializationOnDemandHolderIdiom() {
+        followFeedList = new ArrayList<>();
     }
 
     private static class Singleton {

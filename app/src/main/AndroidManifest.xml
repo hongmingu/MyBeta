@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PingSearchResultActivity"></activity>
+        <activity android:name=".ContentActivity"></activity>
+        <activity android:name=".PingSearchResultActivity" />
         <activity android:name=".SettingActivity" />
         <activity
             android:name=".PingSearchActivity"

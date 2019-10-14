@@ -38,6 +38,13 @@ public class ConstantStrings {
     public static final String INTENT_LOGOUT_INFO = "logout";
 
 
+    public static final String INTENT_CONTENT_START = "start_content_activity";
+
+    public static final String INTENT_CONTENT_USER = "user_content_activity";
+
+    public static final String INTENT_USER_ID = "user_id";
+
+
     /* view TAG */
 
     public static final String TAG_WIDE_VISIBLE = "tag_wide_visible";

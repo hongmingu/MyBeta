@@ -33,6 +33,8 @@ public final class ConstantIntegers {
     public final static int REQUEST_ADD_POST = 301;
     public final static int REQUEST_SEARCH_RESULT = 302;
 
+    public final static int REQUEST_CONTENT = 303;
+
     /* result codes */
 
     public final static int RESULT_SUCCESS = 200;
@@ -45,5 +47,9 @@ public final class ConstantIntegers {
     public final static int OPT_DEFAULT_PING = 1;
     public final static int OPT_TO_CLICK = 2;
 
+    /* times */
+    public final static int TIME_OVER_TWENTEY = 1001;
+    public final static int TIME_OVER_TWENTEY_NINE = 2;
+    public final static int TIME_DEFAULT = 3003;
 
 }

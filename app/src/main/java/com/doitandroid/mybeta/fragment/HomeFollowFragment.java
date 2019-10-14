@@ -73,11 +73,14 @@ public class HomeFollowFragment extends Fragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // 어댑터를 연결시킨다.
-        HomeFollowAdapter homeFollowAdapter= new HomeFollowAdapter(singleton.followFeedList, getContext());
+        singleton.homeFollowAdapter = new HomeFollowAdapter(singleton.followFeedList, ((MainActivity) getContext()));
 
+        Log.d(TAG, singleton.followFeedList.size() + "");
         // 리사이클러뷰에 연결한다.
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(homeFollowAdapter);
+        recyclerView.setAdapter(singleton.homeFollowAdapter);
+
+        recyclerView.setNestedScrollingEnabled(false);
 //        final InteractiveImageView interactiveImageView = rootView.findViewById(R.id.iiv_home);
 //        interactiveImageView.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -128,10 +131,23 @@ public class HomeFollowFragment extends Fragment {
                         for (JsonElement feedElement: content){
                             JsonObject feedObject = feedElement.getAsJsonObject();
                             FeedItem feedItem = new FeedItem(feedObject);
-                            singleton.followFeedList.add(feedItem);
+
+                            boolean isExist = false;
+                            for(FeedItem item : singleton.followFeedList){
+                                if(feedItem.getPostID().equals(item.getPostID())){
+                                    isExist = true;
+                                }
+                            }
+                            if(!isExist){
+                                singleton.followFeedList.add(feedItem);
+                                Log.d(TAG, "called");
+                            }
+
+                            Log.d(TAG, singleton.followFeedList.size() + "");
 
 
                         }
+                        singleton.homeFollowAdapter.notifyDataSetChanged();
 
                         // 접속 성공.
 
