@@ -17,7 +17,9 @@ public class FeedItem {
     String created, postText, pingID, pingText, postID;
 
     // creator
-    String username, userID, fullName, userPhoto, profilePhoto;
+    UserItem user;
+
+    String profilePhoto;
 
 
     Integer pingRes, reactCount, commentCount;
@@ -71,10 +73,15 @@ public class FeedItem {
 
             //todo: django 에서 오타 수정 pint_id 가 아니라 ping_id, user_fullname 이 아니라 full_name, userPhoto 추가, 로그인한 사람 자신의 포토,
 
-            this.username = item.get("username").getAsString();
-            this.fullName = item.get("full_name").getAsString();
-            this.userPhoto = item.get("user_photo").getAsString();
-            this.userID = item.get("user_id").getAsString();
+
+            this.user = new UserItem(
+                    item.get("username").getAsString(),
+                    item.get("user_id").getAsString(),
+                    item.get("full_name").getAsString(),
+                    item.get("user_photo").getAsString(),
+                    null
+                    );
+
             this.reactCount = item.get("react_count").getAsInt();
             this.commentCount = item.get("comment_count").getAsInt();
 
@@ -167,37 +174,6 @@ public class FeedItem {
     public void setPingRes(Integer pingRes) {
         this.pingRes = pingRes;
     }
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getUserPhoto() {
-        return userPhoto;
-    }
-
-    public void setUserPhoto(String userPhoto) {
-        this.userPhoto = userPhoto;
-    }
 
     public String getProfilePhoto() {
         return profilePhoto;
@@ -246,4 +222,14 @@ public class FeedItem {
     public void setLikeUserArrayList(ArrayList<UserItem> likeUserArrayList) {
         this.likeUserArrayList = likeUserArrayList;
     }
+
+
+    public UserItem getUser() {
+        return user;
+    }
+
+    public void setUser(UserItem user) {
+        this.user = user;
+    }
+
 }

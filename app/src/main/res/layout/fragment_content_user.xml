@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/skyblue_4">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/content_user_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/content_user_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="create new fragment"
+        android:clickable="true"/>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

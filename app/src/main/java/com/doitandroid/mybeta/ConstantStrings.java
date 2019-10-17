@@ -43,6 +43,7 @@ public class ConstantStrings {
     public static final String INTENT_CONTENT_USER = "user_content_activity";
 
     public static final String INTENT_USER_ID = "user_id";
+    public static final String INTENT_USER_ITEM = "user_item";
 
 
     /* view TAG */

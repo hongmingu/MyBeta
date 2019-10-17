@@ -6,10 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ContentActivity">
 
+    <include layout="@layout/tool_bar" />
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/content_frame_cl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/home_frame_margin_top"
+        android:elevation="@dimen/home_fragment_frame_elevation"
+        android:outlineProvider="none">
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

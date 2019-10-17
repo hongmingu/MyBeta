@@ -3,6 +3,7 @@ package com.doitandroid.mybeta.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,14 +75,20 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (getItemViewType(position)){
             case ConstantIntegers.OPT_DEFAULT_PING:
                 final FeedItem feeditem = feedItemArrayList.get(position);
-                ((HomeFollowDefaultPingViewHolder) holder).dpi_full_name_tv.setText(feeditem.getFullName());
+                ((HomeFollowDefaultPingViewHolder) holder).dpi_full_name_tv.setText(feeditem.getUser().getFullName());
                 ((HomeFollowDefaultPingViewHolder) holder).dpi_full_name_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(context, ContentActivity.class);
                         intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
-                        intent.putExtra(ConstantStrings.INTENT_USER_ID, feeditem.getUserID());
+
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("userItem", feeditem.getUser());
+                        intent.putExtras(bundle);
+
                         ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
+                        ((MainActivity) context).overridePendingTransition(0, 0); //
+
                     }
                 });
 
@@ -98,7 +105,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
                 Glide.with(context)
-                        .load(feeditem.getUserPhoto())
+                        .load(feeditem.getUser().getUserPhoto())
                         .into(((HomeFollowDefaultPingViewHolder) holder).dpi_user_photo_civ);
 
                 switch (getAdjustedTimeDifference(feeditem.getCreated())){

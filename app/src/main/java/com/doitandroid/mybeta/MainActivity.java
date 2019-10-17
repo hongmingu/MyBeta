@@ -293,7 +293,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_received).commit();
         fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_follow).commit();
 
-
         if (fragment_home_follow == null) {
             fragment_home_follow = new HomeFollowFragment();
             fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_follow).commit();
