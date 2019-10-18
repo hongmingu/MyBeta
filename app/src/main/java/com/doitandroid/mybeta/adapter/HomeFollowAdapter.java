@@ -27,6 +27,7 @@ import com.doitandroid.mybeta.MainActivity;
 import com.doitandroid.mybeta.PingItem;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.itemclass.FeedItem;
+import com.doitandroid.mybeta.rest.ConstantREST;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -105,9 +106,12 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
                 Glide.with(context)
-                        .load(feeditem.getUser().getUserPhoto())
+                        //.load(feeditem.getUser().getUserPhoto())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + feeditem.getUser().getUserPhoto())
+
                         .into(((HomeFollowDefaultPingViewHolder) holder).dpi_user_photo_civ);
 
+                Log.d(TAG, ConstantREST.URL_HOME + feeditem.getUser().getUserPhoto());
                 switch (getAdjustedTimeDifference(feeditem.getCreated())){
                     case ConstantIntegers.TIME_DEFAULT:
                         ((HomeFollowDefaultPingViewHolder) holder).dpi_time_indicator_iv.setBackground(context.getResources().getDrawable(R.drawable.ic_bluelogo));

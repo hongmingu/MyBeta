@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.ContentActivity;
@@ -24,12 +26,14 @@ import com.doitandroid.mybeta.adapter.HomeFollowAdapter;
 import com.doitandroid.mybeta.itemclass.FeedItem;
 import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
+import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,8 +45,6 @@ public class ContentUserFragment extends Fragment {
     private static final String TAG = "HomeFollowFragTAG";
 
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
-
-    AppCompatTextView test_tv, test_btn;
 
     APIInterface apiInterface;
 
@@ -57,17 +59,11 @@ public class ContentUserFragment extends Fragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_content_user, container, false);
 
         apiInterface = getApiInterface();
-        test_tv = rootView.findViewById(R.id.content_user_tv);
-        int random = (int)(Math.random() * 50 + 1);
-        test_tv.setText(random + " is random num");
+//        ((ContentActivity)getActivity()).addTestFragment();
 
-        test_btn = rootView.findViewById(R.id.content_user_btn);
-        test_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((ContentActivity)getActivity()).addTestFragment();
-            }
-        });
+        Glide.with(rootView)
+                .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
+                .into((CircleImageView) rootView.findViewById(R.id.fragment_content_user_photo_civ));
 
 
         return rootView;
