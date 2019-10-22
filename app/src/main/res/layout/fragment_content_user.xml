@@ -111,6 +111,7 @@ twice_sana_unofficial"
         android:layout_height="56dp" />
     
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/fragment_content_user_follow_iv"
         android:layout_gravity="center"
         android:layout_width="88dp"
         android:layout_height="42dp"

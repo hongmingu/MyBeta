@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     String current_fragment = "home";
     String current_ping_num;
-    Boolean currentPingIsWide, currentPingIsPressed, currentFragmentHomeFollow;
+    Boolean is_logined, currentPingIsWide, currentPingIsPressed, currentFragmentHomeFollow;
 
     int window_width, ping_small_wrapper_width, space_width, pingXdiffer, pingXdifferPx, pingAndSpacePx, pingPxDp;
     Toolbar toolbar;
@@ -113,45 +113,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         // 자동 로그인 구현
+        is_logined = true;
         auto_login();
-        set_toolbar();
-        findViews();
 
-        apiInterface = getApiInterface();
-        context = this;
+        if (is_logined){
 
-        currentPingIsWide = false;
-        currentPingIsPressed = false;
-        currentFragmentHomeFollow = true;
+            set_toolbar();
+            findViews();
 
-        // todo: 각 포스트 내용 받을 클래스 만들고 그 클래스를 이용한 어레이리스트 설정.
-        singleton.homeFollowingList = new ArrayList<>();
+            apiInterface = getApiInterface();
+            context = this;
 
+            currentPingIsWide = false;
+            currentPingIsPressed = false;
+            currentFragmentHomeFollow = true;
 
-        setFragments();
-
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        window_width = displayMetrics.widthPixels;
-
-        // make ping wrapper hide
+            // todo: 각 포스트 내용 받을 클래스 만들고 그 클래스를 이용한 어레이리스트 설정.
+            singleton.homeFollowingList = new ArrayList<>();
 
 
-        // ArrayList Init
-        arrayListInit();
+            setFragments();
 
-        // make ping list
-        refreshForYouPings();
-        refreshRecommendPings();
 
-        // openPingDimWrapper();
-        closePingDimWrapper();
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            window_width = displayMetrics.widthPixels;
 
-        // hideHomeInterface();
-        // showHomeInterface();
+            // make ping wrapper hide
 
-        // main whole wrapper cover on
+
+            // ArrayList Init
+            arrayListInit();
+
+            // make ping list
+            refreshForYouPings();
+            refreshRecommendPings();
+
+            // openPingDimWrapper();
+            closePingDimWrapper();
+
+            // hideHomeInterface();
+            // showHomeInterface();
+
+            // main whole wrapper cover on
+        }
+
 
 
 
@@ -462,9 +468,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void auto_login() {
         SharedPreferences sp = getSharedPreferences(ConstantStrings.INIT_APP, MODE_PRIVATE);
 
+        Log.d(TAG, "auto_login");
         if (sp.getInt(ConstantStrings.AUTO_LOGIN, ConstantIntegers.IS_NOT_LOGINED) != ConstantIntegers.IS_LOGINED) {
+            is_logined = false;
             Intent intent = new Intent(this, FrontActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            Log.d(TAG, "auto_login2");
             startActivity(intent);
             // not auto login
         }

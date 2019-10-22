@@ -83,4 +83,19 @@ public interface APIInterface {
     @POST("r/rest/get_follow_feed/")
     Call<JsonObject> get_follow_feed();
 
+
+    /* follow */
+    @Multipart
+    @POST("r/rest/follow/")
+    Call<JsonObject> follow(@Part("user_id") RequestBody user_id);
+
+
+
+    /* get_related_follower */
+    @Multipart
+    @POST("r/rest/get_related_follower/")
+    Call<JsonObject> get_related_follower(@Part("user_id") RequestBody user_id);
+
+
+
 }

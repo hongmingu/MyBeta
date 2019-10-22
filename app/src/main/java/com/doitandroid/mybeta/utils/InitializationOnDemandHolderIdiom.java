@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import com.doitandroid.mybeta.adapter.HomeFollowAdapter;
 import com.doitandroid.mybeta.itemclass.FeedItem;
+import com.doitandroid.mybeta.itemclass.UserItem;
 
 import java.util.ArrayList;
 
@@ -14,15 +15,23 @@ public class InitializationOnDemandHolderIdiom {
 
     public ArrayList<String> homeFollowingList;
 
+    public ArrayList<String> followList;
+
+    public ArrayList<UserItem> userList, followUserList;
+
     public ArrayList<Fragment> contentFragmentList;
 
     public HomeFollowAdapter homeFollowAdapter;
     public Context context;
 
+
     private InitializationOnDemandHolderIdiom() {
         followFeedList = new ArrayList<>();
 
         contentFragmentList = new ArrayList<>();
+        followList = new ArrayList<>();
+        followUserList = new ArrayList<>();
+        userList = new ArrayList<>();
     }
 
     private static class Singleton {
