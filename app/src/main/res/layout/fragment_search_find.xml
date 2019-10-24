@@ -4,16 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/fragment_search_find_ll"
         android:layout_width="match_parent"
-        android:layout_height="2000dp"
-        android:background="@color/green">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="2000dp"
-        android:background="@color/darkblue">
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>

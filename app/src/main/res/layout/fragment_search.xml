@@ -12,6 +12,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/fragment_search_back_iv"
                 android:layout_width="52dp"
                 android:layout_height="48dp"
                 android:background="@color/green"
@@ -22,6 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/fragment_search_et"
                     android:layout_width="match_parent"
                     android:paddingStart="@dimen/default12"
                     android:paddingEnd="52dp"
@@ -31,7 +33,7 @@
                     android:hint="search"
                     android:background="@drawable/bg_white_border_skyblue"/>
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/fragment_search_search_btn"
+                    android:id="@+id/fragment_search_search_iv"
                     android:layout_alignParentEnd="true"
                     android:layout_width="48dp"
                     android:layout_height="48dp"

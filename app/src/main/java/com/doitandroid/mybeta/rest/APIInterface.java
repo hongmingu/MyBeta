@@ -96,6 +96,11 @@ public interface APIInterface {
     @POST("r/rest/get_related_follower/")
     Call<JsonObject> get_related_follower(@Part("user_id") RequestBody user_id);
 
+    /* search */
+    @Multipart
+    @POST("r/rest/search/")
+    Call<JsonObject> search(@Part("search_word") RequestBody search_word);
+
 
 
 }
