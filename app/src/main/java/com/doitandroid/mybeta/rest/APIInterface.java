@@ -102,5 +102,13 @@ public interface APIInterface {
     Call<JsonObject> search(@Part("search_word") RequestBody search_word);
 
 
+    /* add post */
+    @Multipart
+    @POST("r/rest/addPost/")
+    Call<JsonObject> addPost(@Part("ping_id") RequestBody ping_id,
+                             @Part("ping_text") RequestBody ping_text,
+                             @Part("post_text") RequestBody post_text);
+
+
 
 }

@@ -5,23 +5,46 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.ping.PingShownItem;
+import com.doitandroid.mybeta.rest.APIInterface;
+import com.doitandroid.mybeta.rest.ConstantREST;
+import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AddPostActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private static final String TAG ="AddPostActivity";
     Intent got_intent;
     Toolbar toolbar_exit;
     PingShownItem pingShownItem;
     CoordinatorLayout add_post_ping_cl, add_post_complete_cl;
-    AppCompatEditText add_post_ping_et;
+    AppCompatEditText add_post_ping_et, add_post_text_et;
+
+    APIInterface apiInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +54,12 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
         toolbar_exit = findViewById(R.id.tb_tb_exit);
         add_post_ping_cl = findViewById(R.id.add_post_ping_cl);
         add_post_ping_et = findViewById(R.id.add_post_ping_et);
+        add_post_text_et = findViewById(R.id.add_post_text_et);
         add_post_complete_cl = findViewById(R.id.add_post_complete_cl);
+
         add_post_complete_cl.setOnClickListener(this);
+
+        apiInterface = getApiInterface();
 
         setSupportActionBar(toolbar_exit);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -75,18 +102,37 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.add_post_complete_cl:
+                // assume no ping and post
+                RequestBody request_ping_id = null;
+                RequestBody request_ping_text = null;
+                RequestBody request_post_text = null;
+
                 if(pingShownItem != null){
+                    request_ping_id = RequestBody.create(MediaType.parse("multipart/form-data"), pingShownItem.getPingID());
+
                     String ping_text = Objects.requireNonNull(add_post_ping_et.getText()).toString().trim();
-                    if(ping_text.equals("")){
-                        Toast.makeText(this, "has ping but no text", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, ping_text, Toast.LENGTH_SHORT).show();
+                    if (!ping_text.equals(pingShownItem.getPingText())){
+                        // ping text changed
+                        request_ping_text = RequestBody.create(MediaType.parse("multipart/form-data"), ping_text);
                     }
-
-                }else {
-                    Toast.makeText(this, "it's null", Toast.LENGTH_SHORT).show();
-
                 }
+
+                String post_text = add_post_text_et.getText().toString().trim();
+                if(!post_text.equals("")){
+                    request_post_text = RequestBody.create(MediaType.parse("multipart/form-data"), post_text);
+                }
+
+                if(request_ping_id == null && request_post_text == null){
+                    // 아무것도 없음.
+                    return;
+                }
+
+
+
+
+
+
+
 
                 break;
             default:
@@ -94,4 +140,45 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
         }
 
     }
+
+    public void addPost(RequestBody requestPingID, RequestBody requestPingText, RequestBody requestPostText){
+
+        Call<JsonObject> call = apiInterface.addPost(requestPingID, requestPingText, requestPostText);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject jsonObject = response.body();
+                    if (jsonObject != null) {
+                        int rc = jsonObject.get("rc").getAsInt();
+                        if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                            // sign up 실패
+                            call.cancel();
+                            return;
+                        }
+
+                        JsonObject contentObject = jsonObject.get("content").getAsJsonObject();
+
+                        // homeFollowFragment 띄우면서 맨 위에 리스트에 넣고 어댑터에 노티파이 해줘야겠다.
+
+                        // 접속 성공.
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                call.cancel();
+
+            }
+        });
+    }
+
+    private APIInterface getApiInterface(){
+        SharedPreferences sp = getSharedPreferences(ConstantStrings.INIT_APP, MODE_PRIVATE);
+        String auth_token = sp.getString(ConstantStrings.TOKEN, ConstantStrings.REMOVE_TOKEN);
+        APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
+        return apiInterface;
+    }
+
 }

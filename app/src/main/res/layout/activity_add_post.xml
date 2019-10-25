@@ -53,7 +53,8 @@
             android:paddingBottom="@dimen/add_post_ll_padding_top"
             android:layout_weight="1">
 
-            <EditText
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/add_post_text_et"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/add_post_et_padding"
