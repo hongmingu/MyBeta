@@ -8,6 +8,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.doitandroid.mybeta.itemclass.FeedItem;
 import com.doitandroid.mybeta.ping.PingShownItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,6 +46,8 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
     PingShownItem pingShownItem;
     CoordinatorLayout add_post_ping_cl, add_post_complete_cl;
     AppCompatEditText add_post_ping_et, add_post_text_et;
+
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     APIInterface apiInterface;
 
@@ -118,14 +123,41 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
                 String post_text = add_post_text_et.getText().toString().trim();
+
+/*                if (post_text != null) {
+                    Log.d(TAG, "ping_text: " + request_ping_text.toString());
+                }*/
                 if(!post_text.equals("")){
                     request_post_text = RequestBody.create(MediaType.parse("multipart/form-data"), post_text);
                 }
 
                 if(request_ping_id == null && request_post_text == null){
                     // 아무것도 없음.
+                    Toast.makeText(this, "nothing so cant add", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                addPost(request_ping_id, request_ping_text, request_post_text);
+
+                if (request_ping_id != null) {
+                    Log.d(TAG, "ping_id: " + request_ping_id.toString());
+                }
+                if (request_ping_text != null) {
+                    Log.d(TAG, "ping_text: " + request_ping_text.toString());
+                }
+                if (request_post_text != null) {
+                    Log.d(TAG, "post_text: "+ request_post_text.toString());
+                }
+
+
+                Intent result_intent = new Intent();
+                result_intent.putExtra(ConstantStrings.INTENT_ADD_POST_INFO, ConstantIntegers.RESULT_SUCCESS);
+                setResult(RESULT_OK, result_intent);
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    finishAfterTransition();
+                } else finish();
 
 
 
@@ -158,6 +190,28 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
                         }
 
                         JsonObject contentObject = jsonObject.get("content").getAsJsonObject();
+
+/*
+                        FeedItem feedItem = new FeedItem(contentObject);
+                        Log.d(TAG, "called_feeditem_good: "+feedItem.getPostID());
+
+                        boolean isExist = false;
+                        for(FeedItem item : singleton.followFeedList){
+                            if(feedItem.getPostID().equals(item.getPostID())){
+                                isExist = true;
+                            }
+                        }
+                        if(!isExist){
+                            singleton.followFeedList.add(0, feedItem);
+                            singleton.homeFollowAdapter.notifyDataSetChanged();
+
+                            Log.d(TAG, "called_feeditem_good");
+                        }
+*/
+
+
+
+
 
                         // homeFollowFragment 띄우면서 맨 위에 리스트에 넣고 어댑터에 노티파이 해줘야겠다.
 

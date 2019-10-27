@@ -37,6 +37,8 @@ public class ConstantStrings {
 
     public static final String INTENT_LOGOUT_INFO = "logout";
 
+    public static final String INTENT_ADD_POST_INFO = "add_post";
+
 
     public static final String INTENT_CONTENT_START = "start_content_activity";
 
@@ -45,6 +47,8 @@ public class ConstantStrings {
     public static final String INTENT_USER_ID = "user_id";
     public static final String INTENT_USER_ITEM = "user_item";
 
+
+    public static final String INTENT_POST_ID = "post_id";
 
     /* view TAG */
 

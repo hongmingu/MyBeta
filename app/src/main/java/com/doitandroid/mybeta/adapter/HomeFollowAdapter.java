@@ -1,6 +1,5 @@
 package com.doitandroid.mybeta.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,10 +14,12 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
+import com.doitandroid.mybeta.CommentActivity;
 import com.doitandroid.mybeta.ConstantAnimations;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
@@ -56,7 +57,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         View view = null;
         switch (viewType){
             case ConstantIntegers.OPT_DEFAULT_PING:
-                view = inflater.inflate(R.layout.default_ping_item, parent, false);
+                view = inflater.inflate(R.layout.item_default_ping, parent, false);
                 viewHolder = new HomeFollowDefaultPingViewHolder(view);
                 break;
             case ConstantIntegers.OPT_TO_CLICK:
@@ -126,11 +127,30 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         break;
                 }
 
-                ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_text_tv.setText(feeditem.getPingText());
-                ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_lav.setAnimation(feeditem.getPingRes());
+                if (feeditem.getPingID() == null){
+                    ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_wrapper_ll.setVisibility(View.GONE);
+                } else {
+                    ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_text_tv.setText(feeditem.getPingText());
+                    ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_lav.setAnimation(feeditem.getPingRes());
+
+                }
 
                 ((HomeFollowDefaultPingViewHolder) holder).dpi_text_tv.setText(feeditem.getPostText());
+
+                ((HomeFollowDefaultPingViewHolder) holder).dpi_comment_content_rl.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, CommentActivity.class);
+                        intent.putExtra(ConstantStrings.INTENT_POST_ID, feeditem.getPostID());
+
+                        ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_COMMENT);
+                        ((MainActivity) context).overridePendingTransition(0, 0); //
+                    }
+                });
+
+
                 Log.d(TAG, "dpi sets");
+                Log.d(TAG, "post text: " + feeditem.getPostText());
 
                 break;
             case ConstantIntegers.OPT_TO_CLICK:
@@ -175,14 +195,16 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
     private class HomeFollowDefaultPingViewHolder extends RecyclerView.ViewHolder {
+        LinearLayoutCompat dpi_ping_wrapper_ll;
         AppCompatTextView dpi_full_name_tv, dpi_ping_text_tv, dpi_text_tv;
         CircleImageView dpi_user_photo_civ, dpi_profile_photo_civ;
         AppCompatImageView dpi_time_indicator_iv;
         LottieAnimationView dpi_ping_lav, dpi_react_btn_lav;
-        RelativeLayout dpi_react_content_rl, dpi_comment_content_rl;
+        RelativeLayout dpi_react_content_rl, dpi_comment_content_rl, dpi_comment_chat_rl;
 
         public HomeFollowDefaultPingViewHolder(View view) {
             super(view);
+            dpi_ping_wrapper_ll = view.findViewById(R.id.default_ping_item_ping_wrapper_ll);
             dpi_full_name_tv = view.findViewById(R.id.default_ping_item_full_name_tv);
             dpi_user_photo_civ = view.findViewById(R.id.default_ping_item_user_photo_civ);
             dpi_ping_lav = view.findViewById(R.id.default_ping_item_ping_lav);
@@ -193,6 +215,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             dpi_comment_content_rl = view.findViewById(R.id.default_ping_item_comment_content_rl);
             dpi_profile_photo_civ = view.findViewById(R.id.default_ping_item_profile_photo_civ);
             dpi_time_indicator_iv = view.findViewById(R.id.default_ping_item_time_indicator_iv);
+            dpi_comment_chat_rl = view.findViewById(R.id.default_ping_item_comment_chat_rl);
 
         }
     }

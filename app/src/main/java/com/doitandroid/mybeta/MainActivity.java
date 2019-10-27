@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final static String TAG = "MainActivityTAG";
 
-    final static int REQUEST_ADD_POST = 10001;
     final static int REQUEST_PING_SEARCH = 10002;
 
     Context context;
@@ -129,8 +128,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             currentFragmentHomeFollow = true;
 
             // todo: 각 포스트 내용 받을 클래스 만들고 그 클래스를 이용한 어레이리스트 설정.
-            singleton.homeFollowingList = new ArrayList<>();
-
 
             setFragments();
 
@@ -617,6 +614,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tb_fl_notification:
                 tb_btn_clicked(ConstantStrings.FRAGMENT_NOTI);
                 ping_side_visible();
+
+                Log.d(TAG, singleton.followFeedList.toString());
 //                noti_btn_clicked();
                 break;
 
@@ -635,14 +634,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 Intent intent_add_post = new Intent(this, AddPostActivity.class);
 
-                intent_add_post.putExtra(ConstantStrings.INTENT_REQUEST_CODE, REQUEST_ADD_POST);
+                intent_add_post.putExtra(ConstantStrings.INTENT_REQUEST_CODE, ConstantIntegers.REQUEST_ADD_POST);
                 if (currentPingShownItem != null){
                     intent_add_post.putExtra(ConstantStrings.INTENT_PING_SHOWN_ITEM_ID, currentPingShownItem.getPingID());
                 } else {
                     intent_add_post.putExtra(ConstantStrings.INTENT_PING_SHOWN_ITEM_ID, ConstantStrings.INTENT_NO_PING);
                 }
 
-                startActivityForResult(intent_add_post, REQUEST_ADD_POST);
+                startActivityForResult(intent_add_post, ConstantIntegers.REQUEST_ADD_POST);
 
                 overridePendingTransition(R.anim.slide_up, R.anim.stay);
 
@@ -829,30 +828,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
 
-        /*switch (requestCode) {
-
-            case ConstantIntegers.REQUEST_SETTING_ACTIVITY:
-                switch (resultCode){
-                    case ConstantIntegers.RESULT_SUCCESS:
-                        break;
-                    default:
-                        break;
-                }
-
-                if (data.getIntExtra(ConstantStrings.INTENT_LOGOUT_INFO, ConstantIntegers.RESULT_CANCELED) == ConstantIntegers.RESULT_LOGOUTTED) {
-                    //logout됨
-                    logout();
-                    Toast.makeText(this, "is logout", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    //logout 안됨
-                }
-
-
-                break;
-            default:
-                break;
-        }*/
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
 
@@ -861,6 +836,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (data.getIntExtra(ConstantStrings.INTENT_LOGOUT_INFO, ConstantIntegers.RESULT_CANCELED) == ConstantIntegers.RESULT_LOGOUTTED) {
                         //logout됨
                         logout();
+                        Toast.makeText(this, "is logout", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        //logout 안됨
+                    }
+
+
+                    break;
+                case ConstantIntegers.REQUEST_ADD_POST:
+                    if (data.getIntExtra(ConstantStrings.INTENT_ADD_POST_INFO, ConstantIntegers.RESULT_CANCELED) == ConstantIntegers.RESULT_SUCCESS) {
+                        // 글이 올라감.
+                        // singleton.homeFollowAdapter.notifyDataSetChanged();
+
                         Toast.makeText(this, "is logout", Toast.LENGTH_SHORT).show();
 
                     } else {

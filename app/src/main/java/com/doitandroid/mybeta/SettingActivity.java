@@ -31,7 +31,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 Intent result_intent = new Intent();
                 result_intent.putExtra(ConstantStrings.INTENT_LOGOUT_INFO, ConstantIntegers.RESULT_LOGOUTTED);
                 setResult(RESULT_OK, result_intent);
-                finish();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    finishAfterTransition();
+                } else finish();
+
                 // finishAffinity();
                 // 이건 java.lang.IllegalStateException: Can not be called to deliver a result 일으킴.
 

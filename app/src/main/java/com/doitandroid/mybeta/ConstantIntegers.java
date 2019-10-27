@@ -34,6 +34,7 @@ public final class ConstantIntegers {
     public final static int REQUEST_SEARCH_RESULT = 302;
 
     public final static int REQUEST_CONTENT = 303;
+    public final static int REQUEST_COMMENT = 305;
 
     /* result codes */
 
@@ -41,6 +42,8 @@ public final class ConstantIntegers {
 
     public final static int RESULT_LOGOUTTED= 400;
     public final static int RESULT_CANCELED= 404;
+
+
 
 
     /* feed opt */

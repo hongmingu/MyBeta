@@ -13,11 +13,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.doitandroid.mybeta.ConstantAnimations;
 import com.doitandroid.mybeta.ConstantIntegers;
@@ -52,6 +54,7 @@ public class HomeFollowFragment extends Fragment {
 
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
+    SwipeRefreshLayout home_follow_srl;
     TextView tv_count;
 
     APIInterface apiInterface;
@@ -63,6 +66,18 @@ public class HomeFollowFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home_follow, container, false);
+
+        home_follow_srl = rootView.findViewById(R.id.home_follow_srl);
+
+        home_follow_srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                init_feed();
+
+                Toast.makeText(getContext(), "swipe refresh layout", Toast.LENGTH_SHORT).show();
+                //home_follow_srl.setEnabled(true);
+            }
+        });
 
         apiInterface = getApiInterface();
 
@@ -108,6 +123,7 @@ public class HomeFollowFragment extends Fragment {
         });
      */
     public void init_feed(){
+        singleton.followFeedList.clear();
 
 
         Call<JsonObject> call = apiInterface.get_follow_feed();
@@ -148,6 +164,7 @@ public class HomeFollowFragment extends Fragment {
 
                         }
                         singleton.homeFollowAdapter.notifyDataSetChanged();
+                        home_follow_srl.setRefreshing(false);
 
                         // 접속 성공.
 

@@ -104,7 +104,7 @@ public interface APIInterface {
 
     /* add post */
     @Multipart
-    @POST("r/rest/addPost/")
+    @POST("r/rest/add_post/")
     Call<JsonObject> addPost(@Part("ping_id") RequestBody ping_id,
                              @Part("ping_text") RequestBody ping_text,
                              @Part("post_text") RequestBody post_text);

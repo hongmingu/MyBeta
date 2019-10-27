@@ -13,8 +13,6 @@ import java.util.ArrayList;
 public class InitializationOnDemandHolderIdiom {
     public ArrayList<FeedItem> followFeedList, receivedFeedList;
 
-    public ArrayList<String> homeFollowingList;
-
     public ArrayList<String> followList;
 
     public ArrayList<UserItem> userList, followUserList;

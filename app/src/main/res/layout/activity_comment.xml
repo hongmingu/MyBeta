@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CommentActivity">
+
+    <include layout="@layout/tool_bar_exit"></include>
+    <RelativeLayout
+        android:layout_marginTop="48dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_centerInParent="true"
+            android:layout_width="32dp"
+            android:layout_height="24dp"
+            android:background="@color/skyblue"/>
+    </RelativeLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_marginTop="96dp"
+        android:layout_marginBottom="56dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--여기에 컨텐츠 옴.-->
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/skyblue">
+
+        </View>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Space
+                android:layout_width="@dimen/default12"
+                android:layout_height="match_parent" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_gravity="center_vertical"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/bg_darkblue_radius4dp"/>
+
+            <Space
+                android:layout_width="@dimen/default12"
+                android:layout_height="match_parent" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+
+                android:layout_weight="1"
+                android:padding="@dimen/default8"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:hint="댓글을 입력하세요."
+                android:backgroundTint="@color/transparent"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@color/skyblue"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
