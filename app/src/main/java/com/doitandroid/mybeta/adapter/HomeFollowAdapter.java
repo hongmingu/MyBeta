@@ -2,6 +2,7 @@ package com.doitandroid.mybeta.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -28,7 +29,10 @@ import com.doitandroid.mybeta.MainActivity;
 import com.doitandroid.mybeta.PingItem;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.itemclass.FeedItem;
+import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
+import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.google.gson.JsonObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -37,15 +41,25 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "HomeFollowAdapterTAG";
     ArrayList<FeedItem> feedItemArrayList;
+
     Context context;
+
+    APIInterface apiInterface;
 
     public HomeFollowAdapter(ArrayList<FeedItem> feedItemArrayList, Context context) {
         this.feedItemArrayList = feedItemArrayList;
         this.context = context;
+
+        apiInterface = getApiInterface();
     }
 
     @NonNull
@@ -148,6 +162,12 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
 
+                ((HomeFollowDefaultPingViewHolder) holder).dpi_react_btn_lav.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        react(feeditem.getPostID());
+                    }
+                });
 
                 Log.d(TAG, "dpi sets");
                 Log.d(TAG, "post text: " + feeditem.getPostText());
@@ -272,5 +292,42 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
 
+    public void react(String postID){
+        RequestBody requestPostID = RequestBody.create(MediaType.parse("multipart/form-data"), postID);
+        Call<JsonObject> call = apiInterface.react(requestPostID);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject jsonObject = response.body();
+                    if (jsonObject != null) {
+                        int rc = jsonObject.get("rc").getAsInt();
+                        if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                            // sign up 실패
+                            call.cancel();
+                            return;
+                        }
 
+                        Boolean result = jsonObject.get("content").getAsBoolean();
+
+                        Log.d(TAG, result.toString());
+
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                call.cancel();
+
+            }
+        });
+    }
+    private APIInterface getApiInterface(){
+        SharedPreferences sp = context.getSharedPreferences(ConstantStrings.INIT_APP, Context.MODE_PRIVATE);
+        String auth_token = sp.getString(ConstantStrings.TOKEN, ConstantStrings.REMOVE_TOKEN);
+        APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
+        return apiInterface;
+    }
 }

@@ -90,7 +90,6 @@ public interface APIInterface {
     Call<JsonObject> follow(@Part("user_id") RequestBody user_id);
 
 
-
     /* get_related_follower */
     @Multipart
     @POST("r/rest/get_related_follower/")
@@ -109,6 +108,17 @@ public interface APIInterface {
                              @Part("ping_text") RequestBody ping_text,
                              @Part("post_text") RequestBody post_text);
 
+
+    /* add comment */
+    @Multipart
+    @POST("r/rest/add_comment/")
+    Call<JsonObject> addComment(@Part("post_id") RequestBody post_id,
+                                @Part("comment_text") RequestBody comment_text);
+
+    /* react */
+    @Multipart
+    @POST("r/rest/react/")
+    Call<JsonObject> react(@Part("post_id") RequestBody post_id);
 
 
 }
