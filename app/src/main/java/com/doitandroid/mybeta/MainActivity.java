@@ -1,5 +1,6 @@
 package com.doitandroid.mybeta;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -42,6 +43,10 @@ import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.doitandroid.mybeta.utils.UtilsCollection;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -102,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     APIInterface apiInterface;
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
+    String fcm_token;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +160,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // showHomeInterface();
 
             // main whole wrapper cover on
+
+            FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                @Override
+                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "getInstanceId failed", task.getException());
+                        return;
+                    }
+
+                    // Get new Instance ID token
+                    String token = task.getResult().getToken();
+                    fcm_token = token;
+
+                    // Log and toast
+                    Log.d(TAG, token);
+                    Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                }
+            });
+            // Log.d(TAG, FirebaseInstanceId.getInstance().getToken());
+
         }
 
 
@@ -618,14 +645,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(TAG, singleton.followFeedList.toString());
 //                noti_btn_clicked();
                 break;
+            case R.id.tb_fl_search:
+                tb_btn_clicked(ConstantStrings.FRAGMENT_SEARCH);
+                break;
+
 
             case R.id.tb_fl_user:
                 tb_btn_clicked(ConstantStrings.FRAGMENT_USER);
 
+                fcmPush(fcm_token);
+
+
                 // narrower 일 때 space비롯해서 invisible 걸어버리자. tag 붙이면 됨.
-                break;
-            case R.id.tb_fl_search:
-                tb_btn_clicked(ConstantStrings.FRAGMENT_SEARCH);
                 break;
 
 
@@ -1031,6 +1062,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
+
+    public void fcmPush(String token){
+
+        RequestBody requestToken = RequestBody.create(MediaType.parse("multipart/form-data"), token);
+
+        Call<JsonObject> call = apiInterface.fcmPush(requestToken);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject jsonObject = response.body();
+                    if (jsonObject != null) {
+                        int rc = jsonObject.get("rc").getAsInt();
+
+                        if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                            // sign up 실패
+                            call.cancel();
+                            return;
+                        }
+
+                        // 접속 성공.
+
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                call.cancel();
+
+            }
+        });
+    }
 }
 
 

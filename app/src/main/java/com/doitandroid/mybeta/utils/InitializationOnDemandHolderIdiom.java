@@ -22,6 +22,8 @@ public class InitializationOnDemandHolderIdiom {
     public HomeFollowAdapter homeFollowAdapter;
     public Context context;
 
+    public int accumulatedNum;
+
 
     private InitializationOnDemandHolderIdiom() {
         followFeedList = new ArrayList<>();
@@ -30,6 +32,8 @@ public class InitializationOnDemandHolderIdiom {
         followList = new ArrayList<>();
         followUserList = new ArrayList<>();
         userList = new ArrayList<>();
+
+        accumulatedNum = 0;
     }
 
     private static class Singleton {

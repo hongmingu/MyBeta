@@ -120,5 +120,9 @@ public interface APIInterface {
     @POST("r/rest/react/")
     Call<JsonObject> react(@Part("post_id") RequestBody post_id);
 
+    /* fcmPush */
+    @Multipart
+    @POST("r/rest/fcm_push/")
+    Call<JsonObject> fcmPush(@Part("fcm_token") RequestBody fcm_token);
 
 }
