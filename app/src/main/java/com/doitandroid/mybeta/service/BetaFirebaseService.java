@@ -6,6 +6,8 @@ import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import com.doitandroid.mybeta.ConstantStrings;
+
 public class BetaFirebaseService extends FirebaseMessagingService {
     private static final String TAG = "BetaFirebaseServiceTAG";
 
@@ -37,7 +39,22 @@ public class BetaFirebaseService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData().get("Nick"));
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData().get("opt"));
+
+            String opt = remoteMessage.getData().get("opt");
+
+            switch (opt){
+                case ConstantStrings.FCM_OPT_NOTICE_FOLLOW:
+                    break;
+                case ConstantStrings.FCM_OPT_NOTICE_COMMENT:
+                    break;
+                case ConstantStrings.FCM_OPT_NOTICE_REACT:
+                    break;
+                default:
+                    break;
+
+            }
+
 
             if (/* Check if data needs to be processed by long running job */ true) {
                 // For long-running tasks (10 seconds or more) use WorkManager.

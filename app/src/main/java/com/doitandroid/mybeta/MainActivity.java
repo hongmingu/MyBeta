@@ -173,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String token = task.getResult().getToken();
                     fcm_token = token;
 
+                    fcmPush(fcm_token);
+
                     // Log and toast
                     Log.d(TAG, token);
                     Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
@@ -653,7 +655,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tb_fl_user:
                 tb_btn_clicked(ConstantStrings.FRAGMENT_USER);
 
-                fcmPush(fcm_token);
 
 
                 // narrower 일 때 space비롯해서 invisible 걸어버리자. tag 붙이면 됨.
@@ -1083,7 +1084,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
 
                         // 접속 성공.
-
                     }
 
                 }

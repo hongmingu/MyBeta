@@ -54,4 +54,10 @@ public class ConstantStrings {
 
     public static final String TAG_WIDE_VISIBLE = "tag_wide_visible";
 
+
+    /* fcm opt */
+
+    public static final String FCM_OPT_NOTICE_REACT = "fcm_opt_notice_react";
+    public static final String FCM_OPT_NOTICE_COMMENT = "fcm_opt_notice_comment";
+    public static final String FCM_OPT_NOTICE_FOLLOW = "fcm_opt_notice_follow";
 }
