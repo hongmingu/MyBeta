@@ -55,4 +55,12 @@ public final class ConstantIntegers {
     public final static int TIME_OVER_TWENTEY_NINE = 2;
     public final static int TIME_DEFAULT = 3003;
 
+
+    /* notices */
+
+    public final static int NOTICE_FOLLOW = 1001;
+    public final static int NOTICE_POST_COMMENT = 2002;
+    public final static int NOTICE_POST_REACT = 2003;
+    public final static int NOTICE_TIMEBAR_QUARTER_DAY = 2004;
+    public final static int NOTICE_TIMEBAR_DAY = 2005;
 }

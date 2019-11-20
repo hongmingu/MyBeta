@@ -7,23 +7,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
-import com.doitandroid.mybeta.ContentActivity;
-import com.doitandroid.mybeta.MainActivity;
 import com.doitandroid.mybeta.R;
-import com.doitandroid.mybeta.adapter.HomeFollowAdapter;
 import com.doitandroid.mybeta.itemclass.FeedItem;
 import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
@@ -231,8 +224,8 @@ public class ContentUserFragment extends Fragment {
         });
     }
     private APIInterface getApiInterface(){
-        SharedPreferences sp = getActivity().getSharedPreferences(ConstantStrings.INIT_APP, MODE_PRIVATE);
-        String auth_token = sp.getString(ConstantStrings.TOKEN, ConstantStrings.REMOVE_TOKEN);
+        SharedPreferences sp = getActivity().getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
+        String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
         APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
         return apiInterface;
     }

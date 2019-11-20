@@ -5,33 +5,37 @@ import android.content.Context;
 import androidx.fragment.app.Fragment;
 
 import com.doitandroid.mybeta.adapter.HomeFollowAdapter;
+import com.doitandroid.mybeta.adapter.NotiAdapter;
 import com.doitandroid.mybeta.itemclass.FeedItem;
+import com.doitandroid.mybeta.itemclass.NotiItem;
 import com.doitandroid.mybeta.itemclass.UserItem;
 
 import java.util.ArrayList;
 
 public class InitializationOnDemandHolderIdiom {
     public ArrayList<FeedItem> followFeedList, receivedFeedList;
-
-    public ArrayList<String> followList;
-
     public ArrayList<UserItem> userList, followUserList;
+    public ArrayList<NotiItem> notiList;
 
     public ArrayList<Fragment> contentFragmentList;
 
     public HomeFollowAdapter homeFollowAdapter;
+    public NotiAdapter notiAdapter;
     public Context context;
 
     public int accumulatedNum;
-
 
     private InitializationOnDemandHolderIdiom() {
         followFeedList = new ArrayList<>();
 
         contentFragmentList = new ArrayList<>();
-        followList = new ArrayList<>();
         followUserList = new ArrayList<>();
         userList = new ArrayList<>();
+
+        notiList = new ArrayList<>();
+
+
+
 
         accumulatedNum = 0;
     }

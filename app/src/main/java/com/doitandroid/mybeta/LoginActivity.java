@@ -12,7 +12,6 @@ import android.text.InputType;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 import com.doitandroid.mybeta.customview.ClearableEditText;
@@ -149,11 +148,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     call.cancel();
                                     return;
                                 }
-                                SharedPreferences sp = getSharedPreferences(ConstantStrings.INIT_APP, MODE_PRIVATE);
+                                SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
 
                                 SharedPreferences.Editor editor = sp.edit();
-                                editor.putInt(ConstantStrings.AUTO_LOGIN, ConstantIntegers.IS_LOGINED);
-                                editor.putString(ConstantStrings.TOKEN, content.get("token").getAsString());
+                                editor.putInt(ConstantStrings.SP_ARG_AUTO_LOGIN, ConstantIntegers.IS_LOGINED);
+                                editor.putString(ConstantStrings.SP_ARG_TOKEN, content.get("token").getAsString());
+
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_PHOTO, content.get("profile_photo").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_USERNAME, content.get("profile_username").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_FULLNAME, content.get("profile_full_name").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_USERID, content.get("profile_user_id").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_EMAIL, content.get("profile_email").getAsString());
+
                                 editor.commit();
 
                                 Intent intent = new Intent(activity, MainActivity.class);

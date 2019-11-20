@@ -325,8 +325,8 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
     }
     private APIInterface getApiInterface(){
-        SharedPreferences sp = context.getSharedPreferences(ConstantStrings.INIT_APP, Context.MODE_PRIVATE);
-        String auth_token = sp.getString(ConstantStrings.TOKEN, ConstantStrings.REMOVE_TOKEN);
+        SharedPreferences sp = context.getSharedPreferences(ConstantStrings.SP_INIT_APP, Context.MODE_PRIVATE);
+        String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
         APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
         return apiInterface;
     }

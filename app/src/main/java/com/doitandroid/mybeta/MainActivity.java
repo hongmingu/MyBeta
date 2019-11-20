@@ -10,10 +10,12 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,12 +26,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Space;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.doitandroid.mybeta.Cropper.CropImage;
+import com.doitandroid.mybeta.Cropper.CropImageView;
 import com.doitandroid.mybeta.customview.MyDialog;
 import com.doitandroid.mybeta.customview.MyDialogListener;
 import com.doitandroid.mybeta.fragment.HomeReceivedFragment;
@@ -50,11 +55,17 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     String current_fragment = "home";
     String current_ping_num;
-    Boolean is_logined, currentPingIsWide, currentPingIsPressed, currentFragmentHomeFollow;
+    Boolean is_logined, currentPingIsWide, currentPingIsPressed, currentFragmentHomeFollow, isPermission;
 
     int window_width, ping_small_wrapper_width, space_width, pingXdiffer, pingXdifferPx, pingAndSpacePx, pingPxDp;
     Toolbar toolbar;
@@ -107,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     APIInterface apiInterface;
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
+    Uri imageUri;
     String fcm_token;
 
 
@@ -121,6 +133,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 자동 로그인 구현
         is_logined = true;
         auto_login();
+
+
+        // permission
+
+        tedPermission();
 
         if (is_logined){
 
@@ -350,8 +367,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private APIInterface getApiInterface(){
-        SharedPreferences sp = getSharedPreferences(ConstantStrings.INIT_APP, MODE_PRIVATE);
-        String auth_token = sp.getString(ConstantStrings.TOKEN, ConstantStrings.REMOVE_TOKEN);
+        SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
+        String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
         APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
         return apiInterface;
     }
@@ -492,10 +509,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void auto_login() {
-        SharedPreferences sp = getSharedPreferences(ConstantStrings.INIT_APP, MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
 
         Log.d(TAG, "auto_login");
-        if (sp.getInt(ConstantStrings.AUTO_LOGIN, ConstantIntegers.IS_NOT_LOGINED) != ConstantIntegers.IS_LOGINED) {
+        if (sp.getInt(ConstantStrings.SP_ARG_AUTO_LOGIN, ConstantIntegers.IS_NOT_LOGINED) != ConstantIntegers.IS_LOGINED) {
             is_logined = false;
             Intent intent = new Intent(this, FrontActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -806,6 +823,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (fragment_notification != null) {
                     fragmentManager.beginTransaction().show(fragment_notification).commit();
                 }
+
+                NotiFragment notiFragment = (NotiFragment) fragment_notification;
+                notiFragment.getNotice();
+
                 break;
             case ConstantStrings.FRAGMENT_SEARCH:
                 if (fragment_search == null) {
@@ -858,7 +879,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
+        // cropper 에서 fragment 데이터 받기 위해 super.~ 필요.
+        super.onActivityResult(requestCode, resultCode, data);
+
 
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
@@ -889,18 +912,85 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                     break;
+                case  CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                    // 문서 가면 에러 코드도 있다.
+
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    for (int i=0; i<result.getCropPoints().length; i++ ){
+                        Log.d(TAG, "crop data: " + result.getCropPoints()[i] + "");
+
+                    }
+                    // ((ImageView) findViewById(R.id.quick_start_cropped_image)).setImageURI(result.getUri());
+                    imageUri = result.getUri();
+                    Toast.makeText(
+                            this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG)
+                            .show();
+
+                    changeProfilePhoto(imageUri);
+
+
+                    break;
                 default:
                     break;
             }
         }
     }
 
+    public void changeProfilePhoto(Uri imageUri){
+
+        File imageFile = new File(imageUri.getPath());
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("uploaded_file", imageFile.getName(), requestFile);
+
+
+        Call<JsonObject> call = apiInterface.changeProfilePhoto(body);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject jsonObject = response.body();
+                    if (jsonObject != null) {
+                        int rc = jsonObject.get("rc").getAsInt();
+                        if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                            // sign up 실패
+                            call.cancel();
+                            return;
+                        }
+
+
+                        UserFragment userFragment = (UserFragment) fragment_user;
+                        userFragment.changePhoto(jsonObject.get("content").getAsString());
+
+                        // 접속 성공.
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                call.cancel();
+            }
+        });
+    }
+
+    public void getCroppedImage(){
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(1, 1)
+                .setFixAspectRatio(true)
+                .setAllowRotation(false)
+                .setCropShape(CropImageView.CropShape.OVAL)
+                .setRequestedSize(400, 400)
+                .start(this);
+    }
+
     private void logout() {
 
-        SharedPreferences sp = getSharedPreferences(ConstantStrings.INIT_APP, MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(ConstantStrings.AUTO_LOGIN, ConstantIntegers.IS_NOT_LOGINED);
-        editor.putString(ConstantStrings.TOKEN, ConstantStrings.REMOVE_TOKEN);
+        editor.putInt(ConstantStrings.SP_ARG_AUTO_LOGIN, ConstantIntegers.IS_NOT_LOGINED);
+        editor.putString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
         editor.commit();
 
         Intent intent = new Intent(this, FrontActivity.class);
@@ -1097,6 +1187,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+    }
+
+    private void tedPermission() {
+        PermissionListener permissionListener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                Log.d("Permission: ", "Granted");
+                // 권한 요청 성공
+                isPermission = true;
+
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                Log.d("Permission: ", "Denied");
+                // 권한 요청 실패
+                isPermission = false;
+
+            }
+
+        };
+
+        TedPermission.with(this)
+                .setPermissionListener(permissionListener)
+                .setRationaleMessage("RationaleMessage")
+                .setDeniedMessage("DeniedMessage")
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .check();
+
     }
 }
 

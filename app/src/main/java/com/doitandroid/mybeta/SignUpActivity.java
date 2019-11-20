@@ -5,7 +5,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -13,14 +12,11 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.doitandroid.mybeta.customview.ClearableEditText;
 import com.doitandroid.mybeta.customview.MyDialog;
@@ -29,12 +25,7 @@ import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.NotLoggedInAPIClient;
 import com.doitandroid.mybeta.utils.BackPressCloseHandler;
 import com.doitandroid.mybeta.utils.UtilsCollection;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -148,7 +139,7 @@ public class SignUpActivity extends AppCompatActivity {
                             JsonObject jsonObject = response.body();
 
                             if (jsonObject != null) {
-                                Integer rc = jsonObject.get("rc").getAsInt();
+                                int rc = jsonObject.get("rc").getAsInt();
                                 JsonObject content = jsonObject.get("content").getAsJsonObject();
 
                                 if (rc != ConstantIntegers.SUCCESS){
@@ -156,11 +147,18 @@ public class SignUpActivity extends AppCompatActivity {
                                     call.cancel();
                                     return;
                                 }
-                                SharedPreferences sp = getSharedPreferences(ConstantStrings.INIT_APP, MODE_PRIVATE);
+                                SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
 
                                 SharedPreferences.Editor editor = sp.edit();
-                                editor.putInt(ConstantStrings.AUTO_LOGIN, ConstantIntegers.IS_LOGINED);
-                                editor.putString(ConstantStrings.TOKEN, content.get("token").getAsString());
+                                editor.putInt(ConstantStrings.SP_ARG_AUTO_LOGIN, ConstantIntegers.IS_LOGINED);
+                                editor.putString(ConstantStrings.SP_ARG_TOKEN, content.get("token").getAsString());
+
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_PHOTO, content.get("profile_photo").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_USERNAME, content.get("profile_username").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_FULLNAME, content.get("profile_full_name").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_USERID, content.get("profile_user_id").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_EMAIL, content.get("profile_email").getAsString());
+
                                 editor.commit();
 
                                 Intent intent = new Intent(activity, MainActivity.class);

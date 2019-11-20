@@ -47,6 +47,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
+
+    //crop
+    implementation 'androidx.exifinterface:exifinterface:1.0.0'
+
 }
 
 // firebase

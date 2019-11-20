@@ -2,11 +2,29 @@ package com.doitandroid.mybeta;
 
 public class ConstantStrings {
     public static final String TRAY_COLOR = "#cccccc";
-    public static final String INIT_APP = "init_app";
-    public static final String AUTO_LOGIN = "auto_login";
-    public static final String TOKEN = "token";
-    public static final String REMOVE_TOKEN = "none";
 
+    /* SharedPreference */
+    public static final String SP_INIT_APP = "init_app";
+
+    public static final String SP_ARG_AUTO_LOGIN = "auto_login";
+    public static final String SP_ARG_TOKEN = "token";
+
+    public static final String SP_ARG_PROFILE_PHOTO = "photo";
+    public static final String SP_ARG_PROFILE_USERNAME = "username";
+    public static final String SP_ARG_PROFILE_FULLNAME = "full_name";
+    public static final String SP_ARG_PROFILE_USERID = "user_id";
+    public static final String SP_ARG_PROFILE_EMAIL = "email";
+
+
+    public static final String SP_ARG_REMOVE_TOKEN = "none";
+    public static final String SP_ARG_NONE = "none";
+    public static final String SP_ARG_NONE_PHOTO = "none";
+    public static final String SP_ARG_NONE_USERNAME = "none";
+    public static final String SP_ARG_NONE_FULLNAME = "none";
+    public static final String SP_ARG_NONE_USERID = "none";
+
+
+    /* Fragment */
     public static final String FRAGMENT_HOME = "home_follow";
     public static final String FRAGMENT_NOTI = "noti";
     public static final String FRAGMENT_SEARCH = "search";

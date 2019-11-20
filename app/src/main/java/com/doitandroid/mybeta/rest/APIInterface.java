@@ -125,4 +125,18 @@ public interface APIInterface {
     @POST("r/rest/fcm_push/")
     Call<JsonObject> fcmPush(@Part("fcm_token") RequestBody fcm_token);
 
+
+    /* getNotice */
+    @Multipart
+    @POST("r/rest/get_notice/")
+    Call<JsonObject> getNotice(@Part("end_id") RequestBody end_id);
+
+    @POST("r/rest/get_notice/")
+    Call<JsonObject> getNotice();
+
+    /* change profile photo */
+    @Multipart
+    @POST("r/rest/change_profile_photo/")
+    Call<JsonObject> changeProfilePhoto(@Part MultipartBody.Part file);
+
 }

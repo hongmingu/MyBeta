@@ -9,6 +9,7 @@ public class UserItem implements Serializable {
     String username, userID, fullName, userPhoto;
 
     ArrayList<UserItem> followList;
+    // followlist 는 이 유저가 팔로우 하고 있는 사람들.
 
     // 여기서 followList 가 null 이면 리퀘스트로 찾는다. 아니면 이미 찾은 셈. 이런식으로 너무 계속 뻗어나가는 것을 방지.
     // 그리고 누가 a를 팔로우 하는지를 나타내고, a가 팔로우하는 사람까지 표시하는 것은 그림이 좋지 않은 것 같다.

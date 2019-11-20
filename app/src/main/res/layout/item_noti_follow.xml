@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/item_notice_user_photo_civ"
+                    android:id="@+id/item_noti_follow_user_photo_civ"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:layout_marginStart="12dp"
@@ -36,8 +36,8 @@
                     android:src="@color/green"/>
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_marginStart="32dp"
-                    android:layout_alignStart="@+id/item_notice_user_photo_civ"
-                    android:layout_alignBottom="@+id/item_notice_user_photo_civ"
+                    android:layout_alignStart="@+id/item_noti_follow_user_photo_civ"
+                    android:layout_alignBottom="@+id/item_noti_follow_user_photo_civ"
                     android:id="@+id/item_notice_opt_iv"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
@@ -55,6 +55,7 @@
                 android:orientation="vertical"
                 android:layout_gravity="center_vertical">
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/item_noti_follow_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
@@ -65,20 +66,9 @@
                     android:text="Sana"
                     />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/item_notice_comment_text_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:textStyle="normal"
-                    android:textColor="#202020"
-                    android:lineSpacingExtra="5sp"
-                    android:text="정말 놀라운 일이군요"
-                    />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/item_notice_new_follower_tv"
+                    android:id="@+id/item_noti_follow_new_follower_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"

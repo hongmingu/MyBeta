@@ -7,40 +7,252 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/profile_fragment_hamburger_wrapper_height">
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="12dp"></androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <!--todo: 이제 레이아웃 꾸미고 개인 프로필화면 보는거만들어보자.-->
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_gravity="end"
-            
-            android:id="@+id/user_fragment_setting_btn"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="14dp"
+            android:id="@+id/fragment_user_setting_btn"
             android:layout_width="@dimen/profile_fragment_hamburger_width"
             android:layout_height="@dimen/profile_fragment_hamburger_width"
             android:src="@drawable/bg_green_radius4dp"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Space
+            android:layout_width="@dimen/default12"
+            android:layout_height="match_parent" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/fragment_user_photo_civ"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@color/skyblue"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/fragment_user_change_photo_iv"
+                android:layout_alignBottom="@+id/fragment_user_photo_civ"
+                android:layout_alignEnd="@+id/fragment_user_photo_civ"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/darkblue"/>
+
+        </RelativeLayout>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textStyle="normal"
+                        android:textColor="#202020"
+                        android:lineSpacingExtra="5sp"
+                        android:text="follower"
+                        />
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/default8" />
+                    <TextView
+                        android:id="@+id/fragment_user_follower_count_tv"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textStyle="normal"
+                        android:textColor="#202020"
+                        android:lineSpacingExtra="5sp"
+                        android:text="101"
+                        />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                >
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textStyle="normal"
+                        android:textColor="#202020"
+                        android:lineSpacingExtra="5sp"
+                        android:text="following"
+                        />
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/default8" />
+                    <TextView
+                        android:id="@+id/fragment_user_following_count_tv"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textStyle="normal"
+                        android:textColor="#202020"
+                        android:lineSpacingExtra="5sp"
+                        android:text="101"
+                        />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    <ScrollView
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/skyblue_4">
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <LinearLayout
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <Space
+            android:layout_width="@dimen/default12"
+            android:layout_height="match_parent" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="36dp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/skyblue">
+
+    </View>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Space
+            android:layout_width="@dimen/default12"
+            android:layout_height="match_parent" />
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <Button
-                android:id="@+id/fragment1_btn"
+            android:orientation="vertical"
+            >
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+            <TextView
+                android:id="@+id/fragment_user_full_name_tv"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="fragment home btn"/>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/home_follow_recyclerview"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textColor="#202020"
+                android:lineSpacingExtra="5sp"
+                android:text="Sana"
+                />
+            <Space
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/default12" />
+            <TextView
+                android:id="@+id/fragment_user_username_tv"
 
-            </androidx.recyclerview.widget.RecyclerView>
-        </LinearLayout>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="#636363"
+                android:lineSpacingExtra="5sp"
+                android:text="username_123"
+                />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default12" />
 
-    </ScrollView>
+            <TextView
+                android:id="@+id/fragment_user_email_tv"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="#636363"
+                android:lineSpacingExtra="5sp"
+                android:text="sana@twice.com"
+                />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/skyblue">
+
+    </View>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="36dp" />
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/fragment_user_now_wrapper_ll"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Space
+            android:layout_width="@dimen/default12"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="normal"
+            android:textColor="#202020"
+            android:lineSpacingExtra="5sp"
+            android:text="NOW"
+            />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default12" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </androidx.recyclerview.widget.RecyclerView>
 </androidx.appcompat.widget.LinearLayoutCompat>
