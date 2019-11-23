@@ -139,4 +139,14 @@ public interface APIInterface {
     @POST("r/rest/change_profile_photo/")
     Call<JsonObject> changeProfilePhoto(@Part MultipartBody.Part file);
 
+    /* getComment */
+    @Multipart
+    @POST("r/rest/get_comment/")
+    Call<JsonObject> getComment(@Part("post_id") RequestBody post_id, @Part("end_id") RequestBody end_id);
+
+    @Multipart
+    @POST("r/rest/get_comment/")
+    Call<JsonObject> getComment(@Part("post_id") RequestBody post_id);
+
+
 }
