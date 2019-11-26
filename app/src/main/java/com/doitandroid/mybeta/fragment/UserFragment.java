@@ -83,7 +83,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     public void changePhoto(String profilePhoto){
         Glide.with(this)
                 .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + profilePhoto)
-
                 .into(user_fragment_profile_photo_civ);
     }
 

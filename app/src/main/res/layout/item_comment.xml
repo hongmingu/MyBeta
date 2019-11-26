@@ -25,6 +25,7 @@
             android:orientation="horizontal">
             
             <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/item_comment_user_photo_civ"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/bg_skyblue"/>
@@ -36,7 +37,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/item_comment_full_name_tv"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
@@ -49,7 +52,8 @@
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="8dp" />
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/item_comment_text_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"

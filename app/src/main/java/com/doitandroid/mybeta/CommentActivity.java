@@ -3,20 +3,29 @@ package com.doitandroid.mybeta;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.doitandroid.mybeta.adapter.CommentAdapter;
+import com.doitandroid.mybeta.adapter.NotiAdapter;
+import com.doitandroid.mybeta.itemclass.CommentItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
@@ -34,7 +43,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     AppCompatEditText comment_et;
     CircleImageView comment_profile_photo;
 
-    CoordinatorLayout comment_content_cl;
+    RecyclerView comment_content_rv;
+    ArrayList<CommentItem> commentItemArrayList;
+    CommentAdapter commentAdapter;
 
     APIInterface apiInterface;
 
@@ -49,7 +60,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         comment_profile_photo = findViewById(R.id.comment_profile_photo_civ);
 
-        comment_content_cl = findViewById(R.id.comment_content_cl);
+        comment_content_rv = findViewById(R.id.comment_content_rv);
 
         SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
         String profilePhoto = sp.getString(ConstantStrings.SP_ARG_PROFILE_PHOTO, ConstantStrings.SP_ARG_REMOVE_TOKEN);
@@ -58,12 +69,17 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + profilePhoto)
                 .into(comment_profile_photo);
 
+        commentItemArrayList = new ArrayList<>();
+
         apiInterface = getApiInterface();
 
 
         gotIntent = getIntent();
 
         getComment(gotIntent.getStringExtra(ConstantStrings.INTENT_POST_ID));
+
+
+
 
         // 이제 버튼 클릭시 애드코멘트 하는 거 추가.
 
@@ -107,9 +123,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             return;
                         }
 
-                        JsonObject contentObject = jsonObject.get("content").getAsJsonObject();
+                        JsonObject content = jsonObject.get("content").getAsJsonObject();
 
-                        Log.d(TAG, contentObject.toString());
+
 
 
 
@@ -153,6 +169,28 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         JsonArray contentArray = jsonObject.get("content").getAsJsonArray();
 
                         Log.d(TAG, contentArray.toString());
+
+                        for(JsonElement jsonElement: contentArray){
+                            JsonObject item = jsonElement.getAsJsonObject();
+                            CommentItem commentItem = new CommentItem(item);
+                            commentItemArrayList.add(commentItem);
+
+                        }
+
+                        Log.d(TAG, "size: "+commentItemArrayList.size() + "");
+
+
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                        // 어댑터를 연결시킨다.
+                        commentAdapter = new CommentAdapter(commentItemArrayList, getApplicationContext());
+
+                        // 리사이클러뷰에 연결한다.
+                        comment_content_rv.setLayoutManager(layoutManager);
+                        comment_content_rv.setAdapter(commentAdapter);
+
+                        comment_content_rv.setNestedScrollingEnabled(false);
+
+                        commentAdapter.notifyDataSetChanged();
 
 
                     }

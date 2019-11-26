@@ -80,16 +80,33 @@ public class BetaFirebaseService extends FirebaseMessagingService {
 
             //String title = remoteMessage.getNotification().getTitle();
             //String body = remoteMessage.getNotification().getBody();
+            Handler mHandler = new Handler(Looper.getMainLooper());
             switch (opt){
                 case ConstantStrings.FCM_OPT_NOTICE_FOLLOW:
-                    Toast.makeText(getApplicationContext(), remoteMessage.getData().get("full_name"), Toast.LENGTH_SHORT).show();
+
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 사용하고자 하는 코드
+                            Toast.makeText(getApplicationContext(), remoteMessage.getData().get("full_name"), Toast.LENGTH_SHORT).show();
+
+                            sendNotification(remoteMessage.getData().get("full_name"), "reacted");
+
+                        }
+                    }, 0);
                     break;
                 case ConstantStrings.FCM_OPT_NOTICE_COMMENT:
-                    Toast.makeText(getApplicationContext(), remoteMessage.getData().get("full_name"), Toast.LENGTH_SHORT).show();
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 사용하고자 하는 코드
+                            Toast.makeText(getApplicationContext(), remoteMessage.getData().get("full_name"), Toast.LENGTH_SHORT).show();
+
+                        }
+                    }, 0);
                     break;
                 case ConstantStrings.FCM_OPT_NOTICE_REACT:
 
-                    Handler mHandler = new Handler(Looper.getMainLooper());
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
