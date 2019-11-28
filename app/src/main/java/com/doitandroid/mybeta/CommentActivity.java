@@ -99,7 +99,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.comment_send_iv:
                 String commentText = comment_et.getText().toString();
 
+
                 addComment(gotIntent.getStringExtra(ConstantStrings.INTENT_POST_ID), commentText);
+
+                comment_et.setText("");
                 break;
             default:
                 break;
@@ -124,6 +127,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         }
 
                         JsonObject content = jsonObject.get("content").getAsJsonObject();
+
+                        CommentItem commentItem = new CommentItem(content);
+                        commentItemArrayList.add(commentItem);
+
+                        commentAdapter.notifyDataSetChanged();
 
 
 
