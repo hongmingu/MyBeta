@@ -67,6 +67,7 @@ public class ConstantStrings {
 
 
     public static final String INTENT_POST_ID = "post_id";
+    public static final String INTENT_OPEN_KEYBOARD = "open_keyboard";
 
     /* view TAG */
 

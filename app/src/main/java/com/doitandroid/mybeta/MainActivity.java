@@ -496,6 +496,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    public void startReactActivity(String postID){
+        Intent intent = new Intent(context, ReactActivity.class);
+        intent.putExtra(ConstantStrings.INTENT_POST_ID, postID);
+
+        ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_REACT);
+        ((MainActivity) context).overridePendingTransition(0, 0); //
+    }
+    public void startCommentActivity(String postID, boolean openKeyboard){
+        Intent intent = new Intent(context, CommentActivity.class);
+        intent.putExtra(ConstantStrings.INTENT_POST_ID, postID);
+        intent.putExtra(ConstantStrings.INTENT_OPEN_KEYBOARD, openKeyboard);
+
+        ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_COMMENT);
+        ((MainActivity) context).overridePendingTransition(0, 0); //
+    }
     public void removeAllClicked() {
         for (PingShownItem item: allPingShownItemArrayList){
             item.setIsClicked(false);

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.adapter.CommentAdapter;
@@ -53,6 +54,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
+        gotIntent = getIntent();
 
         comment_send_iv = findViewById(R.id.comment_send_iv);
         comment_send_iv.setOnClickListener(this);
@@ -61,6 +63,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         comment_profile_photo = findViewById(R.id.comment_profile_photo_civ);
 
         comment_content_rv = findViewById(R.id.comment_content_rv);
+
+
+        if (!(gotIntent.getBooleanExtra(ConstantStrings.INTENT_OPEN_KEYBOARD, false))){
+            hideSoftKeyboard();
+        } else {
+            showSoftKeyboard(comment_et);
+        }
+
 
         SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
         String profilePhoto = sp.getString(ConstantStrings.SP_ARG_PROFILE_PHOTO, ConstantStrings.SP_ARG_REMOVE_TOKEN);
@@ -74,7 +84,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         apiInterface = getApiInterface();
 
 
-        gotIntent = getIntent();
 
         getComment(gotIntent.getStringExtra(ConstantStrings.INTENT_POST_ID));
 
@@ -212,5 +221,24 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+    }
+
+    /**
+     * Hides the soft keyboard
+     */
+    public void hideSoftKeyboard() {
+        if(getCurrentFocus()!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
+
+    /**
+     * Shows the soft keyboard
+     */
+    public void showSoftKeyboard(View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        view.requestFocus();
+        inputMethodManager.showSoftInput(view, 0);
     }
 }

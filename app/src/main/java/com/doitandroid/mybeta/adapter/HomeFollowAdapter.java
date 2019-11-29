@@ -154,11 +154,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ((HomeFollowDefaultPingViewHolder) holder).dpi_comment_content_rl.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context, CommentActivity.class);
-                        intent.putExtra(ConstantStrings.INTENT_POST_ID, feeditem.getPostID());
-
-                        ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_COMMENT);
-                        ((MainActivity) context).overridePendingTransition(0, 0); //
+                        ((MainActivity) context).startCommentActivity(feeditem.getPostID(), false);
                     }
                 });
 
@@ -168,6 +164,23 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         react(feeditem.getPostID());
                     }
                 });
+
+                ((HomeFollowDefaultPingViewHolder) holder).dpi_comment_chat_rl.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((MainActivity) context).startCommentActivity(feeditem.getPostID(), true);
+                    }
+                });
+
+                ((HomeFollowDefaultPingViewHolder) holder).dpi_react_content_rl.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((MainActivity) context).startReactActivity(feeditem.getPostID());
+                    }
+                });
+
+
+
 
                 Log.d(TAG, "dpi sets");
                 Log.d(TAG, "post text: " + feeditem.getPostText());

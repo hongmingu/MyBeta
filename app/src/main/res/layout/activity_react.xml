@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ReactActivity">
+
+    <include layout="@layout/tool_bar_exit"></include>
+    <RelativeLayout
+        android:layout_marginTop="48dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_centerInParent="true"
+            android:layout_width="32dp"
+            android:layout_height="24dp"
+            android:background="@color/skyblue"/>
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/react_content_rv"
+        android:layout_marginTop="96dp"
+        android:layout_marginBottom="56dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!--여기에 컨텐츠 옴.-->
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
