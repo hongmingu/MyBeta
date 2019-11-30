@@ -31,7 +31,7 @@ import java.util.TimeZone;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = "NotiAdapterTAG";
+    private static final String TAG = "CommentAdapterTAG";
     ArrayList<CommentItem> commentItemArrayList;
 
     // todo: CommentItem 만든다.

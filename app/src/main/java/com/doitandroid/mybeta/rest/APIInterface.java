@@ -148,5 +148,14 @@ public interface APIInterface {
     @POST("r/rest/get_comment/")
     Call<JsonObject> getComment(@Part("post_id") RequestBody post_id);
 
+    /* getReact */
+    @Multipart
+    @POST("r/rest/get_react/")
+    Call<JsonObject> getReact(@Part("post_id") RequestBody post_id, @Part("end_id") RequestBody end_id);
+
+    @Multipart
+    @POST("r/rest/get_react/")
+    Call<JsonObject> getReact(@Part("post_id") RequestBody post_id);
+
 
 }
