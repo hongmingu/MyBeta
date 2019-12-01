@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
+import com.doitandroid.mybeta.ContentActivity;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.itemclass.FeedItem;
 import com.doitandroid.mybeta.itemclass.UserItem;
@@ -52,6 +54,7 @@ public class ContentUserFragment extends Fragment {
     CircleImageView user_photo_civ;
     AppCompatImageView follow_iv;
     AppCompatTextView full_name_tv, username_tv;
+    CoordinatorLayout following_cl, follower_cl;
 
 
     @Nullable
@@ -86,6 +89,20 @@ public class ContentUserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 follow_user();
+            }
+        });
+
+        following_cl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ContentActivity) getActivity()).addListFragment(userItem, true);
+            }
+        });
+        follower_cl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ContentActivity) getActivity()).addListFragment(userItem, false);
+
             }
         });
 
@@ -154,6 +171,9 @@ public class ContentUserFragment extends Fragment {
         full_name_tv = rootView.findViewById(R.id.fragment_content_user_full_name_tv);
         username_tv = rootView.findViewById(R.id.fragment_content_user_username_tv);
         follow_iv = rootView.findViewById(R.id.fragment_content_user_follow_iv);
+
+        follower_cl = rootView.findViewById(R.id.fragment_content_user_follower_cl);
+        following_cl = rootView.findViewById(R.id.fragment_content_user_following_cl);
     }
 
     /**

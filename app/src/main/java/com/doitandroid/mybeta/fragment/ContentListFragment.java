@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -57,6 +58,8 @@ public class ContentListFragment extends Fragment {
 
     FragmentManager childFragmentManager;
 
+    AppCompatTextView content_list_following_tv, content_list_follower_tv;
+
     ContentListFollowingFragment contentListFollowingFragment;
     ContentListFollowerFragment contentListFollowerFragment;
 
@@ -69,6 +72,9 @@ public class ContentListFragment extends Fragment {
 
         apiInterface = getApiInterface();
 
+
+
+
         childFragmentManager = getChildFragmentManager();
 
         contentListFollowerFragment = new ContentListFollowerFragment();
@@ -77,8 +83,25 @@ public class ContentListFragment extends Fragment {
         childFragmentManager.beginTransaction().add(R.id.fragment_content_list_child_container, contentListFollowerFragment).commit();
         childFragmentManager.beginTransaction().add(R.id.fragment_content_list_child_container, contentListFollowingFragment).commit();
 
+
         showChild(initFollowing);
 
+        content_list_following_tv = rootView.findViewById(R.id.fragment_content_list_following_tv);
+
+        content_list_follower_tv = rootView.findViewById(R.id.fragment_content_list_follower_tv);
+
+        content_list_following_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showChild(true);
+            }
+        });
+        content_list_follower_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showChild(false);
+            }
+        });
 
 
         return rootView;

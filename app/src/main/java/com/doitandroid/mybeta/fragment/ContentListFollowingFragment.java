@@ -24,6 +24,7 @@ public class ContentListFollowingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_content_list_following, container, false);
+        // todo: 이제 여기서 rest 받아오는거 해야한다. recyclerview를 이용해라.
 
         return view;
     }
