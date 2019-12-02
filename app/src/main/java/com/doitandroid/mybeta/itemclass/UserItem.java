@@ -1,5 +1,7 @@
 package com.doitandroid.mybeta.itemclass;
 
+import com.google.gson.JsonObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -23,6 +25,13 @@ public class UserItem implements Serializable {
         this.followList = followList;
     }
 
+    public UserItem(JsonObject jsonObject){
+        this.username = jsonObject.get("username").getAsString();
+        this.userID = jsonObject.get("user_id").getAsString();
+        this.fullName = jsonObject.get("full_name").getAsString();
+        this.userPhoto = jsonObject.get("user_photo").getAsString();
+        this.followList = null;
+    }
 
     public String getUsername() {
         return username;

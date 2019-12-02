@@ -158,4 +158,23 @@ public interface APIInterface {
     Call<JsonObject> getReact(@Part("post_id") RequestBody post_id);
 
 
+
+    /* getFollower */
+    @Multipart
+    @POST("r/rest/get_follower/")
+    Call<JsonObject> getFollower(@Part("user_id") RequestBody post_id, @Part("end_id") RequestBody end_id);
+
+    @Multipart
+    @POST("r/rest/get_follower/")
+    Call<JsonObject> getFollower(@Part("user_id") RequestBody post_id);
+
+
+    /* getFollowing */
+    @Multipart
+    @POST("r/rest/get_following/")
+    Call<JsonObject> getFollowing(@Part("user_id") RequestBody post_id, @Part("end_id") RequestBody end_id);
+
+    @Multipart
+    @POST("r/rest/get_following/")
+    Call<JsonObject> getFollowing(@Part("user_id") RequestBody post_id);
 }

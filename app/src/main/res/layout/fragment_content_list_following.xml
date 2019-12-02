@@ -4,28 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/child_fragment_content_list_following_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <androidx.coordinatorlayout.widget.CoordinatorLayout
-                android:layout_width="match_parent"
-                android:layout_height="2000dp"
-                android:background="@color/green">
-
-            </androidx.coordinatorlayout.widget.CoordinatorLayout>
-            <androidx.coordinatorlayout.widget.CoordinatorLayout
-                android:layout_width="match_parent"
-                android:layout_height="2000dp"
-                android:background="@color/colorAccent">
-
-            </androidx.coordinatorlayout.widget.CoordinatorLayout>
-        </LinearLayout>
-    </ScrollView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

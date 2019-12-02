@@ -11,6 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="48dp">
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="normal"
+            android:textColor="#202020"
+            android:lineSpacingExtra="5sp"
+            android:text="Sana"
+            />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <androidx.appcompat.widget.LinearLayoutCompat
