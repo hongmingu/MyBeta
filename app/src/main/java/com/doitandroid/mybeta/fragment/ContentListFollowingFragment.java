@@ -41,9 +41,11 @@ public class ContentListFollowingFragment extends Fragment {
     RecyclerView list_rv;
 
     ContentListFollowingAdapter adapter;
+
+    /*
     public static ContentListFollowerFragment newInstance(){
         return new ContentListFollowerFragment();
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,12 +60,13 @@ public class ContentListFollowingFragment extends Fragment {
 
 
         list_rv = view.findViewById(R.id.child_fragment_content_list_following_rv);
+
         return view;
     }
 
-    public void getUser(String postID){
-        RequestBody requestPostID = RequestBody.create(MediaType.parse("multipart/form-data"), postID);
-        Call<JsonObject> call = apiInterface.getReact(requestPostID);
+    public void getUser(String userID){
+        RequestBody requestPostID = RequestBody.create(MediaType.parse("multipart/form-data"), userID);
+        Call<JsonObject> call = apiInterface.getFollowing(requestPostID);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -123,5 +126,11 @@ public class ContentListFollowingFragment extends Fragment {
         String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
         APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
         return apiInterface;
+    }
+
+    public ContentListFollowingFragment(APIInterface apiInterface) {
+        this.apiInterface = apiInterface;
+        userItemArrayList = new ArrayList<>();
+
     }
 }

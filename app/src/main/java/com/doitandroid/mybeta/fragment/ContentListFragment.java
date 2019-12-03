@@ -77,8 +77,8 @@ public class ContentListFragment extends Fragment {
 
         childFragmentManager = getChildFragmentManager();
 
-        contentListFollowerFragment = new ContentListFollowerFragment();
-        contentListFollowingFragment = new ContentListFollowingFragment();
+        contentListFollowerFragment = new ContentListFollowerFragment(apiInterface);
+        contentListFollowingFragment = new ContentListFollowingFragment(apiInterface);
 
         childFragmentManager.beginTransaction().add(R.id.fragment_content_list_child_container, contentListFollowerFragment).commit();
         childFragmentManager.beginTransaction().add(R.id.fragment_content_list_child_container, contentListFollowingFragment).commit();
@@ -102,6 +102,9 @@ public class ContentListFragment extends Fragment {
                 showChild(false);
             }
         });
+
+        contentListFollowerFragment.getUser(userItem.getUserID());
+        contentListFollowingFragment.getUser(userItem.getUserID());
 
 
         return rootView;
@@ -128,7 +131,7 @@ public class ContentListFragment extends Fragment {
         if (initFollowing) {
 
             if (contentListFollowingFragment == null) {
-                contentListFollowingFragment = new ContentListFollowingFragment();
+                contentListFollowingFragment = new ContentListFollowingFragment(apiInterface);
                 childFragmentManager.beginTransaction().add(R.id.fragment_search_child_container, contentListFollowingFragment).commit();
             }
 
@@ -142,7 +145,7 @@ public class ContentListFragment extends Fragment {
 
         } else {
             if (contentListFollowerFragment== null) {
-                contentListFollowerFragment= new ContentListFollowerFragment();
+                contentListFollowerFragment= new ContentListFollowerFragment(apiInterface);
                 childFragmentManager.beginTransaction().add(R.id.fragment_search_child_container, contentListFollowerFragment).commit();
             }
 
