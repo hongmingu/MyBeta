@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -101,6 +102,7 @@ public class ContentUserFragment extends Fragment {
         follower_cl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getContext(), "follower", Toast.LENGTH_SHORT).show();
                 ((ContentActivity) getActivity()).addListFragment(userItem, false);
 
             }

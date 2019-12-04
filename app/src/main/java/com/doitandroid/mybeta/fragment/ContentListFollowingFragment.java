@@ -40,6 +40,8 @@ public class ContentListFollowingFragment extends Fragment {
     ArrayList<UserItem> userItemArrayList;
     RecyclerView list_rv;
 
+    Fragment fragment;
+
     ContentListFollowingAdapter adapter;
 
     /*
@@ -57,7 +59,7 @@ public class ContentListFollowingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_content_list_following, container, false);
 
-
+        fragment = this;
 
         list_rv = view.findViewById(R.id.child_fragment_content_list_following_rv);
 
@@ -96,7 +98,7 @@ public class ContentListFollowingFragment extends Fragment {
 
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
                         // 어댑터를 연결시킨다.
-                        adapter = new ContentListFollowingAdapter(userItemArrayList, getContext());
+                        adapter = new ContentListFollowingAdapter(userItemArrayList, getContext(), getParentFragment());
 
                         // 리사이클러뷰에 연결한다.
                         list_rv.setLayoutManager(layoutManager);
@@ -133,4 +135,5 @@ public class ContentListFollowingFragment extends Fragment {
         userItemArrayList = new ArrayList<>();
 
     }
+
 }

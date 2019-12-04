@@ -114,7 +114,7 @@ public class ContentActivity extends AppCompatActivity {
 
     public void limitFragmentNumber(){
         if (fragmentManager.getFragments().size() > 5){
-            Fragment fragment = fragmentManager.getFragments().get(0);
+            Fragment fragment = fragmentManager.getFragments().get(1);
             fragmentManager.beginTransaction().remove(fragment).commit();
         }
     }

@@ -11,12 +11,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.R;
+import com.doitandroid.mybeta.fragment.ContentListFragment;
 import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
@@ -37,13 +39,17 @@ public class ContentListFollowerAdapter extends RecyclerView.Adapter<RecyclerVie
     private static final String TAG = "CLFollowerAdapterTAG";
     ArrayList<UserItem> userItemArrayList;
 
+    Fragment parentFragment;
+
 
     Context context;
 
     APIInterface apiInterface;
 
-    public ContentListFollowerAdapter(ArrayList<UserItem> userItemArrayList, Context context) {
+    public ContentListFollowerAdapter(ArrayList<UserItem> userItemArrayList, Context context, Fragment parentFragment) {
         this.userItemArrayList = userItemArrayList;
+        this.parentFragment = parentFragment;
+
         this.context = context;
         apiInterface = getApiInterface();
     }
@@ -77,11 +83,14 @@ public class ContentListFollowerAdapter extends RecyclerView.Adapter<RecyclerVie
             default:
                 final UserViewHolder userViewHolder = ((UserViewHolder) holder);
                 userViewHolder.full_name_tv.setText(userItem.getFullName());
+
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
                         .into(userViewHolder.user_photo_civ);
 
+                setStartUserFragment(userItem, userViewHolder.full_name_tv);
+                setStartUserFragment(userItem, userViewHolder.user_photo_civ);
                 userViewHolder.follow_iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -195,5 +204,16 @@ public class ContentListFollowerAdapter extends RecyclerView.Adapter<RecyclerVie
 
             }
         });
+    }
+
+
+    public void setStartUserFragment(final UserItem userItem, View view){
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ContentListFragment) parentFragment).addUserFragment(userItem);
+            }
+        });
+
     }
 }

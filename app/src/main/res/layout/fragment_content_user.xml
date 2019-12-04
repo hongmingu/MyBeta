@@ -73,7 +73,7 @@ twice_sana_unofficial"
         android:weightSum="2">
         <androidx.coordinatorlayout.widget.CoordinatorLayout
 
-            android:id="@+id/fragment_content_user_following_cl"
+            android:id="@+id/fragment_content_user_follower_cl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
@@ -90,7 +90,7 @@ twice_sana_unofficial"
                 />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
         <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/fragment_content_user_follower_cl"
+            android:id="@+id/fragment_content_user_following_cl"
 
             android:layout_width="0dp"
             android:layout_height="wrap_content"

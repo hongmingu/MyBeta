@@ -18,7 +18,11 @@ import androidx.fragment.app.FragmentManager;
 import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
+import com.doitandroid.mybeta.ContentActivity;
 import com.doitandroid.mybeta.R;
+import com.doitandroid.mybeta.SignUpActivity;
+import com.doitandroid.mybeta.customview.MyDialog;
+import com.doitandroid.mybeta.customview.MyDialogListener;
 import com.doitandroid.mybeta.itemclass.FeedItem;
 import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
@@ -85,6 +89,9 @@ public class ContentListFragment extends Fragment {
 
 
         showChild(initFollowing);
+
+        full_name_tv = rootView.findViewById(R.id.fragment_content_list_full_name_tv);
+        full_name_tv.setText(userItem.getFullName());
 
         content_list_following_tv = rootView.findViewById(R.id.fragment_content_list_following_tv);
 
@@ -160,6 +167,39 @@ public class ContentListFragment extends Fragment {
 
     }
 
+
+    public void addUserFragment(UserItem userItem){
+        ((ContentActivity) getActivity()).addUserFragment(userItem);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        // todo: 이거 수정해서 뒤로가기 눌렀을떄 행동 설정.
+        String email = reg_email.getEditText().getText().toString().trim();
+        String full_name = reg_full_name.getEditText().getText().toString().trim();
+        String password = reg_password.getEditText().getText().toString();
+
+        if(email.equals("") && full_name.equals("") && password.equals("")){
+            super.onBackPressed();
+        } else {
+            MyDialog dialog = new MyDialog(this, "뒤로가기", "작업중인 내용이 있다", "뒤로갈래잉", "안갈래잉");
+            dialog.setDialogListener(new MyDialogListener() {
+                @Override
+                public void onPositiveClicked() {
+                    SignUpActivity.super.onBackPressed();
+                }
+
+                @Override
+                public void onNegativeClicked() {
+
+                }
+            });
+            dialog.show();
+        }
+
+    }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

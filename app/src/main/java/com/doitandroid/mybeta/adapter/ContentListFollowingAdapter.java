@@ -11,12 +11,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.R;
+import com.doitandroid.mybeta.fragment.ContentListFragment;
 import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
@@ -36,15 +38,15 @@ import retrofit2.Response;
 public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "CLFollowingAdapterTAG";
     ArrayList<UserItem> userItemArrayList;
-
-
     Context context;
+    Fragment parentFragment;
 
     APIInterface apiInterface;
 
-    public ContentListFollowingAdapter(ArrayList<UserItem> userItemArrayList, Context context) {
+    public ContentListFollowingAdapter(ArrayList<UserItem> userItemArrayList, Context context, Fragment parentFragment) {
         this.userItemArrayList = userItemArrayList;
         this.context = context;
+        this.parentFragment = parentFragment;
         apiInterface = getApiInterface();
     }
 
@@ -81,6 +83,8 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
                         //.load(feeditem.getUser().getUserPhoto())
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
                         .into(userViewHolder.user_photo_civ);
+                setStartUserFragment(userItem, userViewHolder.full_name_tv);
+                setStartUserFragment(userItem, userViewHolder.user_photo_civ);
 
                 userViewHolder.follow_iv.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -195,5 +199,14 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
 
             }
         });
+    }
+    public void setStartUserFragment(final UserItem userItem, View view){
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ContentListFragment) parentFragment).addUserFragment(userItem);
+            }
+        });
+
     }
 }
