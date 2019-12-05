@@ -12,17 +12,24 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.R;
+import com.doitandroid.mybeta.adapter.ContentListFollowerAdapter;
+import com.doitandroid.mybeta.adapter.SearchResultAdapter;
+import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
@@ -38,7 +45,11 @@ public class SearchFindFragment extends Fragment {
     private final static String TAG = "SearchFindFragment";
 
     APIInterface apiInterface;
-    LinearLayoutCompat fragment_search_find_ll;
+
+    ArrayList<UserItem> userItemArrayList;
+    SearchResultAdapter adapter;
+    RecyclerView fragment_search_find_rv;
+
     View rootView;
 
     public static SearchFindFragment newInstance(){
@@ -55,13 +66,19 @@ public class SearchFindFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_search_find, container, false);
 
-        fragment_search_find_ll = rootView.findViewById(R.id.fragment_search_find_ll);
+        fragment_search_find_rv = rootView.findViewById(R.id.fragment_search_find_rv);
+        userItemArrayList = new ArrayList<>();
+
         apiInterface = getApiInterface();
         return rootView;
     }
 
     public void search(String searchWord){
-        fragment_search_find_ll.removeAllViews();
+        userItemArrayList.clear();
+
+        if (adapter != null){
+            adapter.notifyDataSetChanged();
+        }
         RequestBody requestSearchWord = RequestBody.create(MediaType.parse("multipart/form-data"), searchWord);
 
         Call<JsonObject> call = apiInterface.search(requestSearchWord);
@@ -78,42 +95,31 @@ public class SearchFindFragment extends Fragment {
                             return;
                         }
 
-                        JsonArray jsonArray = jsonObject.get("content").getAsJsonArray();
-                        Log.d(TAG, jsonArray.toString());
+                        JsonArray contentArray = jsonObject.get("content").getAsJsonArray();
+                        Log.d(TAG, contentArray.toString());
 
-                        for (final JsonElement item: jsonArray){
-                            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                            View view = inflater.inflate(R.layout.search_user_item, fragment_search_find_ll, false);
-
-                            CircleImageView circleImageView = view.findViewById(R.id.search_user_item_user_photo_civ);
-                            Glide.with(getContext())
-                                    .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + item.getAsJsonObject().get("user_photo").getAsString())
-                                    .into(circleImageView);
-
-                            TextView fullName = view.findViewById(R.id.search_user_item_full_name_tv);
-                            fullName.setText(item.getAsJsonObject().get("full_name").getAsString());
-                            TextView username = view.findViewById(R.id.search_user_item_username_tv);
-                            username.setText(item.getAsJsonObject().get("username").getAsString());
-                            fragment_search_find_ll.addView(view);
-
-                            final ImageView follow = view.findViewById(R.id.search_user_item_follow_iv);
-                            if (item.getAsJsonObject().get("is_followed").getAsBoolean()){
-                                //following
-                                follow.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
-                            } else {
-                                follow.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-
-                            }
-                            follow.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    follow_user(item.getAsJsonObject().get("user_id").getAsString(), follow);
-                                }
-                            });
-
-
+                        for(JsonElement jsonElement: contentArray){
+                            JsonObject item = jsonElement.getAsJsonObject();
+                            UserItem userItem = new UserItem(item);
+                            userItemArrayList.add(userItem);
 
                         }
+
+                        Log.d(TAG, "size: " + userItemArrayList.size() + "");
+
+
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+                        // 어댑터를 연결시킨다.
+                        adapter = new SearchResultAdapter(userItemArrayList, getParentFragment().getActivity());
+
+                        // 리사이클러뷰에 연결한다.
+                        fragment_search_find_rv.setLayoutManager(layoutManager);
+                        fragment_search_find_rv.setAdapter(adapter);
+
+                        fragment_search_find_rv.setNestedScrollingEnabled(false);
+
+                        adapter.notifyDataSetChanged();
+
 
                         // 접속 성공.
                     }

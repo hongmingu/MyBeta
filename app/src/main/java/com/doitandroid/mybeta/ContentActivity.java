@@ -114,21 +114,37 @@ public class ContentActivity extends AppCompatActivity {
 
     public void limitFragmentNumber(){
         if (fragmentManager.getFragments().size() > 5){
-            Fragment fragment = fragmentManager.getFragments().get(1);
+            Fragment fragment = fragmentManager.getFragments().get(0);
             fragmentManager.beginTransaction().remove(fragment).commit();
+
         }
     }
     @Override
     public void finish() {
+
+        Toast.makeText(this, "onBackPressed: "+fragmentManager.getFragments().size(), Toast.LENGTH_SHORT).show();
+
+        Log.d(TAG, fragmentManager.getFragments().toString());
         if (fragmentManager.getFragments().size() > 1){
             // 여기서 순차적으로 지워지도록 한다.
             Fragment fragment = fragmentManager.getFragments().get(fragmentManager.getFragments().size()-1);
             fragmentManager.beginTransaction().remove(fragment).commit();
+        } else if (fragmentManager.getFragments().size() == 1){
+            Fragment fragment = fragmentManager.getFragments().get(fragmentManager.getFragments().size()-1);
+            fragmentManager.beginTransaction().remove(fragment).commit();
+            super.finish();
         } else {
             super.finish();
 //        overridePendingTransition(R.anim.stay, R.anim.slide_down);
             overridePendingTransition(0, 0);
         }
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+        finish();
     }
 }

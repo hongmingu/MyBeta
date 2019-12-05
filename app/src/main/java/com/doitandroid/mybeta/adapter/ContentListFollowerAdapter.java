@@ -84,7 +84,7 @@ public class ContentListFollowerAdapter extends RecyclerView.Adapter<RecyclerVie
                 final UserViewHolder userViewHolder = ((UserViewHolder) holder);
                 userViewHolder.full_name_tv.setText(userItem.getFullName());
 
-                Glide.with(context)
+                Glide.with(context.getApplicationContext())
                         //.load(feeditem.getUser().getUserPhoto())
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
                         .into(userViewHolder.user_photo_civ);

@@ -98,7 +98,7 @@ public class ContentListFollowingFragment extends Fragment {
 
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
                         // 어댑터를 연결시킨다.
-                        adapter = new ContentListFollowingAdapter(userItemArrayList, getContext(), getParentFragment());
+                        adapter = new ContentListFollowingAdapter(userItemArrayList, getParentFragment().getContext(), getParentFragment());
 
                         // 리사이클러뷰에 연결한다.
                         list_rv.setLayoutManager(layoutManager);

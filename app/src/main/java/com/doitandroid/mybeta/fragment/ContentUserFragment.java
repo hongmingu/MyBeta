@@ -70,7 +70,7 @@ public class ContentUserFragment extends Fragment {
         setViews();
 
         // set user photo
-        Glide.with(rootView)
+        Glide.with(getActivity().getApplicationContext())
                 .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
                 .into(user_photo_civ);
 

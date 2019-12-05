@@ -1,7 +1,9 @@
 package com.doitandroid.mybeta.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,12 +13,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
+import com.doitandroid.mybeta.ContentActivity;
+import com.doitandroid.mybeta.MainActivity;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.fragment.ContentListFragment;
 import com.doitandroid.mybeta.itemclass.UserItem;
@@ -35,18 +38,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = "CLFollowingAdapterTAG";
+public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "SearchResultAdapterTAG";
     ArrayList<UserItem> userItemArrayList;
+
+    // todo: CommentItem 만든다.
+    //  comment는 그때그때 리스트 만들어서 준다.
+
     Context context;
-    Fragment parentFragment;
 
     APIInterface apiInterface;
 
-    public ContentListFollowingAdapter(ArrayList<UserItem> userItemArrayList, Context context, Fragment parentFragment) {
-        this.userItemArrayList = userItemArrayList;
+    public SearchResultAdapter(ArrayList<UserItem> userItemArrayList, Context context) {
+        this.userItemArrayList= userItemArrayList;
         this.context = context;
-        this.parentFragment = parentFragment;
         apiInterface = getApiInterface();
     }
 
@@ -59,7 +64,7 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
         View view = null;
         switch (viewType){
             default:
-                view = inflater.inflate(R.layout.item_following, parent, false);
+                view = inflater.inflate(R.layout.search_user_item, parent, false);
                 viewHolder = new UserViewHolder(view);
                 break;
         }
@@ -79,12 +84,26 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
             default:
                 final UserViewHolder userViewHolder = ((UserViewHolder) holder);
                 userViewHolder.full_name_tv.setText(userItem.getFullName());
+                userViewHolder.full_name_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ContentActivity.class);
+                        intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("userItem", userItem);
+                        intent.putExtras(bundle);
+
+                        ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
+                        ((MainActivity) context).overridePendingTransition(0, 0); //
+                    }
+                });
+
+                //todo: 이제 댓글, 좋아요에서 유저컨텐트로 이어지는 부분.
                 Glide.with(context.getApplicationContext())
                         //.load(feeditem.getUser().getUserPhoto())
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
                         .into(userViewHolder.user_photo_civ);
-                setStartUserFragment(userItem, userViewHolder.full_name_tv);
-                setStartUserFragment(userItem, userViewHolder.user_photo_civ);
 
                 userViewHolder.follow_iv.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -131,9 +150,9 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
 
         public UserViewHolder(View view) {
             super(view);
-            full_name_tv = view.findViewById(R.id.item_following_full_name_tv);
-            follow_iv = view.findViewById(R.id.item_following_follow_iv);
-            user_photo_civ = view.findViewById(R.id.item_following_user_photo_civ);
+            full_name_tv = view.findViewById(R.id.search_user_item_full_name_tv);
+            follow_iv = view.findViewById(R.id.search_user_item_follow_iv);
+            user_photo_civ = view.findViewById(R.id.search_user_item_user_photo_civ);
 
         }
     }
@@ -200,13 +219,5 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
             }
         });
     }
-    public void setStartUserFragment(final UserItem userItem, View view){
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((ContentListFragment) parentFragment).addUserFragment(userItem);
-            }
-        });
 
-    }
 }

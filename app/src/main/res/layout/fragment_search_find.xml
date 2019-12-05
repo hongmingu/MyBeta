@@ -4,12 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/fragment_search_find_ll"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_search_find_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.recyclerview.widget.RecyclerView>
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -173,33 +173,8 @@ public class ContentListFragment extends Fragment {
 
     }
 
-    @Override
-    public void onBackPressed() {
 
-        // todo: 이거 수정해서 뒤로가기 눌렀을떄 행동 설정.
-        String email = reg_email.getEditText().getText().toString().trim();
-        String full_name = reg_full_name.getEditText().getText().toString().trim();
-        String password = reg_password.getEditText().getText().toString();
 
-        if(email.equals("") && full_name.equals("") && password.equals("")){
-            super.onBackPressed();
-        } else {
-            MyDialog dialog = new MyDialog(this, "뒤로가기", "작업중인 내용이 있다", "뒤로갈래잉", "안갈래잉");
-            dialog.setDialogListener(new MyDialogListener() {
-                @Override
-                public void onPositiveClicked() {
-                    SignUpActivity.super.onBackPressed();
-                }
-
-                @Override
-                public void onNegativeClicked() {
-
-                }
-            });
-            dialog.show();
-        }
-
-    }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

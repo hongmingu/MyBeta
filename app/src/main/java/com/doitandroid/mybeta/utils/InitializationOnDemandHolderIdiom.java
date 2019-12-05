@@ -1,14 +1,18 @@
 package com.doitandroid.mybeta.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.fragment.app.Fragment;
 
+import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.adapter.HomeFollowAdapter;
 import com.doitandroid.mybeta.adapter.NotiAdapter;
 import com.doitandroid.mybeta.itemclass.FeedItem;
 import com.doitandroid.mybeta.itemclass.NotiItem;
 import com.doitandroid.mybeta.itemclass.UserItem;
+import com.doitandroid.mybeta.rest.APIInterface;
+import com.doitandroid.mybeta.rest.LoggedInAPIClient;
 
 import java.util.ArrayList;
 
@@ -33,8 +37,6 @@ public class InitializationOnDemandHolderIdiom {
         userList = new ArrayList<>();
 
         notiList = new ArrayList<>();
-
-
 
 
         accumulatedNum = 0;
