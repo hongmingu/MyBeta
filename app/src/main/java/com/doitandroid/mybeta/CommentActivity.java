@@ -7,6 +7,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -48,6 +49,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     ArrayList<CommentItem> commentItemArrayList;
     CommentAdapter commentAdapter;
 
+    Context context;
+
     APIInterface apiInterface;
 
     @Override
@@ -55,6 +58,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         gotIntent = getIntent();
+
+        context = this;
 
         comment_send_iv = findViewById(R.id.comment_send_iv);
         comment_send_iv.setOnClickListener(this);
@@ -199,7 +204,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
                         // 어댑터를 연결시킨다.
-                        commentAdapter = new CommentAdapter(commentItemArrayList, getApplicationContext());
+                        commentAdapter = new CommentAdapter(commentItemArrayList, context);
 
                         // 리사이클러뷰에 연결한다.
                         comment_content_rv.setLayoutManager(layoutManager);

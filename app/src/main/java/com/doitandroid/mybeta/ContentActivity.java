@@ -37,6 +37,14 @@ public class ContentActivity extends AppCompatActivity {
             case ConstantStrings.INTENT_CONTENT_USER:
                 addUserFragment(userItem);
                 break;
+            case ConstantStrings.INTENT_CONTENT_FOLLOW:
+                if (gotIntent.getBooleanExtra(ConstantStrings.INTENT_CONTENT_FOLLOW_BOOLEAN, true)){
+                    //true
+                    addListFragment(userItem, true);
+                } else {
+                    addListFragment(userItem, false);
+
+                }
             default:
                 break;
         }

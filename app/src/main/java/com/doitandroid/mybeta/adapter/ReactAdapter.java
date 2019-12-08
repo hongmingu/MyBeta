@@ -1,7 +1,9 @@
 package com.doitandroid.mybeta.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,9 +16,12 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.doitandroid.mybeta.CommentActivity;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
+import com.doitandroid.mybeta.ContentActivity;
 import com.doitandroid.mybeta.R;
+import com.doitandroid.mybeta.ReactActivity;
 import com.doitandroid.mybeta.itemclass.CommentItem;
 import com.doitandroid.mybeta.itemclass.ReactItem;
 import com.doitandroid.mybeta.rest.APIInterface;
@@ -80,6 +85,22 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             default:
                 final ReactViewHolder reactViewHolder = ((ReactViewHolder) holder);
                 reactViewHolder.react_full_name_tv.setText(reactItem.getUser().getFullName());
+
+                reactViewHolder.react_full_name_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ContentActivity.class);
+                        intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("userItem", reactItem.getUser());
+                        intent.putExtras(bundle);
+
+                        ((ReactActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
+                        ((ReactActivity) context).overridePendingTransition(0, 0); //
+
+                    }
+                });
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + reactItem.getUser().getUserPhoto())

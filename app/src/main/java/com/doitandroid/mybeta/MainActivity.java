@@ -976,6 +976,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         UserFragment userFragment = (UserFragment) fragment_user;
                         userFragment.changePhoto(jsonObject.get("content").getAsString());
 
+
+
                         // 접속 성공.
                     }
                 }

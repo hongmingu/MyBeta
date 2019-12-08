@@ -37,6 +37,8 @@ public final class ConstantIntegers {
     public final static int REQUEST_COMMENT = 305;
     public final static int REQUEST_REACT = 306;
 
+    public final static int REQUEST_FOLLOW = 310;
+
     /* result codes */
 
     public final static int RESULT_SUCCESS = 200;

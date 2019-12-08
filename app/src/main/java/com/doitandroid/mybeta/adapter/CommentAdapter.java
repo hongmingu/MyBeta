@@ -1,7 +1,9 @@
 package com.doitandroid.mybeta.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,8 +15,11 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.doitandroid.mybeta.CommentActivity;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
+import com.doitandroid.mybeta.ContentActivity;
+import com.doitandroid.mybeta.MainActivity;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.itemclass.CommentItem;
 import com.doitandroid.mybeta.itemclass.NotiItem;
@@ -69,13 +74,29 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        CommentItem commentItem = commentItemArrayList.get(position);
+        final CommentItem commentItem = commentItemArrayList.get(position);
 
         switch (getItemViewType(position)){
 
             default:
                 CommentViewHolder commentViewHolder = ((CommentViewHolder) holder);
                 commentViewHolder.comment_full_name_tv.setText(commentItem.getUser().getFullName());
+
+                commentViewHolder.comment_full_name_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ContentActivity.class);
+                        intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("userItem", commentItem.getUser());
+                        intent.putExtras(bundle);
+
+                        ((CommentActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
+                        ((CommentActivity) context).overridePendingTransition(0, 0); //
+
+                    }
+                });
                 commentViewHolder.comment_text_tv.setText(commentItem.getCommentText());
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())

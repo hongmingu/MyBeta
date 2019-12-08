@@ -61,6 +61,7 @@ public class ConstantStrings {
     public static final String INTENT_CONTENT_START = "start_content_activity";
 
     public static final String INTENT_CONTENT_USER = "user_content_activity";
+    public static final String INTENT_CONTENT_FOLLOW = "follow_content_activity";
 
     public static final String INTENT_USER_ID = "user_id";
     public static final String INTENT_USER_ITEM = "user_item";
@@ -68,6 +69,14 @@ public class ConstantStrings {
 
     public static final String INTENT_POST_ID = "post_id";
     public static final String INTENT_OPEN_KEYBOARD = "open_keyboard";
+
+
+    public static final String INTENT_FOLLOW = "follow";
+    public static final String INTENT_CONTENT_FOLLOW_BOOLEAN = "follow_boolean";
+
+
+    public static final String INTENT_FOLLOW_FOLLOWING = "following";
+    public static final String INTENT_FOLLOW_FOLLOWER = "follower";
 
     /* view TAG */
 

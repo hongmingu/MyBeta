@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -39,13 +40,18 @@ public class ReactActivity extends AppCompatActivity {
 
     RecyclerView react_content_rv;
     ReactAdapter reactAdapter;
+
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_react);
         gotIntent = getIntent();
 
+        context = this;
+
         reactItemArrayList = new ArrayList<>();
+
 
         apiInterface = getApiInterface();
         react_content_rv = findViewById(R.id.react_content_rv);
@@ -89,7 +95,7 @@ public class ReactActivity extends AppCompatActivity {
 
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
                         // 어댑터를 연결시킨다.
-                        reactAdapter = new ReactAdapter(reactItemArrayList, getApplicationContext());
+                        reactAdapter = new ReactAdapter(reactItemArrayList, context);
 
                         // 리사이클러뷰에 연결한다.
                         react_content_rv.setLayoutManager(layoutManager);
