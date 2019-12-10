@@ -33,6 +33,8 @@ public class FeedItem {
 
     ArrayList<UserItem> likeUserArrayList;
 
+
+
     public FeedItem(JsonObject jsonObject) {
 
         this.jsonObject = jsonObject;
@@ -40,28 +42,6 @@ public class FeedItem {
         switch (opt) {
             case ConstantIntegers.OPT_DEFAULT_PING:
 
-/*                [{
-                "opt":1, "con":{
-                    "post_id":"77525228c3b0435caf83d9c387833e71", "postText":null, "pint_id":
-                    "5", "user_id":"900218257910401369", "username":"ghdalsrn2", "user_fullname":
-                    "ghdalsrn2", "comment_display_user_list":[],"comment_count":
-                    6, "react_display_user_list":[],"react_count":6, "is_reacted":false
-                }
-            },{
-                "opt":1, "con":{
-                    "post_id":"53bf8040da94494995a20f9fb9767c2a", "postText":null, "pint_id":
-                    "13", "user_id":"900218257910401369", "username":"ghdalsrn2", "user_fullname":
-                    "ghdalsrn2", "comment_display_user_list":[],"comment_count":
-                    6, "react_display_user_list":[],"react_count":6, "is_reacted":false
-                }
-            },{
-                "opt":1, "con":{
-                    "post_id":"130fe66d08fe4ce18a88797bd247c66e", "postText":null, "pint_id":
-                    "12", "user_id":"900218257910401369", "username":"ghdalsrn2", "user_fullname":
-                    "ghdalsrn2", "comment_display_user_list":[],"comment_count":
-                    6, "react_display_user_list":[],"react_count":6, "is_reacted":false
-                }
-            }]*/
 
             JsonObject item = jsonObject.get("con").getAsJsonObject();
             this.created = item.get("created").getAsString();
@@ -81,6 +61,8 @@ public class FeedItem {
                     item.get("user_photo").getAsString(),
                     null
                     );
+
+
 
             this.reactCount = item.get("react_count").getAsInt();
             this.commentCount = item.get("comment_count").getAsInt();

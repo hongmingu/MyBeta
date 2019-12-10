@@ -77,7 +77,7 @@ public class ContentUserFragment extends Fragment {
         full_name_tv.setText(userItem.getFullName());
         username_tv.setText(userItem.getUsername());
 
-        if (containsUserItem(singleton.followUserList, userItem)){
+        if (containsUserItem(singleton.userList, userItem)){
             // is following
             follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
         } else {

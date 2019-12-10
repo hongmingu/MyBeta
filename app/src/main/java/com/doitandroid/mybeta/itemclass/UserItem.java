@@ -1,8 +1,12 @@
 package com.doitandroid.mybeta.itemclass;
 
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
@@ -10,29 +14,95 @@ public class UserItem implements Serializable {
 
     String username, userID, fullName, userPhoto;
 
-    ArrayList<UserItem> followList;
+    boolean isFollowed;
+
+    ArrayList<UserItem> relatedFollowingList, relatedFollowerList;
+
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
+
     // followlist 는 이 유저가 팔로우 하고 있는 사람들.
 
     // 여기서 followList 가 null 이면 리퀘스트로 찾는다. 아니면 이미 찾은 셈. 이런식으로 너무 계속 뻗어나가는 것을 방지.
     // 그리고 누가 a를 팔로우 하는지를 나타내고, a가 팔로우하는 사람까지 표시하는 것은 그림이 좋지 않은 것 같다.
 
 
-    public UserItem(String username, String userID, String fullName, String userPhoto, ArrayList<UserItem> followList) {
+    public UserItem(String username,
+                    String userID,
+                    String fullName,
+                    String userPhoto,
+                    ArrayList<UserItem> relatedFollowerList,
+                    ArrayList<UserItem> relatedFollowingList,
+                    boolean isFollowed,
+                    boolean followUpdate) {
+
         this.username = username;
         this.userID = userID;
         this.fullName = fullName;
         this.userPhoto = userPhoto;
-        this.followList = followList;
+        this.relatedFollowerList = relatedFollowerList;
+        this.relatedFollowingList = relatedFollowingList;
+        this.isFollowed = isFollowed;
+
+        singleton.updateUserList(this, followUpdate);
     }
 
-    public UserItem(JsonObject jsonObject){
+    public UserItem(JsonObject jsonObject) {
         this.username = jsonObject.get("username").getAsString();
         this.userID = jsonObject.get("user_id").getAsString();
         this.fullName = jsonObject.get("full_name").getAsString();
         this.userPhoto = jsonObject.get("user_photo").getAsString();
-        this.followList = null;
+        this.isFollowed = jsonObject.get("is_followed").getAsBoolean();
+
+        relatedFollowerList = new ArrayList<>();
+        relatedFollowingList = new ArrayList<>();
+
+        if (jsonObject.get("follow_update").getAsBoolean()) {
+            JsonArray followerJsonArray = jsonObject.get("related_follower_list").getAsJsonArray();
+            for (JsonElement followerJsonElement : followerJsonArray) {
+                JsonObject followerJsonItem = followerJsonElement.getAsJsonObject();
+                UserItem followerUserItem = new UserItem(followerJsonItem);
+                relatedFollowerList.add(followerUserItem);
+
+            }
+
+            JsonArray followingJsonArray = jsonObject.get("related_following_list").getAsJsonArray();
+            for (JsonElement followingJsonElement : followingJsonArray) {
+                JsonObject followingJsonItem = followingJsonElement.getAsJsonObject();
+                UserItem followingUserItem = new UserItem(followingJsonItem);
+                relatedFollowingList.add(followingUserItem);
+            }
+            //todo: followList 관련 코드.
+        }
+
+        singleton.updateUserList(this, jsonObject.get("follow_update").getAsBoolean());
+
     }
 
+
+    public boolean isSameUserItem(UserItem userItem){
+
+        if(this.userID.equals(userItem.getUserID())){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void updateItem(UserItem userItem, boolean followUpdate){
+        if (followUpdate){
+            this.userPhoto = userItem.getUserPhoto();
+            this.username = userItem.getUsername();
+            this.fullName = userItem.getFullName();
+            this.isFollowed = userItem.isFollowed();
+            this.relatedFollowingList = userItem.getRelatedFollowingList();
+            this.relatedFollowerList = userItem.getRelatedFollowerList();
+        } else {
+            this.userPhoto = userItem.getUserPhoto();
+            this.username = userItem.getUsername();
+            this.fullName = userItem.getFullName();
+            this.isFollowed = userItem.isFollowed();
+        }
+    }
     public String getUsername() {
         return username;
     }
@@ -65,11 +135,28 @@ public class UserItem implements Serializable {
         this.userPhoto = userPhoto;
     }
 
-    public ArrayList<UserItem> getFollowList() {
-        return followList;
+
+    public boolean isFollowed() {
+        return isFollowed;
     }
 
-    public void setFollowList(ArrayList<UserItem> followList) {
-        this.followList = followList;
+    public void setFollowed(boolean followed) {
+        isFollowed = followed;
+    }
+
+    public ArrayList<UserItem> getRelatedFollowingList() {
+        return relatedFollowingList;
+    }
+
+    public void setRelatedFollowingList(ArrayList<UserItem> relatedFollowingList) {
+        this.relatedFollowingList = relatedFollowingList;
+    }
+
+    public ArrayList<UserItem> getRelatedFollowerList() {
+        return relatedFollowerList;
+    }
+
+    public void setRelatedFollowerList(ArrayList<UserItem> relatedFollowerList) {
+        this.relatedFollowerList = relatedFollowerList;
     }
 }

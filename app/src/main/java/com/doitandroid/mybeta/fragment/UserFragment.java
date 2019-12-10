@@ -111,6 +111,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
                     }
                 }
+                //todo: noupdate 인자.
 
                 if (!exist){
                     UserItem createUserItem = new UserItem(profileUsername, profileUserID, profileFullName, profilePhoto, null);

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class InitializationOnDemandHolderIdiom {
     public ArrayList<FeedItem> followFeedList, receivedFeedList;
-    public ArrayList<UserItem> userList, followUserList;
+    public ArrayList<UserItem> userList;
     public ArrayList<NotiItem> notiList;
 
     public ArrayList<Fragment> contentFragmentList;
@@ -33,7 +33,6 @@ public class InitializationOnDemandHolderIdiom {
         followFeedList = new ArrayList<>();
 
         contentFragmentList = new ArrayList<>();
-        followUserList = new ArrayList<>();
         userList = new ArrayList<>();
 
         notiList = new ArrayList<>();
@@ -50,4 +49,34 @@ public class InitializationOnDemandHolderIdiom {
         System.out.println("create instance");
         return Singleton.instance;
     }
+
+
+
+    public void updateUserList(UserItem userItem, Boolean followUpdate) {
+        boolean isUpdated = false;
+        for (UserItem item: userList){
+            if(item.isSameUserItem(userItem)){
+                // 같은 것이 존재.
+                item.updateItem(userItem, followUpdate);
+                isUpdated = true;
+            }
+        }
+        if (!isUpdated){
+            userList.add(userItem);
+        }
+    }
+
+
+
+
+    public void removeUserItemfromUserList(UserItem userItem){
+        for (UserItem item: userList){
+            if (item.isSameUserItem(userItem)){
+                userList.remove(item);
+            }
+        }
+    }
+
+
+
 }
