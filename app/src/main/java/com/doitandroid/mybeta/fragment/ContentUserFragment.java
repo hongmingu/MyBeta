@@ -109,6 +109,8 @@ public class ContentUserFragment extends Fragment {
         });
 
 
+        //todo: 이제 fully updated 가 아니면 받아오는 코드.
+
         return rootView;
     }
 

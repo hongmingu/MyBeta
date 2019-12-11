@@ -30,6 +30,8 @@ import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 
+import java.util.ArrayList;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -114,7 +116,15 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 //todo: noupdate 인자.
 
                 if (!exist){
-                    UserItem createUserItem = new UserItem(profileUsername, profileUserID, profileFullName, profilePhoto, null);
+                    UserItem createUserItem = new UserItem(profileUsername,
+                            profileUserID,
+                            profileFullName,
+                            profilePhoto,
+                            new ArrayList<UserItem>(),
+                            new ArrayList<UserItem>(),
+                            false,
+                            false,
+                            false);
                     bundle.putSerializable("userItem", createUserItem);
                 }
 
@@ -145,7 +155,16 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 }
 
                 if (!ingExist){
-                    UserItem createUserItem = new UserItem(profileUsername, profileUserID, profileFullName, profilePhoto, null);
+                    UserItem createUserItem = new UserItem(profileUsername,
+                            profileUserID,
+                            profileFullName,
+                            profilePhoto,
+                            new ArrayList<UserItem>(),
+                            new ArrayList<UserItem>(),
+                            false,
+                            false,
+                            false);
+
                     ingBundle.putSerializable("userItem", createUserItem);
                 }
 

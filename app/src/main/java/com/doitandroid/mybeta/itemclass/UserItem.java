@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
@@ -14,11 +13,10 @@ public class UserItem implements Serializable {
 
     String username, userID, fullName, userPhoto;
 
-    boolean isFollowed;
+    boolean isFollowed, isFullyUpdated;
 
     ArrayList<UserItem> relatedFollowingList, relatedFollowerList;
 
-    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     // followlist 는 이 유저가 팔로우 하고 있는 사람들.
 
@@ -32,6 +30,7 @@ public class UserItem implements Serializable {
                     String userPhoto,
                     ArrayList<UserItem> relatedFollowerList,
                     ArrayList<UserItem> relatedFollowingList,
+                    boolean isFullyUpdated,
                     boolean isFollowed,
                     boolean followUpdate) {
 
@@ -39,10 +38,14 @@ public class UserItem implements Serializable {
         this.userID = userID;
         this.fullName = fullName;
         this.userPhoto = userPhoto;
+
+        this.isFullyUpdated = isFullyUpdated;
+
         this.relatedFollowerList = relatedFollowerList;
         this.relatedFollowingList = relatedFollowingList;
         this.isFollowed = isFollowed;
 
+        InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
         singleton.updateUserList(this, followUpdate);
     }
 
@@ -71,10 +74,18 @@ public class UserItem implements Serializable {
                 UserItem followingUserItem = new UserItem(followingJsonItem);
                 relatedFollowingList.add(followingUserItem);
             }
-            //todo: followList 관련 코드.
+
+            this.isFullyUpdated = jsonObject.get("follow_update").getAsBoolean();
+            // 여긴 그 유저에 딸린 관련 팔로우정보를 입력하는 것이므로 싱글톤에 관여하지 않는다.
+            // 그러므로 add로 처리.
+        } else {
+            this.isFullyUpdated = jsonObject.get("follow_update").getAsBoolean();
         }
 
+
+        InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
         singleton.updateUserList(this, jsonObject.get("follow_update").getAsBoolean());
+        // 전체 유저 리스트를 업데이트 해야하므로 중복검사를 해야한다.
 
     }
 
@@ -96,11 +107,15 @@ public class UserItem implements Serializable {
             this.isFollowed = userItem.isFollowed();
             this.relatedFollowingList = userItem.getRelatedFollowingList();
             this.relatedFollowerList = userItem.getRelatedFollowerList();
+
+            this.isFullyUpdated = true;
+
         } else {
             this.userPhoto = userItem.getUserPhoto();
             this.username = userItem.getUsername();
             this.fullName = userItem.getFullName();
             this.isFollowed = userItem.isFollowed();
+
         }
     }
     public String getUsername() {

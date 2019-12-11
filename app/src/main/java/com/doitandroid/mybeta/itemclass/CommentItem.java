@@ -42,13 +42,7 @@ public class CommentItem {
 
         this.created = item.get("created").getAsString();
 
-        this.user = new UserItem(
-                item.get("username").getAsString(),
-                item.get("user_id").getAsString(),
-                item.get("full_name").getAsString(),
-                item.get("user_photo").getAsString(),
-                null
-        );
+        this.user = new UserItem(item.get("user").getAsJsonObject());
 
         if (item.get("is_followed").getAsBoolean()) {
             // singletone follow 리스트에 추가.
