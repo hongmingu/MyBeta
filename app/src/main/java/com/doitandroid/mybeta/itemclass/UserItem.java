@@ -1,5 +1,7 @@
 package com.doitandroid.mybeta.itemclass;
 
+import android.util.Log;
+
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -11,18 +13,33 @@ import java.util.ArrayList;
 @SuppressWarnings("serial")
 public class UserItem implements Serializable {
 
+    private static final String TAG = "UserItem";
+
     String username, userID, fullName, userPhoto;
 
     boolean isFollowed, isFullyUpdated;
 
     ArrayList<UserItem> relatedFollowingList, relatedFollowerList;
 
+    ArrayList<OnUserItemChangedCallback> onUserItemChangedCallbackArrayList;
 
     // followlist 는 이 유저가 팔로우 하고 있는 사람들.
 
     // 여기서 followList 가 null 이면 리퀘스트로 찾는다. 아니면 이미 찾은 셈. 이런식으로 너무 계속 뻗어나가는 것을 방지.
     // 그리고 누가 a를 팔로우 하는지를 나타내고, a가 팔로우하는 사람까지 표시하는 것은 그림이 좋지 않은 것 같다.
 
+
+    @SuppressWarnings("serial")
+    public interface OnUserItemChangedCallback extends Serializable {
+        void onItemChanged(UserItem userItem);
+    }
+
+    public void setOnUserItemChangedListener(OnUserItemChangedCallback onUserItemChangedCallback){
+        Log.d(TAG, "setOnUserItemChangedListener");
+
+        onUserItemChangedCallbackArrayList.add(onUserItemChangedCallback);
+
+    }
 
     public UserItem(String username,
                     String userID,
@@ -45,6 +62,7 @@ public class UserItem implements Serializable {
         this.relatedFollowingList = relatedFollowingList;
         this.isFollowed = isFollowed;
 
+        onUserItemChangedCallbackArrayList = new ArrayList<>();
         InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
         singleton.updateUserList(this, followUpdate);
     }
@@ -81,7 +99,7 @@ public class UserItem implements Serializable {
         } else {
             this.isFullyUpdated = jsonObject.get("follow_update").getAsBoolean();
         }
-
+        onUserItemChangedCallbackArrayList = new ArrayList<>();
 
         InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
         singleton.updateUserList(this, jsonObject.get("follow_update").getAsBoolean());
@@ -117,7 +135,21 @@ public class UserItem implements Serializable {
             this.isFollowed = userItem.isFollowed();
 
         }
+
+
+        Log.d(TAG, "updatedItem");
+        if (onUserItemChangedCallbackArrayList.size() != 0){
+            for (OnUserItemChangedCallback onUserItemChangedCallback: onUserItemChangedCallbackArrayList){
+                onUserItemChangedCallback.onItemChanged(this);
+            }
+            Log.d(TAG, "updatedItemInCallback");
+
+        }
+
     }
+
+
+
     public String getUsername() {
         return username;
     }
@@ -157,6 +189,15 @@ public class UserItem implements Serializable {
 
     public void setFollowed(boolean followed) {
         isFollowed = followed;
+
+        if (onUserItemChangedCallbackArrayList.size() != 0){
+            for (OnUserItemChangedCallback onUserItemChangedCallback: onUserItemChangedCallbackArrayList){
+                onUserItemChangedCallback.onItemChanged(this);
+                Log.d(TAG, onUserItemChangedCallbackArrayList.size() +"");
+            }
+            Log.d(TAG, "setFollowed");
+
+        }
     }
 
     public ArrayList<UserItem> getRelatedFollowingList() {
@@ -174,4 +215,6 @@ public class UserItem implements Serializable {
     public void setRelatedFollowerList(ArrayList<UserItem> relatedFollowerList) {
         this.relatedFollowerList = relatedFollowerList;
     }
+
+
 }

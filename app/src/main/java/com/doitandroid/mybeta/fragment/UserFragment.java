@@ -104,29 +104,17 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
                 Bundle bundle = new Bundle();
 
-                boolean exist = false;
-                for (UserItem userItem: singleton.userList){
-                    if (userItem.getUserID().equals(profileUserID)){
-                        exist = true;
-                        bundle.putSerializable("userItem", userItem);
+                UserItem userItem = singleton.getUserItemFromSingletonByUserItem(new UserItem(profileUsername,
+                        profileUserID,
+                        profileFullName,
+                        profilePhoto,
+                        new ArrayList<UserItem>(),
+                        new ArrayList<UserItem>(),
+                        false,
+                        false,
+                        false));
 
-
-                    }
-                }
-                //todo: noupdate 인자.
-
-                if (!exist){
-                    UserItem createUserItem = new UserItem(profileUsername,
-                            profileUserID,
-                            profileFullName,
-                            profilePhoto,
-                            new ArrayList<UserItem>(),
-                            new ArrayList<UserItem>(),
-                            false,
-                            false,
-                            false);
-                    bundle.putSerializable("userItem", createUserItem);
-                }
+                bundle.putSerializable("userItem", userItem);
 
                 intent.putExtras(bundle);
 
@@ -144,30 +132,17 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
                 Bundle ingBundle = new Bundle();
 
-                boolean ingExist = false;
-                for (UserItem userItem: singleton.userList){
-                    if (userItem.getUserID().equals(profileUserID)){
-                        ingExist = true;
-                        ingBundle.putSerializable("userItem", userItem);
+                UserItem ingUserItem = singleton.getUserItemFromSingletonByUserItem(new UserItem(profileUsername,
+                        profileUserID,
+                        profileFullName,
+                        profilePhoto,
+                        new ArrayList<UserItem>(),
+                        new ArrayList<UserItem>(),
+                        false,
+                        false,
+                        false));
 
-
-                    }
-                }
-
-                if (!ingExist){
-                    UserItem createUserItem = new UserItem(profileUsername,
-                            profileUserID,
-                            profileFullName,
-                            profilePhoto,
-                            new ArrayList<UserItem>(),
-                            new ArrayList<UserItem>(),
-                            false,
-                            false,
-                            false);
-
-                    ingBundle.putSerializable("userItem", createUserItem);
-                }
-
+                ingBundle.putSerializable("userItem", ingUserItem);
                 ingIntent.putExtras(ingBundle);
 
                 ingIntent.putExtra(ConstantStrings.INTENT_CONTENT_FOLLOW_BOOLEAN, true);

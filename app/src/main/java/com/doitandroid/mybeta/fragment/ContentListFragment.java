@@ -74,7 +74,7 @@ public class ContentListFragment extends Fragment {
 
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_content_list, container, false);
 
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
 
 
 
@@ -117,14 +117,6 @@ public class ContentListFragment extends Fragment {
         return rootView;
     }
 
-
-
-    private APIInterface getApiInterface(){
-        SharedPreferences sp = getActivity().getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
-        String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
-        APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
-        return apiInterface;
-    }
 
 
 

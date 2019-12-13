@@ -22,12 +22,15 @@ import com.doitandroid.mybeta.MainActivity;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.adapter.HomeFollowAdapter;
 import com.doitandroid.mybeta.itemclass.FeedItem;
+import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +48,8 @@ public class HomeFollowFragment extends Fragment {
     TextView tv_count;
 
     APIInterface apiInterface;
+
+    ArrayList<UserItem> usingUserItemArrayList;
 
     ViewGroup rootView;
 
@@ -66,7 +71,7 @@ public class HomeFollowFragment extends Fragment {
             }
         });
 
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
 
         init_feed();
 
@@ -83,14 +88,6 @@ public class HomeFollowFragment extends Fragment {
         recyclerView.setAdapter(singleton.homeFollowAdapter);
 
         recyclerView.setNestedScrollingEnabled(false);
-//        final InteractiveImageView interactiveImageView = rootView.findViewById(R.id.iiv_home);
-//        interactiveImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                interactiveImageView.interactive_click();
-//            }
-//        });
-
         return rootView;
         // return inflater.inflate(R.layout.fragment1, container, false);
         //return super.onCreateView(inflater, container, savedInstanceState);
@@ -110,6 +107,8 @@ public class HomeFollowFragment extends Fragment {
         });
      */
     public void init_feed(){
+
+
         singleton.followFeedList.clear();
 
 

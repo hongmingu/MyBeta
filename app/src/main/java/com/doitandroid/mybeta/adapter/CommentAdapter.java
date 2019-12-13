@@ -26,6 +26,7 @@ import com.doitandroid.mybeta.itemclass.NotiItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -43,13 +44,14 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     //  comment는 그때그때 리스트 만들어서 준다.
 
     Context context;
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     APIInterface apiInterface;
 
     public CommentAdapter(ArrayList<CommentItem> commentItemArrayList, Context context) {
         this.commentItemArrayList = commentItemArrayList;
         this.context = context;
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
     }
 
     @NonNull

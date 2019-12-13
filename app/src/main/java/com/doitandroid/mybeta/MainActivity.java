@@ -43,6 +43,7 @@ import com.doitandroid.mybeta.fragment.SearchFragment;
 import com.doitandroid.mybeta.fragment.UserFragment;
 import com.doitandroid.mybeta.homeping.HomePingAdapater;
 import com.doitandroid.mybeta.fragment.HomeFollowFragment;
+import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.ping.PingShownItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList<PingShownItem> forYouPingShownItemArrayList, allPingShownItemArrayList, recommendPingShownItemArrayList;
     ArrayList<View> wrapperVisibleArrayList;
     ArrayList<Fragment> fragments;
+
     PingShownItem currentPingShownItem;
 
     AppCompatTextView home_ping_preview_tv;
@@ -144,7 +146,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             set_toolbar();
             findViews();
 
-            apiInterface = getApiInterface();
+            // apiInterface를 처음 쓰는 곳으로 추측.
+
+            singleton.setApiInterface(getApiInterface());
+            apiInterface = singleton.apiInterface;
+
             context = this;
 
             currentPingIsWide = false;

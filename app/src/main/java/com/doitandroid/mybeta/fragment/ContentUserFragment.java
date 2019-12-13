@@ -135,9 +135,15 @@ public class ContentUserFragment extends Fragment {
                         // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
                         if (jsonObject.get("content").getAsBoolean()){
                             // follow
+
+                            userItem.setFollowed(true);
+                            singleton.updateUserList(userItem, false);
                             follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
 
                         } else {
+
+                            userItem.setFollowed(false);
+                            singleton.updateUserList(userItem, false);
                             follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
 
 

@@ -5,6 +5,7 @@ import android.view.View;
 import com.doitandroid.mybeta.ConstantAnimations;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.PingItem;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class FeedItem {
 
 
 
+
     public FeedItem(JsonObject jsonObject) {
 
         this.jsonObject = jsonObject;
@@ -53,8 +55,9 @@ public class FeedItem {
 
             //todo: django 에서 오타 수정 pint_id 가 아니라 ping_id, user_fullname 이 아니라 full_name, userPhoto 추가, 로그인한 사람 자신의 포토,
 
+            InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
-            this.user = new UserItem(item.get("user").getAsJsonObject());
+            this.user = singleton.getUserItemFromSingletonByJsonObject(item.get("user").getAsJsonObject());
 
 
 

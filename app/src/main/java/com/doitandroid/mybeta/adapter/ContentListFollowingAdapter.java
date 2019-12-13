@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -23,6 +24,7 @@ import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
     ArrayList<UserItem> userItemArrayList;
     Context context;
     Fragment parentFragment;
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     APIInterface apiInterface;
 
@@ -47,7 +50,7 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
         this.userItemArrayList = userItemArrayList;
         this.context = context;
         this.parentFragment = parentFragment;
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
     }
 
     @NonNull
@@ -72,7 +75,7 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        final UserItem userItem = userItemArrayList.get(position);
+        final UserItem userItem = singleton.getUserItemFromSingletonByUserID(userItemArrayList.get(position).getUserID());
 
         switch (getItemViewType(position)){
 
@@ -90,6 +93,17 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
                     @Override
                     public void onClick(View v) {
                         follow_user(userItem.getUserID(), userViewHolder.follow_iv);
+                    }
+                });
+
+                userItem.setOnUserItemChangedListener(new UserItem.OnUserItemChangedCallback() {
+                    @Override
+                    public void onItemChanged(UserItem userItem) {
+                        Log.d(TAG, "follow from list following: "+ userItem.isFollowed()+ this.getClass().toString());
+
+                        Toast.makeText(context, "following: "+ userItem.isFollowed()+ this.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
+
+
                     }
                 });
 
@@ -159,7 +173,9 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
         return apiInterface;
     }
 
-    public void follow_user(String userID, final View follow_iv){
+    //todo: getApiInterface를 싱글톤으로 사용. useritem을 모두 싱글톤에서 사용.
+
+    public void follow_user(final String userID, final View follow_iv){
         RequestBody requestUserID = RequestBody.create(MediaType.parse("multipart/form-data"), userID);
         Call<JsonObject> call = apiInterface.follow(requestUserID);
         call.enqueue(new Callback<JsonObject>() {
@@ -178,10 +194,21 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
 
                         // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
                         if (jsonObject.get("content").getAsBoolean()){
+
+
                             // follow
+                            UserItem userItem = singleton.getUserItemFromSingletonByUserID(userID);
+                            if (userItem != null){
+                                userItem.setFollowed(true);
+                            }
                             follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
                         } else {
                             // not follow
+
+                            UserItem userItem = singleton.getUserItemFromSingletonByUserID(userID);
+                            if (userItem != null){
+                                userItem.setFollowed(false);
+                            }
                             follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
                         }
 

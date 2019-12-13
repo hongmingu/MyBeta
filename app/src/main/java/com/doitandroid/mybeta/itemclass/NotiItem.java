@@ -3,6 +3,7 @@ package com.doitandroid.mybeta.itemclass;
 import com.doitandroid.mybeta.ConstantAnimations;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.PingItem;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -35,7 +36,10 @@ public class NotiItem {
 
         this.created = item.get("created").getAsString();
 
-        this.user = new UserItem(item.get("user").getAsJsonObject());
+
+        InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
+
+        this.user = singleton.getUserItemFromSingletonByJsonObject(item.get("user").getAsJsonObject());
 
         if (item.get("is_followed").getAsBoolean()) {
             // singletone follow 리스트에 추가.

@@ -1,6 +1,7 @@
 package com.doitandroid.mybeta.itemclass;
 
 import com.doitandroid.mybeta.ConstantIntegers;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonObject;
 
 public class CommentItem {
@@ -41,8 +42,9 @@ public class CommentItem {
         this.commentText = item.get("comment_text").getAsString();
 
         this.created = item.get("created").getAsString();
+        InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
-        this.user = new UserItem(item.get("user").getAsJsonObject());
+        this.user = singleton.getUserItemFromSingletonByJsonObject(item.get("user").getAsJsonObject());
 
         if (item.get("is_followed").getAsBoolean()) {
             // singletone follow 리스트에 추가.

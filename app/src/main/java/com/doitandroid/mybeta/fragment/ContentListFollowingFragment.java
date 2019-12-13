@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import com.doitandroid.mybeta.adapter.ContentListFollowingAdapter;
 import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,6 +45,9 @@ public class ContentListFollowingFragment extends Fragment {
     Fragment fragment;
 
     ContentListFollowingAdapter adapter;
+
+
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     /*
     public static ContentListFollowerFragment newInstance(){
@@ -88,7 +93,9 @@ public class ContentListFollowingFragment extends Fragment {
 
                         for(JsonElement jsonElement: contentArray){
                             JsonObject item = jsonElement.getAsJsonObject();
-                            UserItem userItem = new UserItem(item);
+
+                            UserItem userItem = singleton.getUserItemFromSingletonByJsonObject(item);
+
                             userItemArrayList.add(userItem);
 
                         }

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import com.doitandroid.mybeta.itemclass.ReactItem;
 import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -42,6 +44,7 @@ public class ContentListFollowerFragment extends Fragment {
 
     ContentListFollowerAdapter adapter;
 
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     /*public static ContentListFollowerFragment newInstance(){
         return new ContentListFollowerFragment();
@@ -86,7 +89,7 @@ public class ContentListFollowerFragment extends Fragment {
 
                         for(JsonElement jsonElement: contentArray){
                             JsonObject item = jsonElement.getAsJsonObject();
-                            UserItem userItem = new UserItem(item);
+                            UserItem userItem = singleton.getUserItemFromSingletonByJsonObject(item);
                             userItemArrayList.add(userItem);
 
                         }
@@ -122,13 +125,6 @@ public class ContentListFollowerFragment extends Fragment {
 
     }
 
-
-    private APIInterface getApiInterface(){
-        SharedPreferences sp = getContext().getSharedPreferences(ConstantStrings.SP_INIT_APP, Context.MODE_PRIVATE);
-        String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
-        APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
-        return apiInterface;
-    }
 
     public ContentListFollowerFragment(APIInterface apiInterface) {
         this.apiInterface = apiInterface;
