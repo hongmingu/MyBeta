@@ -64,7 +64,7 @@ public class ContentUserFragment extends Fragment {
 
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_content_user, container, false);
 
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
 //        ((ContentActivity)getActivity()).addTestFragment();
 
         setViews();

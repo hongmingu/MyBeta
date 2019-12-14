@@ -26,7 +26,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Space;
@@ -43,7 +42,6 @@ import com.doitandroid.mybeta.fragment.SearchFragment;
 import com.doitandroid.mybeta.fragment.UserFragment;
 import com.doitandroid.mybeta.homeping.HomePingAdapater;
 import com.doitandroid.mybeta.fragment.HomeFollowFragment;
-import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.ping.PingShownItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
@@ -60,8 +58,6 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         tedPermission();
 
-        if (is_logined){
+        if (is_logined) {
 
             set_toolbar();
             findViews();
@@ -208,24 +204,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-
-
     }
-    private void openPingDimWrapper(){
+
+    private void openPingDimWrapper() {
         home_ping_dim_wrapper_cl.setVisibility(View.VISIBLE);
         home_overlay_wrapper_cl.setVisibility(View.VISIBLE);
         ping_side_visible();
 
     }
-    private void closePingDimWrapper(){
-        if (btn_add_post.isPressed() || currentPingIsPressed){
+
+    private void closePingDimWrapper() {
+        if (btn_add_post.isPressed() || currentPingIsPressed) {
             return;
         }
         home_ping_dim_wrapper_cl.setVisibility(View.INVISIBLE);
         home_overlay_wrapper_cl.setVisibility(View.INVISIBLE);
         ping_side_invisible();
 
-        for (PingShownItem pingShownItem: allPingShownItemArrayList){
+        for (PingShownItem pingShownItem : allPingShownItemArrayList) {
             pingShownItem.setIsClicked(false);
         }
         home_ping_preview_tv.setText("");
@@ -233,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void refreshRecommendPings(){
+    private void refreshRecommendPings() {
         Call<JsonObject> call = apiInterface.refresh_recommend_pings();
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -286,13 +282,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             pingShownItem.getLottieAnimationView().setOnTouchListener(new View.OnTouchListener() {
                                 @Override
                                 public boolean onTouch(View v, MotionEvent event) {
-                                    if(event.getAction() == event.ACTION_DOWN){
+                                    if (event.getAction() == event.ACTION_DOWN) {
                                         // 처음 누를 때
                                         Log.d(TAG, "ACTION_DOWN");
                                         currentPingIsPressed = true;
-                                    } else if (event.getAction() == event.ACTION_MOVE){
+                                    } else if (event.getAction() == event.ACTION_MOVE) {
                                         // 움직일 떄
-                                    } else if (event.getAction() == event.ACTION_UP){
+                                    } else if (event.getAction() == event.ACTION_UP) {
                                         // 떨어질 때
                                         currentPingIsPressed = false;
                                     }
@@ -372,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private APIInterface getApiInterface(){
+    private APIInterface getApiInterface() {
         SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
         String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
         APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
@@ -424,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 @Override
                                 public void onClick(View v) {
                                     removeAllClicked();
-                                    if(home_ping_dim_wrapper_cl.getVisibility() == View.INVISIBLE){
+                                    if (home_ping_dim_wrapper_cl.getVisibility() == View.INVISIBLE) {
                                         openPingDimWrapper();
                                     }
                                     pingShownItem.setIsClicked(true);
@@ -437,22 +433,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             pingShownItem.getLottieAnimationView().setOnTouchListener(new View.OnTouchListener() {
                                 @Override
                                 public boolean onTouch(View v, MotionEvent event) {
-                                    if(event.getAction() == event.ACTION_DOWN){
+                                    if (event.getAction() == event.ACTION_DOWN) {
                                         // 처음 누를 때
                                         Log.d(TAG, "ACTION_DOWN");
                                         currentPingIsPressed = true;
 
                                         progressThread = new ProgressThread();
-                                        if (pingShownItem.getIsClicked()){
+                                        if (pingShownItem.getIsClicked()) {
                                             progressThread.start();
                                         }
-                                    } else if (event.getAction() == event.ACTION_MOVE){
+                                    } else if (event.getAction() == event.ACTION_MOVE) {
                                         // 움직일 떄
-                                    } else if (event.getAction() == event.ACTION_UP){
+                                    } else if (event.getAction() == event.ACTION_UP) {
                                         // 떨어질 때
                                         currentPingIsPressed = false;
 
-                                        if (progressThread != null){
+                                        if (progressThread != null) {
                                             progressThread.stopThread();
 
                                         }
@@ -470,12 +466,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 Space space = new Space(getApplicationContext());
                                 space.setLayoutParams(new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.home_ping_space), ViewGroup.LayoutParams.MATCH_PARENT));
                                 main_ping_for_you_ll.addView(space);
-                                if (default_ping_index == 1){
+                                if (default_ping_index == 1) {
                                     view.setVisibility(View.INVISIBLE);
                                     space.setVisibility(View.INVISIBLE);
                                     wrapperVisibleArrayList.add(view);
                                     wrapperVisibleArrayList.add(space);
-                                } else if (default_ping_index == 4){
+                                } else if (default_ping_index == 4) {
                                     space.setVisibility(View.INVISIBLE);
                                     wrapperVisibleArrayList.add(space);
                                 }
@@ -502,14 +498,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void startReactActivity(String postID){
+    public void startReactActivity(String postID) {
         Intent intent = new Intent(context, ReactActivity.class);
         intent.putExtra(ConstantStrings.INTENT_POST_ID, postID);
 
         ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_REACT);
         ((MainActivity) context).overridePendingTransition(0, 0); //
     }
-    public void startCommentActivity(String postID, boolean openKeyboard){
+
+    public void startCommentActivity(String postID, boolean openKeyboard) {
         Intent intent = new Intent(context, CommentActivity.class);
         intent.putExtra(ConstantStrings.INTENT_POST_ID, postID);
         intent.putExtra(ConstantStrings.INTENT_OPEN_KEYBOARD, openKeyboard);
@@ -517,8 +514,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_COMMENT);
         ((MainActivity) context).overridePendingTransition(0, 0); //
     }
+
     public void removeAllClicked() {
-        for (PingShownItem item: allPingShownItemArrayList){
+        for (PingShownItem item : allPingShownItemArrayList) {
             item.setIsClicked(false);
         }
     }
@@ -654,13 +652,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void ping_side_invisible() {
-        for (View view: wrapperVisibleArrayList){
+        for (View view : wrapperVisibleArrayList) {
             view.setVisibility(View.INVISIBLE);
         }
     }
 
     private void ping_side_visible() {
-        for (View view: wrapperVisibleArrayList){
+        for (View view : wrapperVisibleArrayList) {
             view.setVisibility(View.VISIBLE);
         }
 
@@ -694,7 +692,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tb_btn_clicked(ConstantStrings.FRAGMENT_USER);
 
 
-
                 // narrower 일 때 space비롯해서 invisible 걸어버리자. tag 붙이면 됨.
                 break;
 
@@ -705,7 +702,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent_add_post = new Intent(this, AddPostActivity.class);
 
                 intent_add_post.putExtra(ConstantStrings.INTENT_REQUEST_CODE, ConstantIntegers.REQUEST_ADD_POST);
-                if (currentPingShownItem != null){
+                if (currentPingShownItem != null) {
                     intent_add_post.putExtra(ConstantStrings.INTENT_PING_SHOWN_ITEM_ID, currentPingShownItem.getPingID());
                 } else {
                     intent_add_post.putExtra(ConstantStrings.INTENT_PING_SHOWN_ITEM_ID, ConstantStrings.INTENT_NO_PING);
@@ -757,7 +754,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     fragment_home_received = new HomeReceivedFragment();
                     fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_received).commit();
                 }
-                fragments  = (ArrayList<Fragment>) fragmentManager.getFragments();
+                fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
                     if (fragment != null && fragment.isVisible()) {
                         fragmentManager.beginTransaction().hide(fragment).commit();
@@ -787,10 +784,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 이게 추가된 부분.
 
 
-
         switch (clicked) {
             case ConstantStrings.FRAGMENT_HOME:
-                if (currentFragmentHomeFollow){
+                if (currentFragmentHomeFollow) {
 
                     if (fragment_home_follow == null) {
                         fragment_home_follow = new HomeFollowFragment();
@@ -826,7 +822,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 }
-
 
 
             case ConstantStrings.FRAGMENT_NOTI:
@@ -909,7 +904,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 case ConstantIntegers.REQUEST_SETTING_ACTIVITY:
 
-                    if (data.getIntExtra(ConstantStrings.INTENT_LOGOUT_INFO, ConstantIntegers.RESULT_CANCELED) == ConstantIntegers.RESULT_LOGOUTTED) {
+                    if (data.getIntExtra(ConstantStrings.INTENT_LOGOUT_INFO, ConstantIntegers.RESULT_CANCELED) == ConstantIntegers.RESULT_LOGGED_OUT) {
                         //logout됨
                         logout();
                         Toast.makeText(this, "is logout", Toast.LENGTH_SHORT).show();
@@ -933,11 +928,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                     break;
-                case  CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     // 문서 가면 에러 코드도 있다.
 
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                    for (int i=0; i<result.getCropPoints().length; i++ ){
+                    for (int i = 0; i < result.getCropPoints().length; i++) {
                         Log.d(TAG, "crop data: " + result.getCropPoints()[i] + "");
 
                     }
@@ -951,13 +946,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                     break;
+                case ConstantIntegers.REQUEST_PROFILE_CHANGE:
+                    if (data.getIntExtra(ConstantStrings.INTENT_PROFILE_CHANGE, ConstantIntegers.RESULT_PROFILE_NOT_CHANGED)
+                            == ConstantIntegers.RESULT_PROFILE_CHANGED) {
+                        //profile has changed
+                    } else {
+                        //profile has not changed
+                    }
+                    break;
+
                 default:
                     break;
             }
         }
     }
 
-    public void changeProfilePhoto(Uri imageUri){
+    public void changeProfilePhoto(Uri imageUri) {
 
         File imageFile = new File(imageUri.getPath());
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
@@ -983,7 +987,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         userFragment.changePhoto(jsonObject.get("content").getAsString());
 
 
-
                         // 접속 성공.
                     }
                 }
@@ -997,7 +1000,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    public void getCroppedImage(){
+    public void getCroppedImage() {
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setAspectRatio(1, 1)
@@ -1031,7 +1034,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return px / (context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
-    public void sendInstantPing(String pingID){
+    public void sendInstantPing(String pingID) {
 
         final MyDialog dialog = new MyDialog(this, "뒤로가기", "작업중인 내용이 있다", "뒤로갈래잉", "안갈래잉");
         dialog.setDialogListener(new MyDialogListener() {
@@ -1086,7 +1089,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
     class ProgressThread extends Thread {
 
         boolean stopped;
@@ -1112,7 +1114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             while (stopped == false) {
                 i++;
-                if(i >= 1001){
+                if (i >= 1001) {
                     stopThread();
                     Message message = sendPingHandler.obtainMessage();
                     message.what = ConstantIntegers.SEND_INSTANT_PING;
@@ -1177,7 +1179,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    public void fcmPush(String token){
+    public void fcmPush(String token) {
 
         RequestBody requestToken = RequestBody.create(MediaType.parse("multipart/form-data"), token);
 

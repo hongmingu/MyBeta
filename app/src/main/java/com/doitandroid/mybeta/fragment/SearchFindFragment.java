@@ -25,6 +25,7 @@ import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,6 +44,8 @@ import static android.content.Context.MODE_PRIVATE;
 public class SearchFindFragment extends Fragment {
 
     private final static String TAG = "SearchFindFragment";
+
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     APIInterface apiInterface;
 
@@ -69,7 +72,7 @@ public class SearchFindFragment extends Fragment {
         fragment_search_find_rv = rootView.findViewById(R.id.fragment_search_find_rv);
         userItemArrayList = new ArrayList<>();
 
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
         return rootView;
     }
 
@@ -100,7 +103,7 @@ public class SearchFindFragment extends Fragment {
 
                         for(JsonElement jsonElement: contentArray){
                             JsonObject item = jsonElement.getAsJsonObject();
-                            UserItem userItem = new UserItem(item);
+                            UserItem userItem = singleton.getUserItemFromSingletonByJsonObject(item);
                             userItemArrayList.add(userItem);
 
                         }
@@ -134,14 +137,6 @@ public class SearchFindFragment extends Fragment {
         });
 
     }
-
-    private APIInterface getApiInterface(){
-        SharedPreferences sp = getActivity().getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
-        String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
-        APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
-        return apiInterface;
-    }
-
 
     public void follow_user(String userID, final ImageView follow){
         RequestBody requestUserID = RequestBody.create(MediaType.parse("multipart/form-data"), userID);

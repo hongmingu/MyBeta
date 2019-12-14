@@ -78,6 +78,11 @@ public class ConstantStrings {
     public static final String INTENT_FOLLOW_FOLLOWING = "following";
     public static final String INTENT_FOLLOW_FOLLOWER = "follower";
 
+    public static final String INTENT_PROFILE_CHANGE= "profile_change";
+    public static final String INTENT_PROFILE_USERNAME= "profile_username";
+    public static final String INTENT_PROFILE_FULL_NAME= "profile_full_name";
+    public static final String INTENT_PROFILE_EMAIL= "profile_email";
+
     /* view TAG */
 
     public static final String TAG_WIDE_VISIBLE = "tag_wide_visible";

@@ -14,6 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".PasswordChangeActivity"></activity>
+        <activity
+            android:name=".ProfileChangeActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ReactActivity" />
         <activity
             android:name=".PushViewerActivity"

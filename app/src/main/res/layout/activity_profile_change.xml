@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ProfileChangeActivity">
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/profile_change_exit"
+        android:layout_width="@dimen/front_back_wrapper_width"
+        android:layout_height="@dimen/front_back_wrapper_height"
+        android:background="@drawable/bg_white_clicked_10skyblue">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_gravity="center"
+            android:layout_width="@dimen/front_back_icon_width"
+            android:layout_height="@dimen/front_back_icon_width"
+            android:background="@drawable/ic_back_skyblue100"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_marginTop="144dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textColor="#202020"
+                android:lineSpacingExtra="5sp"
+                android:text="full name"
+                />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/profile_change_full_name_et"
+                android:layout_width="280dp"
+                android:padding="0dp"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/transparent">
+
+            </androidx.appcompat.widget.AppCompatEditText>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textColor="#202020"
+                android:lineSpacingExtra="5sp"
+                android:text="username"
+                />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/profile_change_username_et"
+                android:padding="0dp"
+                android:layout_width="280dp"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/transparent">
+
+            </androidx.appcompat.widget.AppCompatEditText>
+
+            <androidx.appcompat.widget.AppCompatTextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textColor="#202020"
+                android:lineSpacingExtra="5sp"
+                android:text="email"
+                />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/profile_change_email_et"
+                android:padding="0dp"
+                android:layout_width="280dp"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/transparent">
+
+
+            </androidx.appcompat.widget.AppCompatEditText>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/profile_change_save_cl"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/darkblue">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_gravity="center"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="normal"
+            android:textColor="@color/white"
+            android:lineSpacingExtra="5sp"
+            android:text="save"
+            />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -29,7 +29,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.setting_logout:
                 Intent result_intent = new Intent();
-                result_intent.putExtra(ConstantStrings.INTENT_LOGOUT_INFO, ConstantIntegers.RESULT_LOGOUTTED);
+                result_intent.putExtra(ConstantStrings.INTENT_LOGOUT_INFO, ConstantIntegers.RESULT_LOGGED_OUT);
                 setResult(RESULT_OK, result_intent);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

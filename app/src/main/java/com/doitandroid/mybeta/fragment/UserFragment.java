@@ -24,6 +24,7 @@ import com.doitandroid.mybeta.ContentActivity;
 import com.doitandroid.mybeta.Cropper.CropImage;
 import com.doitandroid.mybeta.Cropper.CropImageView;
 import com.doitandroid.mybeta.MainActivity;
+import com.doitandroid.mybeta.ProfileChangeActivity;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.ReactActivity;
 import com.doitandroid.mybeta.itemclass.UserItem;
@@ -41,7 +42,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "UserFragment";
 
     CoordinatorLayout user_fragment_follower_cl, user_fragment_following_cl;
-    AppCompatImageView user_fragment_setting_btn_iv, user_fragment_change_photo_iv;
+    AppCompatImageView user_fragment_setting_btn_iv, user_fragment_change_photo_iv, user_fragment_change_profile_iv;
     CircleImageView user_fragment_profile_photo_civ;
 
     TextView user_fragment_profile_username_tv, user_fragment_profile_full_name_tv, user_fragment_profile_email_tv;
@@ -75,6 +76,11 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         user_fragment_following_cl.setOnClickListener(this);
 
         user_fragment_profile_photo_civ = rootView.findViewById(R.id.fragment_user_photo_civ);
+
+        user_fragment_change_profile_iv = rootView.findViewById(R.id.fragment_user_change_profile_iv);
+        user_fragment_change_profile_iv.setOnClickListener(this);
+
+
 
 
         setProfile();
@@ -148,6 +154,17 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 ingIntent.putExtra(ConstantStrings.INTENT_CONTENT_FOLLOW_BOOLEAN, true);
 
                 ((MainActivity) activity).startActivityForResult(ingIntent, ConstantIntegers.REQUEST_CONTENT);
+                ((MainActivity) activity).overridePendingTransition(0, 0); //
+
+                break;
+            case R.id.fragment_user_change_profile_iv:
+                Intent proIntent = new Intent(activity, ProfileChangeActivity.class);
+
+                proIntent.putExtra(ConstantStrings.INTENT_PROFILE_FULL_NAME, profileFullName);
+                proIntent.putExtra(ConstantStrings.INTENT_PROFILE_USERNAME, profileUsername);
+                proIntent.putExtra(ConstantStrings.INTENT_PROFILE_EMAIL, profileEmail);
+
+                ((MainActivity) activity).startActivityForResult(proIntent, ConstantIntegers.REQUEST_PROFILE_CHANGE);
                 ((MainActivity) activity).overridePendingTransition(0, 0); //
 
                 break;

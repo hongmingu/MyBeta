@@ -31,7 +31,7 @@ public class ContentActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
 
         gotIntent = getIntent();
-        UserItem userItem = (UserItem) gotIntent.getSerializableExtra("userItem");
+        UserItem userItem = singleton.getUserItemFromSingletonByUserItem((UserItem) gotIntent.getSerializableExtra("userItem"));
 
         switch (gotIntent.getStringExtra(ConstantStrings.INTENT_CONTENT_START)){
             case ConstantStrings.INTENT_CONTENT_USER:
@@ -58,7 +58,7 @@ public class ContentActivity extends AppCompatActivity {
 
 
     public void addTestFragment(){
-        UserItem userItem = (UserItem) gotIntent.getSerializableExtra("userItem");
+        UserItem userItem = singleton.getUserItemFromSingletonByUserItem((UserItem) gotIntent.getSerializableExtra("userItem"));
         ContentUserFragment contentUserFragment = new ContentUserFragment(userItem);
 
         singleton.contentFragmentList.add(contentUserFragment);
@@ -103,10 +103,10 @@ public class ContentActivity extends AppCompatActivity {
 
     public void addListFragment(UserItem userItem, boolean initFollowing){
 
-        ContentListFragment contentListFragmen = new ContentListFragment(userItem, initFollowing);
+        ContentListFragment contentListFragment = new ContentListFragment(userItem, initFollowing);
 
-        singleton.contentFragmentList.add(contentListFragmen);
-        fragmentManager.beginTransaction().add(R.id.content_frame_cl, contentListFragmen).commit();
+        singleton.contentFragmentList.add(contentListFragment);
+        fragmentManager.beginTransaction().add(R.id.content_frame_cl, contentListFragment).commit();
 
 //                ArrayList<Fragment> fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
 //                for (Fragment fragment : fragments) {
@@ -115,13 +115,13 @@ public class ContentActivity extends AppCompatActivity {
 //
 //                    }
 //                }
-        fragmentManager.beginTransaction().show(contentListFragmen).commit();
+        fragmentManager.beginTransaction().show(contentListFragment).commit();
         limitFragmentNumber();
     }
 
 
     public void limitFragmentNumber(){
-        if (fragmentManager.getFragments().size() > 5){
+        if (fragmentManager.getFragments().size() > 20){
             Fragment fragment = fragmentManager.getFragments().get(0);
             fragmentManager.beginTransaction().remove(fragment).commit();
 

@@ -23,6 +23,7 @@ import com.doitandroid.mybeta.MainActivity;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.itemclass.CommentItem;
 import com.doitandroid.mybeta.itemclass.NotiItem;
+import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
@@ -77,12 +78,13 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final CommentItem commentItem = commentItemArrayList.get(position);
+        final UserItem userItem = singleton.getUserItemFromSingletonByUserItem(commentItem.getUser());
 
         switch (getItemViewType(position)){
 
             default:
                 CommentViewHolder commentViewHolder = ((CommentViewHolder) holder);
-                commentViewHolder.comment_full_name_tv.setText(commentItem.getUser().getFullName());
+                commentViewHolder.comment_full_name_tv.setText(userItem.getFullName());
 
                 commentViewHolder.comment_full_name_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -91,7 +93,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
 
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("userItem", commentItem.getUser());
+                        bundle.putSerializable("userItem", userItem);
                         intent.putExtras(bundle);
 
                         ((CommentActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
@@ -102,7 +104,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 commentViewHolder.comment_text_tv.setText(commentItem.getCommentText());
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())
-                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + commentItem.getUser().getUserPhoto())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
                         .into(commentViewHolder.comment_user_photo_civ);
 
 

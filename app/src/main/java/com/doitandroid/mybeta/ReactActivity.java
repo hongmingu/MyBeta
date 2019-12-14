@@ -17,6 +17,7 @@ import com.doitandroid.mybeta.itemclass.CommentItem;
 import com.doitandroid.mybeta.itemclass.ReactItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -41,6 +42,8 @@ public class ReactActivity extends AppCompatActivity {
     RecyclerView react_content_rv;
     ReactAdapter reactAdapter;
 
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
+
     Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class ReactActivity extends AppCompatActivity {
         reactItemArrayList = new ArrayList<>();
 
 
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
         react_content_rv = findViewById(R.id.react_content_rv);
 
 

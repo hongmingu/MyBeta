@@ -17,9 +17,11 @@ import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.itemclass.NotiItem;
+import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -35,12 +37,14 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
 
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
+
     APIInterface apiInterface;
 
     public NotiAdapter(ArrayList<NotiItem> notiItemArrayList, Context context) {
         this.notiItemArrayList = notiItemArrayList;
         this.context = context;
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
     }
 
     @NonNull
@@ -91,25 +95,27 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         NotiItem notiItem = notiItemArrayList.get(position);
+        UserItem userItem = notiItem.getUser();
 
         switch (getItemViewType(position)){
 
             case ConstantIntegers.NOTICE_FOLLOW:
                 NotiFollowViewHolder followHolder = ((NotiFollowViewHolder) holder);
-                followHolder.follow_name_tv.setText(notiItem.getUser().getFullName());
+                followHolder.follow_name_tv.setText(userItem.getFullName());
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())
-                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + notiItem.getUser().getUserPhoto())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
                         .into(followHolder.follow_user_photo_civ);
+
                 Log.d(TAG, "post text: " + notiItem.getCommentText());
 
                 break;
             case ConstantIntegers.NOTICE_POST_COMMENT:
                 NotiPostCommentViewHolder postCommentHolder = ((NotiPostCommentViewHolder) holder);
-                postCommentHolder.post_comment_text_tv.setText(notiItem.getUser().getFullName());
+                postCommentHolder.post_comment_text_tv.setText(userItem.getFullName());
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())
-                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + notiItem.getUser().getUserPhoto())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
                         .into(postCommentHolder.post_comment_user_photo_civ);
 
                 postCommentHolder.post_comment_text_tv.setText(notiItem.getCommentText());
@@ -118,10 +124,10 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
             case ConstantIntegers.NOTICE_POST_REACT:
                 NotiPostReactViewHolder postReactHolder = ((NotiPostReactViewHolder) holder);
-                postReactHolder.post_react_name_tv.setText(notiItem.getUser().getFullName());
+                postReactHolder.post_react_name_tv.setText(userItem.getFullName());
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())
-                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + notiItem.getUser().getUserPhoto())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
                         .into(postReactHolder.post_react_user_photo_civ);
                 break;
             case ConstantIntegers.NOTICE_TIMEBAR_QUARTER_DAY:
@@ -258,10 +264,4 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return msg;
     }
 
-    private APIInterface getApiInterface(){
-        SharedPreferences sp = context.getSharedPreferences(ConstantStrings.SP_INIT_APP, Context.MODE_PRIVATE);
-        String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
-        APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
-        return apiInterface;
-    }
 }

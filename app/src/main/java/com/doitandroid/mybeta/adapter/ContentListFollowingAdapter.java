@@ -99,13 +99,10 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
                 userItem.setOnUserItemChangedListener(new UserItem.OnUserItemChangedCallback() {
                     @Override
                     public void onItemChanged(UserItem userItem) {
-                        Log.d(TAG, "follow from list following: "+ userItem.isFollowed()+ this.getClass().toString());
-
-                        Toast.makeText(context, "following: "+ userItem.isFollowed()+ this.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
-
-
+                        Log.d(TAG, "follow list followingadapter: "+ userItem.isFollowed()+ this.getClass().toString());
                     }
                 });
+
 
 
                 break;

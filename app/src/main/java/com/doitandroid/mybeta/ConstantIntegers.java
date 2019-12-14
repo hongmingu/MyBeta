@@ -38,12 +38,16 @@ public final class ConstantIntegers {
     public final static int REQUEST_REACT = 306;
 
     public final static int REQUEST_FOLLOW = 310;
+    public final static int REQUEST_PROFILE_CHANGE = 311;
 
     /* result codes */
 
     public final static int RESULT_SUCCESS = 200;
 
-    public final static int RESULT_LOGOUTTED= 400;
+    public final static int RESULT_PROFILE_NOT_CHANGED = 202;
+    public final static int RESULT_PROFILE_CHANGED = 203;
+
+    public final static int RESULT_LOGGED_OUT = 400;
     public final static int RESULT_CANCELED= 404;
 
 

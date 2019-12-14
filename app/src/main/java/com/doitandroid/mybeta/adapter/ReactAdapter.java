@@ -24,9 +24,11 @@ import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.ReactActivity;
 import com.doitandroid.mybeta.itemclass.CommentItem;
 import com.doitandroid.mybeta.itemclass.ReactItem;
+import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ import retrofit2.Response;
 public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "ReactAdapterTAG";
     ArrayList<ReactItem> reactItemArrayList;
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     // todo: CommentItem 만든다.
     //  comment는 그때그때 리스트 만들어서 준다.
@@ -53,7 +56,7 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public ReactAdapter(ArrayList<ReactItem> reactItemArrayList, Context context) {
         this.reactItemArrayList = reactItemArrayList;
         this.context = context;
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
     }
 
     @NonNull
@@ -79,12 +82,13 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final ReactItem reactItem = reactItemArrayList.get(position);
+        final UserItem userItem = singleton.getUserItemFromSingletonByUserItem(reactItem.getUser());
 
         switch (getItemViewType(position)){
 
             default:
                 final ReactViewHolder reactViewHolder = ((ReactViewHolder) holder);
-                reactViewHolder.react_full_name_tv.setText(reactItem.getUser().getFullName());
+                reactViewHolder.react_full_name_tv.setText(userItem.getFullName());
 
                 reactViewHolder.react_full_name_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -93,7 +97,7 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
 
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("userItem", reactItem.getUser());
+                        bundle.putSerializable("userItem", userItem);
                         intent.putExtras(bundle);
 
                         ((ReactActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
@@ -103,13 +107,13 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 });
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())
-                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + reactItem.getUser().getUserPhoto())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
                         .into(reactViewHolder.react_user_photo_civ);
 
                 reactViewHolder.react_follow_iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        follow_user(reactItem.getUser().getUserID(), reactViewHolder.react_follow_iv);
+                        follow_user(userItem.getUserID(), reactViewHolder.react_follow_iv);
                     }
                 });
 

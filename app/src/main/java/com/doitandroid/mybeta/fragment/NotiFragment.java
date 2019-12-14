@@ -50,7 +50,7 @@ public class NotiFragment extends Fragment implements View.OnClickListener {
         //  하자. 그런 후 거기서 컨텐트 액티비티로 넘어갈 수 있게 하면 될 것 같다.
 
 
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
 
         getNotice();
 
@@ -137,12 +137,5 @@ public class NotiFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-
-    private APIInterface getApiInterface(){
-        SharedPreferences sp = getActivity().getSharedPreferences(ConstantStrings.SP_INIT_APP, Context.MODE_PRIVATE);
-        String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
-        APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
-        return apiInterface;
-    }
 
 }

@@ -1,5 +1,6 @@
 package com.doitandroid.mybeta.itemclass;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
@@ -31,8 +32,15 @@ public class UserItem implements Serializable {
 
     @SuppressWarnings("serial")
     public interface OnUserItemChangedCallback extends Serializable {
+
         void onItemChanged(UserItem userItem);
     }
+
+
+
+    //todo: callback을 context랑 받아서 null이면 디태치시키자. <- 해결못했음.
+
+
 
     public void setOnUserItemChangedListener(OnUserItemChangedCallback onUserItemChangedCallback){
         Log.d(TAG, "setOnUserItemChangedListener");
@@ -192,12 +200,19 @@ public class UserItem implements Serializable {
 
         if (onUserItemChangedCallbackArrayList.size() != 0){
             for (OnUserItemChangedCallback onUserItemChangedCallback: onUserItemChangedCallbackArrayList){
-                onUserItemChangedCallback.onItemChanged(this);
-                Log.d(TAG, onUserItemChangedCallbackArrayList.size() +"");
+                if (onUserItemChangedCallback != null){
+                    onUserItemChangedCallback.onItemChanged(this);
+
+                } else {
+                    Log.d(TAG, "null catch");
+
+                }
             }
             Log.d(TAG, "setFollowed");
 
         }
+
+
     }
 
     public ArrayList<UserItem> getRelatedFollowingList() {

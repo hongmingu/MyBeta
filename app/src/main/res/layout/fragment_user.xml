@@ -149,72 +149,90 @@
         android:background="@color/skyblue">
 
     </View>
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Space
-            android:layout_width="@dimen/default12"
-            android:layout_height="match_parent" />
+        android:layout_height="wrap_content">
         <androidx.appcompat.widget.LinearLayoutCompat
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
+            android:orientation="horizontal">
             <Space
+                android:layout_width="@dimen/default12"
+                android:layout_height="match_parent" />
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="16dp" />
-            <TextView
-                android:id="@+id/fragment_user_full_name_tv"
-
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:fontFamily="sans-serif-medium"
-                android:textStyle="normal"
-                android:textColor="#202020"
-                android:lineSpacingExtra="5sp"
-                android:text="Sana"
-                />
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default12" />
-            <TextView
-                android:id="@+id/fragment_user_username_tv"
+                android:orientation="vertical"
+                >
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:fontFamily="sans-serif"
-                android:textStyle="normal"
-                android:textColor="#636363"
-                android:lineSpacingExtra="5sp"
-                android:text="username_123"
-                />
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default12" />
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp" />
+                <TextView
+                    android:id="@+id/fragment_user_full_name_tv"
 
-            <TextView
-                android:id="@+id/fragment_user_email_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textStyle="normal"
+                    android:textColor="#202020"
+                    android:lineSpacingExtra="5sp"
+                    android:text="Sana"
+                    />
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default12" />
+                <TextView
+                    android:id="@+id/fragment_user_username_tv"
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:fontFamily="sans-serif"
-                android:textStyle="normal"
-                android:textColor="#636363"
-                android:lineSpacingExtra="5sp"
-                android:text="sana@twice.com"
-                />
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="16dp" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="normal"
+                    android:textColor="#636363"
+                    android:lineSpacingExtra="5sp"
+                    android:text="username_123"
+                    />
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default12" />
+
+                <TextView
+                    android:id="@+id/fragment_user_email_tv"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="normal"
+                    android:textColor="#636363"
+                    android:lineSpacingExtra="5sp"
+                    android:text="sana@twice.com"
+                    />
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
         </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fragment_user_change_profile_iv"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="@color/darkblue">
+
+        </androidx.appcompat.widget.AppCompatImageView>
 
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"

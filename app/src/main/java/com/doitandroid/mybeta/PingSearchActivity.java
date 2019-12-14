@@ -226,7 +226,7 @@ public class PingSearchActivity extends AppCompatActivity implements View.OnClic
                         break;
                 }
 
-                if (data.getIntExtra(ConstantStrings.INTENT_LOGOUT_INFO, ConstantIntegers.RESULT_CANCELED) == ConstantIntegers.RESULT_LOGOUTTED) {
+                if (data.getIntExtra(ConstantStrings.INTENT_LOGOUT_INFO, ConstantIntegers.RESULT_CANCELED) == ConstantIntegers.RESULT_LOGGED_OUT) {
                     //logout됨
                     logout();
                     Toast.makeText(this, "is logout", Toast.LENGTH_SHORT).show();
