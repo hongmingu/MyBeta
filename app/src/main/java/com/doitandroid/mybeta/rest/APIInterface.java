@@ -177,4 +177,19 @@ public interface APIInterface {
     @Multipart
     @POST("r/rest/get_following/")
     Call<JsonObject> getFollowing(@Part("user_id") RequestBody post_id);
+
+
+    /* profileChange */
+    @Multipart
+    @POST("r/rest/profile_change/")
+    Call<JsonObject> profileChange(@Part("username") RequestBody username,
+                                   @Part("full_name") RequestBody full_name,
+                                   @Part("email") RequestBody email);
+    /* passwordSet */
+    @Multipart
+    @POST("r/rest/password_set/")
+    Call<JsonObject> passwordSet(@Part("current_password") RequestBody current_password,
+                                 @Part("new_password") RequestBody new_password,
+                                 @Part("new_password_confirm") RequestBody new_password_confirm);
+
 }

@@ -16,6 +16,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_setting);
         findViewById(R.id.setting_exit).setOnClickListener(this);
         findViewById(R.id.setting_logout).setOnClickListener(this);
+        findViewById(R.id.setting_password_set_tv).setOnClickListener(this);
 
     }
 
@@ -39,6 +40,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 // finishAffinity();
                 // 이건 java.lang.IllegalStateException: Can not be called to deliver a result 일으킴.
 
+            case R.id.setting_password_set_tv:
+                Intent passwordIntent = new Intent(this, PasswordSetActivity.class);
+
+                startActivity(passwordIntent);
             default:
                 break;
         }

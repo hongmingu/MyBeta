@@ -186,6 +186,21 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 .into(user_fragment_profile_photo_civ);
     }
 
+    public void refreshProfile(){
+
+        SharedPreferences sp = getActivity().getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
+
+        profileUsername = sp.getString(ConstantStrings.SP_ARG_PROFILE_USERNAME, ConstantStrings.SP_ARG_NONE);
+        profileFullName= sp.getString(ConstantStrings.SP_ARG_PROFILE_FULLNAME, ConstantStrings.SP_ARG_NONE);
+        profileEmail= sp.getString(ConstantStrings.SP_ARG_PROFILE_EMAIL, ConstantStrings.SP_ARG_NONE);
+
+        user_fragment_profile_username_tv.setText(profileUsername);
+        user_fragment_profile_full_name_tv.setText(profileFullName);
+        user_fragment_profile_email_tv.setText(profileEmail);
+
+
+    }
+
     public void setProfile() {
 
 

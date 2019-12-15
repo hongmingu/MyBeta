@@ -1,6 +1,7 @@
 package com.doitandroid.mybeta;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import android.app.Activity;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.doitandroid.mybeta.customview.ClearableEditText;
 import com.doitandroid.mybeta.customview.MyDialog;
@@ -35,6 +37,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     CoordinatorLayout btn_back, btn_complete;
     ScrollView main_layout;
     APIInterface apiInterface;
+
+    AppCompatTextView login_forgot_password_tv;
 
     Activity activity;
 
@@ -83,6 +87,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         findViewById(R.id.login_back).setOnClickListener(this);
         findViewById(R.id.login_complete).setOnClickListener(this);
+
+        findViewById(R.id.login_forgot_password).setOnClickListener(this);
 
         backPressCloseHandler = new BackPressCloseHandler(this);
     }
@@ -180,6 +186,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
 
                 break;
+
+            case R.id.login_forgot_password:
+                Intent forgot_intent = new Intent(this, ForgotPasswordActivity.class);
+                startActivity(forgot_intent);
+                //todo: 이제 ForgotPasswordActivity 구현.
+                Toast.makeText(getApplicationContext(), "forgot?", Toast.LENGTH_SHORT).show();
             default:
                 break;
         }

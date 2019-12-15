@@ -58,7 +58,26 @@
 
         </com.doitandroid.mybeta.customview.ClearableEditText>
 
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="@dimen/front_ok_btn_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/sign_up_show_hide_password_margin_top"
+            >
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/login_forgot_password"
+                android:layout_gravity="end"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="@color/darkblue"
+                android:lineSpacingExtra="5sp"
+                android:text="forgot password?"/>
 
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/login_complete"

@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PasswordChangeActivity"></activity>
+        <activity android:name=".ForgotPasswordActivity"></activity>
+        <activity android:name=".PasswordSetActivity" />
         <activity
             android:name=".ProfileChangeActivity"
             android:windowSoftInputMode="adjustResize" />

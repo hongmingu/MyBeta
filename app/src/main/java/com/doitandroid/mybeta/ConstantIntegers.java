@@ -70,4 +70,8 @@ public final class ConstantIntegers {
     public final static int NOTICE_POST_REACT = 2003;
     public final static int NOTICE_TIMEBAR_QUARTER_DAY = 2004;
     public final static int NOTICE_TIMEBAR_DAY = 2005;
+
+    /* validate */
+    public final static int VALIDATE_OK = 1100;
+    public final static int VALIDATE_FAILED = 1400;
 }

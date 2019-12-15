@@ -949,6 +949,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case ConstantIntegers.REQUEST_PROFILE_CHANGE:
                     if (data.getIntExtra(ConstantStrings.INTENT_PROFILE_CHANGE, ConstantIntegers.RESULT_PROFILE_NOT_CHANGED)
                             == ConstantIntegers.RESULT_PROFILE_CHANGED) {
+                        UserFragment userFragment = (UserFragment) fragment_user;
+                        userFragment.refreshProfile();
                         //profile has changed
                     } else {
                         //profile has not changed

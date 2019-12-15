@@ -19,14 +19,35 @@
             android:background="@drawable/ic_back_skyblue100"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/setting_logout"
+    <LinearLayout
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="24dp"
-        android:background="@color/skyblue_40"
-        android:text="LogoUt"/>
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/setting_password_set_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="24dp"
+            android:background="@color/skyblue_40"
+            android:text="Password Set"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="36dp"></Space>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/setting_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="24dp"
+            android:background="@color/skyblue_40"
+            android:text="LogoUt"/>
+    </LinearLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

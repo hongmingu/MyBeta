@@ -54,7 +54,7 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
 
         add_post_complete_cl.setOnClickListener(this);
 
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
 
         setSupportActionBar(toolbar_exit);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
