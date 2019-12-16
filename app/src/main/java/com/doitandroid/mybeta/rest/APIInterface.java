@@ -192,4 +192,10 @@ public interface APIInterface {
                                  @Part("new_password") RequestBody new_password,
                                  @Part("new_password_confirm") RequestBody new_password_confirm);
 
+    /* forgotPassword */
+    @Multipart
+    @POST("r/rest/forgot_password/")
+    Call<JsonObject> forgotPassword(@Part("account") RequestBody account);
+
+
 }
