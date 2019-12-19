@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.doitandroid.mybeta.customview.MyDialog;
 import com.doitandroid.mybeta.customview.MyDialogListener;
@@ -110,6 +111,10 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
             case R.id.forgot_password_complete_cl:
                 if (mailSent){
                     activity.finish();
+                    return;
+                }
+                if(forgot_password_account_et.getText().toString().trim().equals("")){
+                    Toast.makeText(getApplicationContext(), "no text", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 RequestBody requestAccount = RequestBody.create(MediaType.parse("multipart/form-data"), forgot_password_account_et.getText().toString().trim());

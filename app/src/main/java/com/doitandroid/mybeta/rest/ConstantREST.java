@@ -1,5 +1,5 @@
 package com.doitandroid.mybeta.rest;
 
 public class ConstantREST {
-    public static final String URL_HOME = "http://e46c2ca4.ngrok.io" + "/";
+    public static final String URL_HOME = "http://3af27ea8.ngrok.io" + "/";
 }

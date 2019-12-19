@@ -1,22 +1,31 @@
 package com.doitandroid.mybeta;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.doitandroid.mybeta.customview.ClearableEditText;
 import com.doitandroid.mybeta.customview.MyDialog;
@@ -42,6 +51,8 @@ public class SignUpActivity extends AppCompatActivity {
     CoordinatorLayout back_cl, ok_cl;
     APIInterface apiInterface;
     ScrollView main_layout;
+
+    AppCompatDialog progressDialog;
 
 
     @Override
@@ -131,7 +142,11 @@ public class SignUpActivity extends AppCompatActivity {
                 RequestBody password = RequestBody.create(MediaType.parse("multipart/form-data"), password_str);
                 RequestBody full_name = RequestBody.create(MediaType.parse("multipart/form-data"), full_name_str);
 
+
+
                 Call<JsonObject> call = apiInterface.sign_up(full_name, email, password);
+
+                progressON(activity, "now signing");
                 call.enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -145,6 +160,9 @@ public class SignUpActivity extends AppCompatActivity {
                                 if (rc != ConstantIntegers.SUCCESS){
                                     // sign up 실패
                                     call.cancel();
+
+                                    progressOFF();
+                                    Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                                 SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
@@ -161,6 +179,8 @@ public class SignUpActivity extends AppCompatActivity {
 
                                 editor.commit();
 
+                                progressOFF();
+
                                 Intent intent = new Intent(activity, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
@@ -173,8 +193,11 @@ public class SignUpActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
+
                         call.cancel();
 
+                        progressOFF();
+                        Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -189,6 +212,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
         String email = reg_email.getEditText().getText().toString().trim();
         String full_name = reg_full_name.getEditText().getText().toString().trim();
         String password = reg_password.getEditText().getText().toString();
@@ -210,6 +234,76 @@ public class SignUpActivity extends AppCompatActivity {
             });
             dialog.show();
         }
+
+    }
+
+    public void progressON(Activity activity, String message) {
+
+        if (activity == null || activity.isFinishing()) {
+            return;
+        }
+
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressSET(message);
+        } else {
+
+            progressDialog = new AppCompatDialog(activity);
+            progressDialog.setCancelable(false);
+            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            progressDialog.setContentView(R.layout.progress_loading);
+            progressDialog.show();
+
+        }
+
+
+        final ImageView img_loading_frame = (ImageView) progressDialog.findViewById(R.id.iv_frame_loading);
+        final AnimationDrawable frameAnimation = (AnimationDrawable) img_loading_frame.getBackground();
+        img_loading_frame.post(new Runnable() {
+            @Override
+            public void run() {
+                frameAnimation.start();
+            }
+        });
+
+        TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
+        if (!TextUtils.isEmpty(message)) {
+            tv_progress_message.setText(message);
+        }
+
+
+    }
+
+    public void progressSET(String message) {
+
+        if (progressDialog == null || !progressDialog.isShowing()) {
+            return;
+        }
+
+
+        TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
+        if (!TextUtils.isEmpty(message)) {
+            tv_progress_message.setText(message);
+        }
+
+    }
+
+    public void progressOFF() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    private void startProgress() {
+
+        progressON(this,"Loading...");
+
+/*        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressOFF();
+            }
+        }, 3500);*/
 
     }
 }
