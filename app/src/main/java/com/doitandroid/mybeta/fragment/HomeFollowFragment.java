@@ -111,6 +111,10 @@ public class HomeFollowFragment extends Fragment {
 
         singleton.followFeedList.clear();
 
+        if (singleton.homeFollowAdapter != null){
+            singleton.homeFollowAdapter.notifyDataSetChanged();
+        }
+
 
         Call<JsonObject> call = apiInterface.get_follow_feed();
         call.enqueue(new Callback<JsonObject>() {

@@ -1,5 +1,6 @@
 package com.doitandroid.mybeta.itemclass;
 
+import android.util.Log;
 import android.view.View;
 
 import com.doitandroid.mybeta.ConstantAnimations;
@@ -45,31 +46,42 @@ public class FeedItem {
             case ConstantIntegers.OPT_DEFAULT_PING:
 
 
-            JsonObject item = jsonObject.get("con").getAsJsonObject();
-            this.created = item.get("created").getAsString();
-            this.postID = item.get("post_id").getAsString();
+                JsonObject item = jsonObject.get("con").getAsJsonObject();
+                this.created = item.get("created").getAsString();
+                this.postID = item.get("post_id").getAsString();
+
+                this.pingID = item.get("ping_id").isJsonNull() ? null : item.get("ping_id").getAsString();
+                this.pingRes = pingID != null ? getPingResByPingID(pingID) : null;
 
 
-            this.pingID = item.get("ping_id").isJsonNull() ? null : item.get("ping_id").getAsString() ;
-            this.pingRes = pingID != null ? getPingResByPingID(pingID) : null;
+                if (item.get("ping_text").isJsonNull()){
+                    for (PingItem pingConstantItem: ConstantAnimations.pingList){
+                        if (pingConstantItem.getPingID().equals(pingID)){
+                            this.pingText = pingConstantItem.getPingText();
+                        }
+                    }
+                } else {
+                    this.pingText = item.get("ping_text").getAsString();
+                }
 
-            //todo: django 에서 오타 수정 pint_id 가 아니라 ping_id, user_fullname 이 아니라 full_name, userPhoto 추가, 로그인한 사람 자신의 포토,
+                    //todo: django 에서 오타 수정 pint_id 가 아니라 ping_id, user_fullname 이 아니라 full_name, userPhoto 추가, 로그인한 사람 자신의 포토,
 
-            InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
+                InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
-            this.user = singleton.getUserItemFromSingletonByJsonObject(item.get("user").getAsJsonObject());
-
-
-
-            this.reactCount = item.get("react_count").getAsInt();
-            this.commentCount = item.get("comment_count").getAsInt();
-
-            this.postText = item.get("post_text").isJsonNull() ? null : item.get("post_text").getAsString();
-            this.isReacted = item.get("is_reacted").getAsBoolean();
+                this.user = singleton.getUserItemFromSingletonByJsonObject(item.get("user").getAsJsonObject());
 
 
-            break;
+
+                this.reactCount = item.get("react_count").getAsInt();
+                this.commentCount = item.get("comment_count").getAsInt();
+
+                this.postText = item.get("post_text").isJsonNull() ? null : item.get("post_text").getAsString();
+                this.isReacted = item.get("is_reacted").getAsBoolean();
+
+
+                break;
             case ConstantIntegers.OPT_TO_CLICK:
+
                 break;
             default:
                 break;

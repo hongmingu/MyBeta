@@ -3,6 +3,7 @@ package com.doitandroid.mybeta;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -11,14 +12,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,9 +31,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Space;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -42,6 +49,7 @@ import com.doitandroid.mybeta.fragment.SearchFragment;
 import com.doitandroid.mybeta.fragment.UserFragment;
 import com.doitandroid.mybeta.homeping.HomePingAdapater;
 import com.doitandroid.mybeta.fragment.HomeFollowFragment;
+import com.doitandroid.mybeta.itemclass.FeedItem;
 import com.doitandroid.mybeta.ping.PingShownItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
@@ -89,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     LinearLayoutCompat main_ping_for_you_ll, main_ping_recommend_ll;
 
-    CoordinatorLayout main_ping_fl, main_ping_swiping_text_cl, home_overlay_wrapper_cl, home_ping_dim_wrapper_cl, main_ping_progress_bar_cl, main_ping_search;
+    CoordinatorLayout main_ping_fl, main_ping_swiping_text_cl, home_overlay_wrapper_cl, home_ping_dim_wrapper_cl, main_ping_progress_bar_cl, main_ping_search, home_ping_instant_send_btn;
 
     LottieAnimationView lav_home, lav_noti, lav_search, lav_user;
 
@@ -111,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     PingShownItem currentPingShownItem;
 
     AppCompatTextView home_ping_preview_tv;
+    AppCompatDialog progressDialog;
     HomePingAdapater homePingAdapater;
 
     APIInterface apiInterface;
@@ -119,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Uri imageUri;
     String fcm_token;
 
+    Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             apiInterface = singleton.apiInterface;
 
             context = this;
+            activity = this;
 
             currentPingIsWide = false;
             currentPingIsPressed = false;
@@ -279,6 +290,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     currentPingShownItem = pingShownItem;
                                 }
                             });
+
                             pingShownItem.getLottieAnimationView().setOnTouchListener(new View.OnTouchListener() {
                                 @Override
                                 public boolean onTouch(View v, MotionEvent event) {
@@ -286,16 +298,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         // 처음 누를 때
                                         Log.d(TAG, "ACTION_DOWN");
                                         currentPingIsPressed = true;
+
+                                        progressThread = new ProgressThread();
+                                        if (pingShownItem.getIsClicked()) {
+                                            progressThread.start();
+                                        }
                                     } else if (event.getAction() == event.ACTION_MOVE) {
                                         // 움직일 떄
                                     } else if (event.getAction() == event.ACTION_UP) {
                                         // 떨어질 때
                                         currentPingIsPressed = false;
+
+                                        if (progressThread != null) {
+                                            progressThread.stopThread();
+
+                                        }
+                                        progressThread = null;
                                     }
 
                                     return false;
                                 }
                             });
+
 
                             default_ping_index++;
 
@@ -459,6 +483,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }
                             });
 
+
+
                             default_ping_index++;
 
                             main_ping_for_you_ll.addView(view);
@@ -584,6 +610,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         home_ping_dim_wrapper_pb = findViewById(R.id.home_ping_dim_wrapper_pb);
+
+        home_ping_instant_send_btn = findViewById(R.id.home_ping_instant_send_btn);
+        home_ping_instant_send_btn.setOnClickListener(this);
 
 
 //        rv_ping = findViewById(R.id.main_ping_rv);
@@ -727,6 +756,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.home_ping_instant_send_btn:
+                sendInstantPing(currentPingShownItem.getPingID());
                 break;
             case R.id.home_follow_feed:
 
@@ -1037,6 +1067,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void sendInstantPing(String pingID) {
+/*
 
         final MyDialog dialog = new MyDialog(this, "뒤로가기", "작업중인 내용이 있다", "뒤로갈래잉", "안갈래잉");
         dialog.setDialogListener(new MyDialogListener() {
@@ -1051,6 +1082,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         dialog.show();
 
+        dialog.dismiss();
+
+*/
+
+        progressON(activity, "sending...");
 
         RequestBody requestPingID = RequestBody.create(MediaType.parse("multipart/form-data"), pingID);
 
@@ -1062,27 +1098,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     JsonObject jsonObject = response.body();
                     if (jsonObject != null) {
                         int rc = jsonObject.get("rc").getAsInt();
-                        String content = jsonObject.get("content").getAsString();
+
 
                         if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
                             // sign up 실패
+
                             call.cancel();
+                            progressOFF();
+                            closePingDimWrapper();
+
                             return;
                         }
+
+                        JsonObject contentObject = jsonObject.get("content").getAsJsonObject();
+
+                        FeedItem feedItem = new FeedItem(contentObject);
+                        singleton.followFeedList.add(0, feedItem);
+                        singleton.homeFollowAdapter.notifyDataSetChanged();
 
                         // 접속 성공.
 
                     }
 
                 }
-
-                dialog.dismiss();
+                progressOFF();
+                closePingDimWrapper();
 
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 call.cancel();
+                progressOFF();
+                closePingDimWrapper();
+
 
             }
         });
@@ -1243,6 +1292,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .check();
 
+    }
+
+    public void progressON(Activity activity, String message) {
+
+        if (activity == null || activity.isFinishing()) {
+            return;
+        }
+
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressSET(message);
+        } else {
+
+            progressDialog = new AppCompatDialog(activity);
+            progressDialog.setCancelable(false);
+            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            progressDialog.setContentView(R.layout.progress_loading);
+            progressDialog.show();
+
+        }
+
+
+        final ImageView img_loading_frame = (ImageView) progressDialog.findViewById(R.id.iv_frame_loading);
+        final AnimationDrawable frameAnimation = (AnimationDrawable) img_loading_frame.getBackground();
+        img_loading_frame.post(new Runnable() {
+            @Override
+            public void run() {
+                frameAnimation.start();
+            }
+        });
+
+        TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
+        if (!TextUtils.isEmpty(message)) {
+            tv_progress_message.setText(message);
+        }
+
+
+    }
+
+    public void progressSET(String message) {
+
+        if (progressDialog == null || !progressDialog.isShowing()) {
+            return;
+        }
+
+
+        TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
+        if (!TextUtils.isEmpty(message)) {
+            tv_progress_message.setText(message);
+        }
+
+    }
+
+    public void progressOFF() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }
 

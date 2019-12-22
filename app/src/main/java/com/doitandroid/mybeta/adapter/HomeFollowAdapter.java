@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -110,13 +111,22 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 for (PingItem pingConstantItem: ConstantAnimations.pingList){
                     if (pingConstantItem.getPingID().equals(feeditem.getPingID())){
-                        ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_lav.setAnimation(feeditem.getPingID());
+                        ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_lav.setAnimation(feeditem.getPingRes());
                         ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_lav.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
                             }
                         });
+
+                        if (feeditem.getPingText() == null){
+                            ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_text_tv.setText(pingConstantItem.getPingText());
+                            Log.d(TAG, "this is ping text" + pingConstantItem.getPingText());
+                        } else {
+                            ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_text_tv.setText(feeditem.getPingText());
+                            Log.d(TAG, "this is feed text" + feeditem.getPingText());
+
+                        }
                     }
                 }
 
@@ -144,6 +154,8 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (feeditem.getPingID() == null){
                     ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_wrapper_ll.setVisibility(View.GONE);
                 } else {
+                    ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_wrapper_ll.setVisibility(View.VISIBLE);
+
                     ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_text_tv.setText(feeditem.getPingText());
                     ((HomeFollowDefaultPingViewHolder) holder).dpi_ping_lav.setAnimation(feeditem.getPingRes());
 
@@ -181,10 +193,6 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
 
-
-                Log.d(TAG, "dpi sets");
-                Log.d(TAG, "post text: " + feeditem.getPostText());
-
                 break;
             case ConstantIntegers.OPT_TO_CLICK:
                 break;
@@ -192,7 +200,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 break;
         }
     }
-
+/*
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
         if (payloads.isEmpty()) {
@@ -202,16 +210,16 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (payload instanceof String) {
                     String type = (String) payload;
                     if (TextUtils.equals(type, "color_red")) {
-/*                        LinearLayout layout = ((HomeFollowingViewHolder) holder).home_layout;
+*//*                        LinearLayout layout = ((HomeFollowingViewHolder) holder).home_layout;
                         View view = layout.findViewWithTag("idis_"+holder.getAdapterPosition());
                         Context context = layout.getContext();
-                        view.setBackgroundColor(context.getResources().getColor(R.color.red));*/
+                        view.setBackgroundColor(context.getResources().getColor(R.color.red));*//*
 
                     }
                 }
             }
         }
-    }
+    }*/
 
 
     @Override
