@@ -30,9 +30,11 @@ import com.doitandroid.mybeta.MainActivity;
 import com.doitandroid.mybeta.PingItem;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.itemclass.FeedItem;
+import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
+import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonObject;
 
 import java.text.ParseException;
@@ -55,6 +57,8 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     Context context;
 
     APIInterface apiInterface;
+
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     public HomeFollowAdapter(ArrayList<FeedItem> feedItemArrayList, Context context) {
         this.feedItemArrayList = feedItemArrayList;
@@ -92,7 +96,8 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (getItemViewType(position)){
             case ConstantIntegers.OPT_DEFAULT_PING:
                 final FeedItem feeditem = feedItemArrayList.get(position);
-                ((HomeFollowDefaultPingViewHolder) holder).dpi_full_name_tv.setText(feeditem.getUser().getFullName());
+                final UserItem userItem = singleton.getUserItemFromSingletonByUserID(feeditem.getUser().getUserID());
+                ((HomeFollowDefaultPingViewHolder) holder).dpi_full_name_tv.setText(userItem.getFullName());
                 ((HomeFollowDefaultPingViewHolder) holder).dpi_full_name_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -100,7 +105,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
 
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("userItem", feeditem.getUser());
+                        bundle.putSerializable("userItem", userItem);
                         intent.putExtras(bundle);
 
                         ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
@@ -132,11 +137,11 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())
-                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + feeditem.getUser().getUserPhoto())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
 
                         .into(((HomeFollowDefaultPingViewHolder) holder).dpi_user_photo_civ);
 
-                Log.d(TAG, ConstantREST.URL_HOME + feeditem.getUser().getUserPhoto());
+                Log.d(TAG, ConstantREST.URL_HOME + userItem.getUserPhoto());
                 switch (getAdjustedTimeDifference(feeditem.getCreated())){
                     case ConstantIntegers.TIME_DEFAULT:
                         ((HomeFollowDefaultPingViewHolder) holder).dpi_time_indicator_iv.setBackground(context.getResources().getDrawable(R.drawable.ic_bluelogo));

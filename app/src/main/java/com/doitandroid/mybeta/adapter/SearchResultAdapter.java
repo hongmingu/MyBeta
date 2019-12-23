@@ -55,7 +55,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public SearchResultAdapter(ArrayList<UserItem> userItemArrayList, Context context) {
         this.userItemArrayList= userItemArrayList;
         this.context = context;
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
     }
 
     @NonNull
@@ -93,9 +93,10 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         Intent intent = new Intent(context, ContentActivity.class);
                         intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
 
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("userItem", userItem);
-                        intent.putExtras(bundle);
+                        Log.d(TAG, userItem.toString());
+
+
+                        intent.putExtra("userID", userItem.getUserID());
 
                         ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
                         ((MainActivity) context).overridePendingTransition(0, 0); //
@@ -180,13 +181,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return position;
     }
 
-
-    private APIInterface getApiInterface(){
-        SharedPreferences sp = context.getSharedPreferences(ConstantStrings.SP_INIT_APP, Context.MODE_PRIVATE);
-        String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
-        APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
-        return apiInterface;
-    }
 
     public void follow_user(final String userID, final View follow_iv){
         RequestBody requestUserID = RequestBody.create(MediaType.parse("multipart/form-data"), userID);

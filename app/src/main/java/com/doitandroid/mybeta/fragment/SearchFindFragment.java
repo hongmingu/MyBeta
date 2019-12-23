@@ -113,7 +113,7 @@ public class SearchFindFragment extends Fragment {
 
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
                         // 어댑터를 연결시킨다.
-                        adapter = new SearchResultAdapter(userItemArrayList, getParentFragment().getActivity());
+                        adapter = new SearchResultAdapter(userItemArrayList, getActivity());
 
                         // 리사이클러뷰에 연결한다.
                         fragment_search_find_rv.setLayoutManager(layoutManager);

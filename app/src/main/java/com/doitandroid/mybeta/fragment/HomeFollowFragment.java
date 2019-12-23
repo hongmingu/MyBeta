@@ -108,12 +108,13 @@ public class HomeFollowFragment extends Fragment {
      */
     public void init_feed(){
 
-
+        ((MainActivity) getActivity()).progressON((MainActivity) getActivity(), "loading...");
         singleton.followFeedList.clear();
 
         if (singleton.homeFollowAdapter != null){
             singleton.homeFollowAdapter.notifyDataSetChanged();
         }
+
 
 
         Call<JsonObject> call = apiInterface.get_follow_feed();
@@ -128,7 +129,11 @@ public class HomeFollowFragment extends Fragment {
 
                         if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
                             // sign up 실패
+
                             call.cancel();
+                            home_follow_srl.setRefreshing(false);
+                            ((MainActivity) getActivity()).progressOFF();
+
                             return;
                         }
 
@@ -161,12 +166,15 @@ public class HomeFollowFragment extends Fragment {
                     }
 
                 }
+                ((MainActivity) getActivity()).progressOFF();
+
 
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 call.cancel();
+                ((MainActivity) getActivity()).progressOFF();
 
             }
         });

@@ -31,7 +31,17 @@ public class ContentActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
 
         gotIntent = getIntent();
-        UserItem userItem = singleton.getUserItemFromSingletonByUserItem((UserItem) gotIntent.getSerializableExtra("userItem"));
+
+        UserItem userItem;
+
+        if (gotIntent.getStringExtra("userID") != null){
+            userItem = singleton.getUserItemFromSingletonByUserID(gotIntent.getStringExtra("userID"));
+        } else {
+            userItem = singleton.getUserItemFromSingletonByUserItem((UserItem) gotIntent.getSerializableExtra("userItem"));
+
+        }
+
+
 
         switch (gotIntent.getStringExtra(ConstantStrings.INTENT_CONTENT_START)){
             case ConstantStrings.INTENT_CONTENT_USER:
