@@ -94,6 +94,12 @@ public class ContentListFollowerAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 setStartUserFragment(userItem, userViewHolder.full_name_tv);
                 setStartUserFragment(userItem, userViewHolder.user_photo_civ);
+                if (userItem.isFollowed()){
+                    userViewHolder.follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+                } else {
+                    userViewHolder.follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+                }
                 userViewHolder.follow_iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -107,7 +113,13 @@ public class ContentListFollowerAdapter extends RecyclerView.Adapter<RecyclerVie
                         Log.d(TAG, "follow from list follower: "+ userItem.isFollowed()+ this.getClass().toString());
 
                         Toast.makeText(context, "follower: "+ userItem.isFollowed()+ this.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
+                        if (userItem.isFollowed()){
+                            userViewHolder.follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
 
+                        } else {
+                            userViewHolder.follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+                        }
 
                     }
                 });
@@ -202,14 +214,14 @@ public class ContentListFollowerAdapter extends RecyclerView.Adapter<RecyclerVie
                             if (userItem != null){
                                 userItem.setFollowed(true);
                             }
-                            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+                            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
                         } else {
                             // not follow
                             UserItem userItem = singleton.getUserItemFromSingletonByUserID(userID);
                             if (userItem != null){
-                                userItem.setFollowed(true);
+                                userItem.setFollowed(false);
                             }
-                            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+                            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
                         }
 
                         // 접속 성공.

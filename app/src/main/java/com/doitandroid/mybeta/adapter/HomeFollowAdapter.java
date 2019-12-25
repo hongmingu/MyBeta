@@ -104,9 +104,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         Intent intent = new Intent(context, ContentActivity.class);
                         intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
 
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("userItem", userItem);
-                        intent.putExtras(bundle);
+                        intent.putExtra("userID", userItem.getUserID());
 
                         ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
                         ((MainActivity) context).overridePendingTransition(0, 0); //

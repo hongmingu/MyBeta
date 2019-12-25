@@ -77,14 +77,29 @@ public class ContentUserFragment extends Fragment {
         full_name_tv.setText(userItem.getFullName());
         username_tv.setText(userItem.getUsername());
 
-        if (containsUserItem(singleton.userList, userItem)){
+        if (userItem.isFollowed()){
             // is following
-            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
+            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
         } else {
             // not following
-            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
 
         }
+
+        userItem.setOnUserItemChangedListener(new UserItem.OnUserItemChangedCallback() {
+            @Override
+            public void onItemChanged(UserItem userItem) {
+
+                if (userItem.isFollowed()){
+                    follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+                } else {
+                    follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
+
+                }
+
+            }
+        });
 
         follow_iv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,16 +150,16 @@ public class ContentUserFragment extends Fragment {
                         // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
                         if (jsonObject.get("content").getAsBoolean()){
                             // follow
+                            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
 
                             userItem.setFollowed(true);
                             singleton.updateUserList(userItem, false);
-                            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
 
                         } else {
+                            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
 
                             userItem.setFollowed(false);
                             singleton.updateUserList(userItem, false);
-                            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
 
 
 

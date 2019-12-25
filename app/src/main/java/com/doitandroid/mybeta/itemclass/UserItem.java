@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @SuppressWarnings("serial")
 public class UserItem implements Serializable {
@@ -22,7 +23,7 @@ public class UserItem implements Serializable {
 
     ArrayList<UserItem> relatedFollowingList, relatedFollowerList;
 
-    ArrayList<OnUserItemChangedCallback> onUserItemChangedCallbackArrayList;
+    CopyOnWriteArrayList<OnUserItemChangedCallback> onUserItemChangedCallbackArrayList;
 
     // followlist 는 이 유저가 팔로우 하고 있는 사람들.
 
@@ -70,7 +71,7 @@ public class UserItem implements Serializable {
         this.relatedFollowingList = relatedFollowingList;
         this.isFollowed = isFollowed;
 
-        onUserItemChangedCallbackArrayList = new ArrayList<>();
+        onUserItemChangedCallbackArrayList = new CopyOnWriteArrayList<>();
         InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
         singleton.updateUserList(this, followUpdate);
     }
@@ -107,7 +108,7 @@ public class UserItem implements Serializable {
         } else {
             this.isFullyUpdated = jsonObject.get("follow_update").getAsBoolean();
         }
-        onUserItemChangedCallbackArrayList = new ArrayList<>();
+        onUserItemChangedCallbackArrayList = new CopyOnWriteArrayList<>();
 
         InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
         singleton.updateUserList(this, jsonObject.get("follow_update").getAsBoolean());
@@ -146,13 +147,8 @@ public class UserItem implements Serializable {
 
 
         Log.d(TAG, "updatedItem");
-        if (onUserItemChangedCallbackArrayList.size() != 0){
-            for (OnUserItemChangedCallback onUserItemChangedCallback: onUserItemChangedCallbackArrayList){
-                onUserItemChangedCallback.onItemChanged(this);
-            }
-            Log.d(TAG, "updatedItemInCallback");
+        onUserItemChangedLoop();
 
-        }
 
     }
 
@@ -198,10 +194,22 @@ public class UserItem implements Serializable {
     public void setFollowed(boolean followed) {
         isFollowed = followed;
 
+
+        onUserItemChangedLoop();
+
+
+    }
+    private void onUserItemChangedLoop(){
+
         if (onUserItemChangedCallbackArrayList.size() != 0){
             for (OnUserItemChangedCallback onUserItemChangedCallback: onUserItemChangedCallbackArrayList){
                 if (onUserItemChangedCallback != null){
-                    onUserItemChangedCallback.onItemChanged(this);
+                    try {
+                        onUserItemChangedCallback.onItemChanged(this);
+                    } catch (IllegalStateException e){
+                        onUserItemChangedCallbackArrayList.remove(onUserItemChangedCallback);
+                        Log.d(TAG, e.toString());
+                    }
 
                 } else {
                     Log.d(TAG, "null catch");
@@ -211,8 +219,6 @@ public class UserItem implements Serializable {
             Log.d(TAG, "setFollowed");
 
         }
-
-
     }
 
     public ArrayList<UserItem> getRelatedFollowingList() {

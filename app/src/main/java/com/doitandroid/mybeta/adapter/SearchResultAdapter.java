@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -102,6 +103,18 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         ((MainActivity) context).overridePendingTransition(0, 0); //
                     }
                 });
+                userViewHolder.user_photo_civ.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ContentActivity.class);
+                        intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
+
+                        intent.putExtra("userID", userItem.getUserID());
+
+                        ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
+                        ((MainActivity) context).overridePendingTransition(0, 0); //
+                    }
+                });
 
                 //todo: 이제 댓글, 좋아요에서 유저컨텐트로 이어지는 부분.
                 Glide.with(context.getApplicationContext())
@@ -109,6 +122,14 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
                         .into(userViewHolder.user_photo_civ);
 
+
+
+                if (userItem.isFollowed()){
+                    userViewHolder.follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+                } else {
+                    userViewHolder.follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+                }
                 userViewHolder.follow_iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -119,10 +140,19 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 userItem.setOnUserItemChangedListener(new UserItem.OnUserItemChangedCallback() {
                     @Override
                     public void onItemChanged(UserItem userItem) {
+                        Log.d(TAG, "follow from list follower: "+ userItem.isFollowed()+ this.getClass().toString());
+
+                        Toast.makeText(context, "follower: "+ userItem.isFollowed()+ this.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
+                        if (userItem.isFollowed()){
+                            userViewHolder.follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+                        } else {
+                            userViewHolder.follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+                        }
 
                     }
                 });
-
 
                 break;
         }
@@ -206,15 +236,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             if (userItem != null){
                                 userItem.setFollowed(true);
                             }
-                            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+                            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
                         } else {
                             // not follow
                             UserItem userItem = singleton.getUserItemFromSingletonByUserID(userID);
                             if (userItem != null){
-                                userItem.setFollowed(true);
+                                userItem.setFollowed(false);
                             }
-                            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+                            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
                         }
+
 
                         // 접속 성공.
 
