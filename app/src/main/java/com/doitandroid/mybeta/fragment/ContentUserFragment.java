@@ -31,6 +31,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
@@ -52,11 +53,12 @@ public class ContentUserFragment extends Fragment {
     ViewGroup rootView;
     UserItem userItem;
 
-    CircleImageView user_photo_civ;
+    CircleImageView user_photo_civ, related_follower_1_civ, related_follower_2_civ, related_follower_3_civ;
     AppCompatImageView follow_iv;
     AppCompatTextView full_name_tv, username_tv;
-    CoordinatorLayout following_cl, follower_cl;
+    CoordinatorLayout following_cl, follower_cl, related_follower_wrapper_cl;
 
+    CopyOnWriteArrayList<UserItem> relatedUserItemArrayList;
 
     @Nullable
     @Override
@@ -71,13 +73,13 @@ public class ContentUserFragment extends Fragment {
 
         // set user photo
         Glide.with(getActivity().getApplicationContext())
-                .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
+                .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + userItem.getUserPhoto())
                 .into(user_photo_civ);
 
         full_name_tv.setText(userItem.getFullName());
         username_tv.setText(userItem.getUsername());
 
-        if (userItem.isFollowed()){
+        if (userItem.isFollowed()) {
             // is following
             follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
         } else {
@@ -90,7 +92,7 @@ public class ContentUserFragment extends Fragment {
             @Override
             public void onItemChanged(UserItem userItem) {
 
-                if (userItem.isFollowed()){
+                if (userItem.isFollowed()) {
                     follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
 
                 } else {
@@ -108,6 +110,10 @@ public class ContentUserFragment extends Fragment {
             }
         });
 
+        userFullyUpdate(userItem);
+
+
+
         following_cl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,20 +123,30 @@ public class ContentUserFragment extends Fragment {
         follower_cl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "follower", Toast.LENGTH_SHORT).show();
                 ((ContentActivity) getActivity()).addListFragment(userItem, false);
 
             }
         });
 
+        related_follower_wrapper_cl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ContentActivity) getActivity()).addListFragment(userItem, false);
+            }
+        });
 
+
+        if(userItem.isSameUserItem(singleton.getUserItemFromSingletonByUserID(singleton.profileUserID))){
+            follow_iv.setVisibility(View.INVISIBLE);
+            related_follower_wrapper_cl.setVisibility(View.INVISIBLE);
+        }
         //todo: 이제 fully updated 가 아니면 받아오는 코드.
 
         return rootView;
     }
 
 
-    public void follow_user(){
+    public void follow_user() {
         RequestBody userID = RequestBody.create(MediaType.parse("multipart/form-data"), userItem.getUserID());
         Call<JsonObject> call = apiInterface.follow(userID);
         call.enqueue(new Callback<JsonObject>() {
@@ -148,7 +164,7 @@ public class ContentUserFragment extends Fragment {
                         }
 
                         // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
-                        if (jsonObject.get("content").getAsBoolean()){
+                        if (jsonObject.get("content").getAsBoolean()) {
                             // follow
                             follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
 
@@ -160,7 +176,6 @@ public class ContentUserFragment extends Fragment {
 
                             userItem.setFollowed(false);
                             singleton.updateUserList(userItem, false);
-
 
 
                         }
@@ -182,16 +197,69 @@ public class ContentUserFragment extends Fragment {
     }
 
     public static boolean containsUserItem(ArrayList<UserItem> c, UserItem item) {
-        for(UserItem o : c) {
-            if(o != null && o.getUserID().equals(item.getUserID())) {
+        for (UserItem o : c) {
+            if (o != null && o.getUserID().equals(item.getUserID())) {
                 return true;
             }
         }
         return false;
     }
 
+    public void setRelatedFollower() {
 
-    public void setViews(){
+        relatedUserItemArrayList = new CopyOnWriteArrayList<>();
+        for (UserItem userItem : userItem.getFollowerList()) {
+            if (relatedUserItemArrayList.size() == 3) {
+                break;
+            }
+            if (userItem.isFollowed()) {
+                relatedUserItemArrayList.add(userItem);
+            }
+        }
+
+
+
+        switch (relatedUserItemArrayList.size()) {
+            case 0:
+
+                related_follower_wrapper_cl.setVisibility(View.INVISIBLE);
+
+                break;
+            case 1:
+                related_follower_wrapper_cl.setVisibility(View.VISIBLE);
+
+
+                Glide.with(getActivity().getApplicationContext())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + relatedUserItemArrayList.get(0).getUserPhoto())
+                        .into(related_follower_1_civ);
+                break;
+            case 2:
+                related_follower_wrapper_cl.setVisibility(View.VISIBLE);
+                Glide.with(getActivity().getApplicationContext())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + relatedUserItemArrayList.get(0).getUserPhoto())
+                        .into(related_follower_1_civ);
+                Glide.with(getActivity().getApplicationContext())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + relatedUserItemArrayList.get(1).getUserPhoto())
+                        .into(related_follower_2_civ);
+                break;
+            case 3:
+                related_follower_wrapper_cl.setVisibility(View.VISIBLE);
+                Glide.with(getActivity().getApplicationContext())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + relatedUserItemArrayList.get(0).getUserPhoto())
+                        .into(related_follower_1_civ);
+                Glide.with(getActivity().getApplicationContext())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + relatedUserItemArrayList.get(1).getUserPhoto())
+                        .into(related_follower_2_civ);
+                Glide.with(getActivity().getApplicationContext())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + relatedUserItemArrayList.get(2).getUserPhoto())
+                        .into(related_follower_3_civ);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void setViews() {
         user_photo_civ = rootView.findViewById(R.id.fragment_content_user_photo_civ);
         full_name_tv = rootView.findViewById(R.id.fragment_content_user_full_name_tv);
         username_tv = rootView.findViewById(R.id.fragment_content_user_username_tv);
@@ -199,19 +267,26 @@ public class ContentUserFragment extends Fragment {
 
         follower_cl = rootView.findViewById(R.id.fragment_content_user_follower_cl);
         following_cl = rootView.findViewById(R.id.fragment_content_user_following_cl);
+
+        related_follower_wrapper_cl = rootView.findViewById(R.id.fragment_content_user_followed_by_wrapper_cl);
+        related_follower_1_civ = rootView.findViewById(R.id.fragment_content_user_followed_by_photo1_civ);
+        related_follower_2_civ = rootView.findViewById(R.id.fragment_content_user_followed_by_photo2_civ);
+        related_follower_3_civ = rootView.findViewById(R.id.fragment_content_user_followed_by_photo3_civ);
+
+
     }
 
     /**
-        final Activity activity = (MainActivity)getActivity();
-        Button button = rootView.findViewById(R.id.fragment1_btn);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity) activity).noti_btn_clicked();
-            }
-        });
+     * final Activity activity = (MainActivity)getActivity();
+     * Button button = rootView.findViewById(R.id.fragment1_btn);
+     * button.setOnClickListener(new View.OnClickListener() {
+     *
+     * @Override public void onClick(View v) {
+     * ((MainActivity) activity).noti_btn_clicked();
+     * }
+     * });
      */
-    public void init_feed(){
+    public void init_feed() {
 
 
         Call<JsonObject> call = apiInterface.get_follow_feed();
@@ -232,17 +307,17 @@ public class ContentUserFragment extends Fragment {
 
                         // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
                         Log.d(TAG, content.toString());
-                        for (JsonElement feedElement: content){
+                        for (JsonElement feedElement : content) {
                             JsonObject feedObject = feedElement.getAsJsonObject();
                             FeedItem feedItem = new FeedItem(feedObject);
 
                             boolean isExist = false;
-                            for(FeedItem item : singleton.followFeedList){
-                                if(feedItem.getPostID().equals(item.getPostID())){
+                            for (FeedItem item : singleton.followFeedList) {
+                                if (feedItem.getPostID().equals(item.getPostID())) {
                                     isExist = true;
                                 }
                             }
-                            if(!isExist){
+                            if (!isExist) {
                                 singleton.followFeedList.add(feedItem);
                                 Log.d(TAG, "called");
                             }
@@ -268,12 +343,64 @@ public class ContentUserFragment extends Fragment {
             }
         });
     }
-    private APIInterface getApiInterface(){
-        SharedPreferences sp = getActivity().getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
-        String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
-        APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
-        return apiInterface;
+
+
+    public void userFullyUpdate(final UserItem userItem) {
+        if (!userItem.isFullyUpdated()) {
+
+            RequestBody requestPostID = RequestBody.create(MediaType.parse("multipart/form-data"), userItem.getUserID());
+            Call<JsonObject> call = apiInterface.userFullyUpdate(requestPostID);
+            call.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (response.isSuccessful()) {
+                        JsonObject jsonObject = response.body();
+                        if (jsonObject != null) {
+                            int rc = jsonObject.get("rc").getAsInt();
+                            if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                                // sign up 실패
+                                call.cancel();
+                                return;
+                            }
+                            JsonArray contentFollowerArray = jsonObject.get("content_follower").getAsJsonArray();
+
+                            for (JsonElement jsonFollowerElement : contentFollowerArray) {
+                                JsonObject followerItem = jsonFollowerElement.getAsJsonObject();
+                                UserItem followerUserItem = singleton.getUserItemFromSingletonByJsonObject(followerItem);
+                                userItem.addFollower(followerUserItem);
+
+                            }
+                            JsonArray contentFollowingArray = jsonObject.get("content_following").getAsJsonArray();
+
+
+                            for (JsonElement jsonFollowingElement : contentFollowingArray) {
+                                JsonObject followingItem = jsonFollowingElement.getAsJsonObject();
+                                UserItem followingUserItem = singleton.getUserItemFromSingletonByJsonObject(followingItem);
+                                userItem.addFollowing(followingUserItem);
+
+                            }
+
+
+                            userItem.setFullyUpdated(true);
+                            setRelatedFollower();
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    call.cancel();
+
+                }
+            });
+        } else {
+            setRelatedFollower();
+        }
+
     }
+
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -359,7 +486,6 @@ public class ContentUserFragment extends Fragment {
 
 
     }
-
 
 
     public ContentUserFragment(UserItem userItem) {

@@ -32,6 +32,8 @@ public class InitializationOnDemandHolderIdiom {
     public HomeFollowAdapter homeFollowAdapter;
     public NotiAdapter notiAdapter;
 
+    public String profileUserID;
+
 
     public int accumulatedNum;
 
@@ -40,9 +42,9 @@ public class InitializationOnDemandHolderIdiom {
 
         contentFragmentList = new ArrayList<>();
         userList = new ArrayList<>();
-
         notiList = new ArrayList<>();
 
+        profileUserID = null;
         accumulatedNum = 0;
     }
 
@@ -128,6 +130,11 @@ public class InitializationOnDemandHolderIdiom {
         }
     }
 
+    public String getProfileUserID() {
+        return profileUserID;
+    }
 
-
+    public void setProfileUserID(String profileUserID) {
+        this.profileUserID = profileUserID;
+    }
 }

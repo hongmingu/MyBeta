@@ -110,6 +110,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
 
                         intent.putExtra("userID", userItem.getUserID());
+                        //todo: useritem 을 시리얼라이즈로 넘기는게 아니라 유저아이디로 넘기는 게 낫겠다
+                        // 나머지 다 수정해봐.
 
                         ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
                         ((MainActivity) context).overridePendingTransition(0, 0); //

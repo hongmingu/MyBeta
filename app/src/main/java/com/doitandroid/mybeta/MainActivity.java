@@ -153,8 +153,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             findViews();
 
             // apiInterface를 처음 쓰는 곳으로 추측.
+            singleton.setProfileUserID(getProfileUserID());
 
             singleton.setApiInterface(getApiInterface());
+
             apiInterface = singleton.apiInterface;
 
             context = this;
@@ -397,6 +399,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
         APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
         return apiInterface;
+    }
+
+
+    private String getProfileUserID() {
+        SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
+        String userID = sp.getString(ConstantStrings.SP_ARG_PROFILE_USERID, ConstantStrings.SP_ARG_REMOVE_TOKEN);
+        return userID;
     }
 
     private void refreshForYouPings() {

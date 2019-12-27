@@ -1,6 +1,5 @@
 package com.doitandroid.mybeta.itemclass;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
@@ -9,7 +8,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @SuppressWarnings("serial")
@@ -21,7 +19,8 @@ public class UserItem implements Serializable {
 
     boolean isFollowed, isFullyUpdated;
 
-    ArrayList<UserItem> relatedFollowingList, relatedFollowerList;
+    CopyOnWriteArrayList<UserItem> FollowingList;
+    CopyOnWriteArrayList<UserItem> FollowerList;
 
     CopyOnWriteArrayList<OnUserItemChangedCallback> onUserItemChangedCallbackArrayList;
 
@@ -39,9 +38,6 @@ public class UserItem implements Serializable {
 
 
 
-    //todo: callback을 context랑 받아서 null이면 디태치시키자. <- 해결못했음.
-
-
 
     public void setOnUserItemChangedListener(OnUserItemChangedCallback onUserItemChangedCallback){
         Log.d(TAG, "setOnUserItemChangedListener");
@@ -54,8 +50,8 @@ public class UserItem implements Serializable {
                     String userID,
                     String fullName,
                     String userPhoto,
-                    ArrayList<UserItem> relatedFollowerList,
-                    ArrayList<UserItem> relatedFollowingList,
+                    CopyOnWriteArrayList<UserItem> FollowerList,
+                    CopyOnWriteArrayList<UserItem> FollowingList,
                     boolean isFullyUpdated,
                     boolean isFollowed,
                     boolean followUpdate) {
@@ -67,8 +63,8 @@ public class UserItem implements Serializable {
 
         this.isFullyUpdated = isFullyUpdated;
 
-        this.relatedFollowerList = relatedFollowerList;
-        this.relatedFollowingList = relatedFollowingList;
+        this.FollowerList = FollowerList;
+        this.FollowingList = FollowingList;
         this.isFollowed = isFollowed;
 
         onUserItemChangedCallbackArrayList = new CopyOnWriteArrayList<>();
@@ -83,15 +79,15 @@ public class UserItem implements Serializable {
         this.userPhoto = jsonObject.get("user_photo").getAsString();
         this.isFollowed = jsonObject.get("is_followed").getAsBoolean();
 
-        relatedFollowerList = new ArrayList<>();
-        relatedFollowingList = new ArrayList<>();
+        FollowerList = new CopyOnWriteArrayList<UserItem>();
+        FollowingList = new CopyOnWriteArrayList<UserItem>();
 
         if (jsonObject.get("follow_update").getAsBoolean()) {
             JsonArray followerJsonArray = jsonObject.get("related_follower_list").getAsJsonArray();
             for (JsonElement followerJsonElement : followerJsonArray) {
                 JsonObject followerJsonItem = followerJsonElement.getAsJsonObject();
                 UserItem followerUserItem = new UserItem(followerJsonItem);
-                relatedFollowerList.add(followerUserItem);
+                FollowerList.add(followerUserItem);
 
             }
 
@@ -99,7 +95,7 @@ public class UserItem implements Serializable {
             for (JsonElement followingJsonElement : followingJsonArray) {
                 JsonObject followingJsonItem = followingJsonElement.getAsJsonObject();
                 UserItem followingUserItem = new UserItem(followingJsonItem);
-                relatedFollowingList.add(followingUserItem);
+                FollowingList.add(followingUserItem);
             }
 
             this.isFullyUpdated = jsonObject.get("follow_update").getAsBoolean();
@@ -132,8 +128,8 @@ public class UserItem implements Serializable {
             this.username = userItem.getUsername();
             this.fullName = userItem.getFullName();
             this.isFollowed = userItem.isFollowed();
-            this.relatedFollowingList = userItem.getRelatedFollowingList();
-            this.relatedFollowerList = userItem.getRelatedFollowerList();
+            this.FollowingList = userItem.getFollowingList();
+            this.FollowerList = userItem.getFollowerList();
 
             this.isFullyUpdated = true;
 
@@ -194,11 +190,22 @@ public class UserItem implements Serializable {
     public void setFollowed(boolean followed) {
         isFollowed = followed;
 
+        InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
+
+        UserItem userItem = singleton.getUserItemFromSingletonByUserID(singleton.getProfileUserID());
+        userItem.setFullyUpdated(false);
 
         onUserItemChangedLoop();
-
-
     }
+
+    public boolean isFullyUpdated() {
+        return isFullyUpdated;
+    }
+
+    public void setFullyUpdated(boolean fullyUpdated) {
+        isFullyUpdated = fullyUpdated;
+    }
+
     private void onUserItemChangedLoop(){
 
         if (onUserItemChangedCallbackArrayList.size() != 0){
@@ -221,21 +228,53 @@ public class UserItem implements Serializable {
         }
     }
 
-    public ArrayList<UserItem> getRelatedFollowingList() {
-        return relatedFollowingList;
+    public CopyOnWriteArrayList<UserItem> getFollowingList() {
+        return FollowingList;
     }
 
-    public void setRelatedFollowingList(ArrayList<UserItem> relatedFollowingList) {
-        this.relatedFollowingList = relatedFollowingList;
+    public void setFollowingList(CopyOnWriteArrayList<UserItem> followingList) {
+        this.FollowingList = followingList;
     }
 
-    public ArrayList<UserItem> getRelatedFollowerList() {
-        return relatedFollowerList;
+    public CopyOnWriteArrayList<UserItem> getFollowerList() {
+        return FollowerList;
     }
 
-    public void setRelatedFollowerList(ArrayList<UserItem> relatedFollowerList) {
-        this.relatedFollowerList = relatedFollowerList;
+    public void setFollowerList(CopyOnWriteArrayList<UserItem> followerList) {
+        this.FollowerList = followerList;
     }
 
+    public void addFollower(UserItem userItem){
+
+        CopyOnWriteArrayList<UserItem> changeList = this.FollowerList;
+
+
+        boolean isUpdated = false;
+        for (UserItem existUserItem: changeList){
+            if(existUserItem.isSameUserItem(userItem)){
+                existUserItem.updateItem(userItem, false);
+                isUpdated =true;
+
+            }
+        }
+        if(!isUpdated){
+            changeList.add(userItem);
+        }
+    }
+    public void addFollowing(UserItem userItem){
+        CopyOnWriteArrayList<UserItem> changeList = this.FollowingList;
+
+        boolean isUpdated = false;
+        for (UserItem existUserItem: changeList){
+            if(existUserItem.isSameUserItem(userItem)){
+                existUserItem.updateItem(userItem, false);
+                isUpdated =true;
+
+            }
+        }
+        if(!isUpdated){
+            changeList.add(userItem);
+        }
+    }
 
 }

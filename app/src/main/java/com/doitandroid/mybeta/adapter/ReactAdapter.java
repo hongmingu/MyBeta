@@ -96,10 +96,7 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         Intent intent = new Intent(context, ContentActivity.class);
                         intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
 
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("userItem", userItem);
-                        intent.putExtras(bundle);
-
+                        intent.putExtra("userID", userItem.getUserID());
                         ((ReactActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
                         ((ReactActivity) context).overridePendingTransition(0, 0); //
 

@@ -57,10 +57,79 @@ twice_sana_unofficial"
         android:layout_width="match_parent"
         android:layout_height="24dp" />
 
-    <RelativeLayout
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"></RelativeLayout>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/fragment_content_user_followed_by_wrapper_cl"
+
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible">
+        <RelativeLayout
+
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="32dp">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textStyle="normal"
+                        android:textColor="#202020"
+                        android:lineSpacingExtra="5sp"
+                        android:text="followed by">
+                    </androidx.appcompat.widget.AppCompatTextView>
+
+
+                    <Space
+                        android:layout_width="16dp"
+                        android:layout_height="match_parent">
+
+                    </Space>
+                    <RelativeLayout
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_marginStart="16dp"
+                            android:id="@+id/fragment_content_user_followed_by_photo3_civ"
+                            android:layout_alignStart="@id/fragment_content_user_followed_by_photo2_civ"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp">
+
+                        </de.hdodenhof.circleimageview.CircleImageView>
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/fragment_content_user_followed_by_photo2_civ"
+                            android:layout_marginStart="16dp"
+                            android:layout_alignStart="@id/fragment_content_user_followed_by_photo1_civ"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp">
+
+                        </de.hdodenhof.circleimageview.CircleImageView>
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/fragment_content_user_followed_by_photo1_civ"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp">
+
+                        </de.hdodenhof.circleimageview.CircleImageView>
+                    </RelativeLayout>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </RelativeLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
     <Space
         android:layout_width="match_parent"
@@ -75,7 +144,7 @@ twice_sana_unofficial"
 
             android:id="@+id/fragment_content_user_follower_cl"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_weight="1">
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_gravity="center"
@@ -88,12 +157,13 @@ twice_sana_unofficial"
                 android:lineSpacingExtra="5sp"
                 android:text="follower"
                 />
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/fragment_content_user_following_cl"
 
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_weight="1">
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_gravity="center"

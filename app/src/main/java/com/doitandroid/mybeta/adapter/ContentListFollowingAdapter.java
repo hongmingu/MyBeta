@@ -29,6 +29,7 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
@@ -39,14 +40,14 @@ import retrofit2.Response;
 
 public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "CLFollowingAdapterTAG";
-    ArrayList<UserItem> userItemArrayList;
+    CopyOnWriteArrayList<UserItem> userItemArrayList;
     Context context;
     Fragment parentFragment;
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     APIInterface apiInterface;
 
-    public ContentListFollowingAdapter(ArrayList<UserItem> userItemArrayList, Context context, Fragment parentFragment) {
+    public ContentListFollowingAdapter(CopyOnWriteArrayList<UserItem> userItemArrayList, Context context, Fragment parentFragment) {
         this.userItemArrayList = userItemArrayList;
         this.context = context;
         this.parentFragment = parentFragment;
@@ -114,6 +115,9 @@ public class ContentListFollowingAdapter extends RecyclerView.Adapter<RecyclerVi
                         }
                     }
                 });
+                if(userItem.isSameUserItem(singleton.getUserItemFromSingletonByUserID(singleton.profileUserID))){
+                    userViewHolder.follow_iv.setVisibility(View.INVISIBLE);
+                }
 
 
 

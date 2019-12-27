@@ -63,7 +63,6 @@
             android:textColor="#202020"
             android:lineSpacingExtra="5sp"
             android:text="following"
-            android:background="@drawable/bg_skyblue40"
             />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

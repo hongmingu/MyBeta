@@ -32,6 +32,7 @@ import com.doitandroid.mybeta.rest.ConstantREST;
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -108,23 +109,20 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 Intent intent = new Intent(activity, ContentActivity.class);
                 intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_FOLLOW);
 
-                Bundle bundle = new Bundle();
 
                 UserItem userItem = singleton.getUserItemFromSingletonByUserItem(new UserItem(profileUsername,
                         profileUserID,
                         profileFullName,
                         profilePhoto,
-                        new ArrayList<UserItem>(),
-                        new ArrayList<UserItem>(),
+                        new CopyOnWriteArrayList<UserItem>(),
+                        new CopyOnWriteArrayList<UserItem>(),
                         false,
                         false,
                         false));
+                intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
 
-                bundle.putSerializable("userItem", userItem);
+                intent.putExtra("userID", userItem.getUserID());
 
-                intent.putExtras(bundle);
-
-                intent.putExtra(ConstantStrings.INTENT_CONTENT_FOLLOW_BOOLEAN, false);
 
                 ((MainActivity) activity).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
                 ((MainActivity) activity).overridePendingTransition(0, 0); //
@@ -142,8 +140,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                         profileUserID,
                         profileFullName,
                         profilePhoto,
-                        new ArrayList<UserItem>(),
-                        new ArrayList<UserItem>(),
+                        new CopyOnWriteArrayList<UserItem>(),
+                        new CopyOnWriteArrayList<UserItem>(),
                         false,
                         false,
                         false));

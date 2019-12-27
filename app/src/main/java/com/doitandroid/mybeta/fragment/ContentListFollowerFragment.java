@@ -27,7 +27,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -39,7 +41,7 @@ public class ContentListFollowerFragment extends Fragment {
     private static final String TAG = "CLFollowerFragmentTAG";
 
     APIInterface apiInterface;
-    ArrayList<UserItem> userItemArrayList;
+    CopyOnWriteArrayList<UserItem> userItemArrayList;
     RecyclerView list_rv;
 
     ContentListFollowerAdapter adapter;
@@ -63,6 +65,7 @@ public class ContentListFollowerFragment extends Fragment {
 
 
         list_rv = view.findViewById(R.id.child_fragment_content_list_follower_rv);
+        setAdapter();
 
         return view;
     }
@@ -90,6 +93,7 @@ public class ContentListFollowerFragment extends Fragment {
                         for(JsonElement jsonElement: contentArray){
                             JsonObject item = jsonElement.getAsJsonObject();
                             UserItem userItem = singleton.getUserItemFromSingletonByJsonObject(item);
+
                             userItemArrayList.add(userItem);
 
                         }
@@ -97,17 +101,7 @@ public class ContentListFollowerFragment extends Fragment {
                         Log.d(TAG, "size: " + userItemArrayList.size() + "");
 
 
-                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-                        // 어댑터를 연결시킨다.
-                        adapter = new ContentListFollowerAdapter(userItemArrayList, getParentFragment().getContext(), getParentFragment());
-
-                        // 리사이클러뷰에 연결한다.
-                        list_rv.setLayoutManager(layoutManager);
-                        list_rv.setAdapter(adapter);
-
-                        list_rv.setNestedScrollingEnabled(false);
-
-                        adapter.notifyDataSetChanged();
+                        setAdapter();
 
 
                     }
@@ -125,9 +119,25 @@ public class ContentListFollowerFragment extends Fragment {
 
     }
 
+    public void setUserItemArrayList(CopyOnWriteArrayList<UserItem> arrayList){
+        this.userItemArrayList = arrayList;
+    }
+    public void setAdapter() {
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        // 어댑터를 연결시킨다.
+        adapter = new ContentListFollowerAdapter(userItemArrayList, getParentFragment().getContext(), getParentFragment());
 
-    public ContentListFollowerFragment(APIInterface apiInterface) {
-        this.apiInterface = apiInterface;
-        userItemArrayList = new ArrayList<>();
+        // 리사이클러뷰에 연결한다.
+        list_rv.setLayoutManager(layoutManager);
+        list_rv.setAdapter(adapter);
+
+        list_rv.setNestedScrollingEnabled(false);
+
+        adapter.notifyDataSetChanged();
+    }
+
+    public ContentListFollowerFragment(CopyOnWriteArrayList userItemArrayList) {
+        this.apiInterface = singleton.apiInterface;
+        this.userItemArrayList = userItemArrayList;
     }
 }

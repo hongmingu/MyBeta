@@ -197,5 +197,10 @@ public interface APIInterface {
     @POST("r/rest/forgot_password/")
     Call<JsonObject> forgotPassword(@Part("account") RequestBody account);
 
+    /* userFullyUpdateAndSetAdapter */
+    @Multipart
+    @POST("r/rest/user_fully_update/")
+    Call<JsonObject> userFullyUpdate(@Part("user_id") RequestBody userID);
+
 
 }

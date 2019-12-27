@@ -92,10 +92,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         Intent intent = new Intent(context, ContentActivity.class);
                         intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
 
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("userItem", userItem);
-                        intent.putExtras(bundle);
-
+                        intent.putExtra("userID", userItem.getUserID());
                         ((CommentActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
                         ((CommentActivity) context).overridePendingTransition(0, 0); //
 
