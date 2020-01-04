@@ -46,7 +46,11 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     AppCompatImageView user_fragment_setting_btn_iv, user_fragment_change_photo_iv, user_fragment_change_profile_iv;
     CircleImageView user_fragment_profile_photo_civ;
 
-    TextView user_fragment_profile_username_tv, user_fragment_profile_full_name_tv, user_fragment_profile_email_tv;
+    TextView user_fragment_profile_username_tv,
+            user_fragment_profile_full_name_tv,
+            user_fragment_profile_email_tv,
+            user_fragment_profile_follower_count_tv,
+            user_fragment_profile_following_count_tv;
 
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
@@ -61,6 +65,15 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
         activity = getActivity();
 
+        setViews(rootView);
+
+
+        setProfile();
+
+        return rootView;
+    }
+
+    public void setViews(ViewGroup rootView) {
         user_fragment_setting_btn_iv = rootView.findViewById(R.id.fragment_user_setting_btn);
         user_fragment_setting_btn_iv.setOnClickListener(this);
 
@@ -81,12 +94,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         user_fragment_change_profile_iv = rootView.findViewById(R.id.fragment_user_change_profile_iv);
         user_fragment_change_profile_iv.setOnClickListener(this);
 
-
-
-
-        setProfile();
-
-        return rootView;
+        user_fragment_profile_follower_count_tv = rootView.findViewById(R.id.fragment_user_follower_count_tv);
+        user_fragment_profile_following_count_tv = rootView.findViewById(R.id.fragment_user_following_count_tv);
     }
 
     @Override
@@ -119,10 +128,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                         false,
                         false,
                         false));
-                intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
 
                 intent.putExtra("userID", userItem.getUserID());
 
+                intent.putExtra(ConstantStrings.INTENT_CONTENT_FOLLOW_BOOLEAN, false);
+
+                //todo: 유저프래그먼트에서 팔로워 팔로잉 숫자, 팔로우 그대로 빨리 눌리는 느낌주기. 처음에 누르자마자 색 바뀌고 그다음에 요청.
 
                 ((MainActivity) activity).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
                 ((MainActivity) activity).overridePendingTransition(0, 0); //
@@ -146,8 +157,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                         false,
                         false));
 
-                ingBundle.putSerializable("userItem", ingUserItem);
-                ingIntent.putExtras(ingBundle);
+                ingIntent.putExtra("userID", ingUserItem.getUserID());
 
                 ingIntent.putExtra(ConstantStrings.INTENT_CONTENT_FOLLOW_BOOLEAN, true);
 
@@ -220,6 +230,17 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         user_fragment_profile_full_name_tv.setText(profileFullName);
         user_fragment_profile_email_tv.setText(profileEmail);
 
+
         // todo: 이제 포토 올리는거, 나머지 셋텍스트.
+    }
+
+
+    public void setFollowCount(){
+        UserItem userItem = singleton.getUserItemFromSingletonByUserID(singleton.getProfileUserID());
+
+        Log.d(TAG, "setFollowCount: + " + userItem.getFollowingList().size());
+        user_fragment_profile_following_count_tv.setText(userItem.getFollowingList().size() + "");
+        user_fragment_profile_follower_count_tv.setText(userItem.getFollowerList().size()+"");
+
     }
 }

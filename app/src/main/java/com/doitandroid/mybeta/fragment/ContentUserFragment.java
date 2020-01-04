@@ -1,5 +1,6 @@
 package com.doitandroid.mybeta.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -30,7 +31,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -44,7 +48,9 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class ContentUserFragment extends Fragment {
 
-    private static final String TAG = "HomeFollowFragTAG";
+    private static final String TAG = "ContentUserFragment";
+
+    Activity activity;
 
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
@@ -148,39 +154,73 @@ public class ContentUserFragment extends Fragment {
 
     public void follow_user() {
         RequestBody userID = RequestBody.create(MediaType.parse("multipart/form-data"), userItem.getUserID());
-        Call<JsonObject> call = apiInterface.follow(userID);
+        RequestBody requestBoolean;
+        if (userItem.isFollowed()){
+            requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "false");
+            userItem.setFollowed(false);
+            singleton.updateUserList(userItem, false);
+            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
+
+            // 일단 팔로우취소해
+
+        } else {
+            requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "true");
+            userItem.setFollowed(true);
+            singleton.updateUserList(userItem, true);
+            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+        }
+
+
+        Call<JsonObject> call = apiInterface.followBoolean(userID, requestBoolean);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
                 if (response.isSuccessful()) {
                     JsonObject jsonObject = response.body();
                     if (jsonObject != null) {
                         int rc = jsonObject.get("rc").getAsInt();
 
                         if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
-                            // sign up 실패
+                            Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
+
+                            if (userItem.isFollowed()){
+                                userItem.setFollowed(false);
+                                singleton.updateUserList(userItem, false);
+                                follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
+
+                                // 일단 팔로우취소해
+
+                            } else {
+                                userItem.setFollowed(true);
+                                singleton.updateUserList(userItem, true);
+                                follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+                            }
+
                             call.cancel();
                             return;
                         }
 
                         // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
-                        if (jsonObject.get("content").getAsBoolean()) {
-                            // follow
-                            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-
-                            userItem.setFollowed(true);
-                            singleton.updateUserList(userItem, false);
-
-                        } else {
-                            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
-
-                            userItem.setFollowed(false);
-                            singleton.updateUserList(userItem, false);
-
-
-                        }
 
                         // 접속 성공.
+
+                    }
+
+                } else {
+                    if (userItem.isFollowed()){
+                        userItem.setFollowed(false);
+                        singleton.updateUserList(userItem, false);
+                        follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
+
+                        // 일단 팔로우취소해
+
+                    } else {
+                        userItem.setFollowed(true);
+                        singleton.updateUserList(userItem, true);
+                        follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
 
                     }
 
@@ -190,6 +230,22 @@ public class ContentUserFragment extends Fragment {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
+                if (userItem.isFollowed()){
+                    userItem.setFollowed(false);
+                    singleton.updateUserList(userItem, false);
+                    follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
+
+                    // 일단 팔로우취소해
+
+                } else {
+                    userItem.setFollowed(true);
+                    singleton.updateUserList(userItem, true);
+                    follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+                }
+
                 call.cancel();
 
             }
@@ -204,6 +260,19 @@ public class ContentUserFragment extends Fragment {
         }
         return false;
     }
+
+
+/*
+    Date today = new Date();
+
+    //        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+    java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+    String dateToStr = format.format(today);
+        Log.d(TAG, dateToStr);
+
+*/
+
 
     public void setRelatedFollower() {
 
@@ -229,13 +298,13 @@ public class ContentUserFragment extends Fragment {
                 related_follower_wrapper_cl.setVisibility(View.VISIBLE);
 
 
-                Glide.with(getActivity().getApplicationContext())
+                Glide.with(activity.getApplicationContext())
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + relatedUserItemArrayList.get(0).getUserPhoto())
                         .into(related_follower_1_civ);
                 break;
             case 2:
                 related_follower_wrapper_cl.setVisibility(View.VISIBLE);
-                Glide.with(getActivity().getApplicationContext())
+                Glide.with(activity.getApplicationContext())
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + relatedUserItemArrayList.get(0).getUserPhoto())
                         .into(related_follower_1_civ);
                 Glide.with(getActivity().getApplicationContext())
@@ -244,13 +313,13 @@ public class ContentUserFragment extends Fragment {
                 break;
             case 3:
                 related_follower_wrapper_cl.setVisibility(View.VISIBLE);
-                Glide.with(getActivity().getApplicationContext())
+                Glide.with(activity.getApplicationContext())
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + relatedUserItemArrayList.get(0).getUserPhoto())
                         .into(related_follower_1_civ);
-                Glide.with(getActivity().getApplicationContext())
+                Glide.with(activity.getApplicationContext())
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + relatedUserItemArrayList.get(1).getUserPhoto())
                         .into(related_follower_2_civ);
-                Glide.with(getActivity().getApplicationContext())
+                Glide.with(activity.getApplicationContext())
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + relatedUserItemArrayList.get(2).getUserPhoto())
                         .into(related_follower_3_civ);
                 break;
@@ -362,6 +431,7 @@ public class ContentUserFragment extends Fragment {
                                 call.cancel();
                                 return;
                             }
+
                             JsonArray contentFollowerArray = jsonObject.get("content_follower").getAsJsonArray();
 
                             for (JsonElement jsonFollowerElement : contentFollowerArray) {
@@ -488,7 +558,8 @@ public class ContentUserFragment extends Fragment {
     }
 
 
-    public ContentUserFragment(UserItem userItem) {
+    public ContentUserFragment(UserItem userItem, Activity activity) {
         this.userItem = userItem;
+        this.activity = activity;
     }
 }

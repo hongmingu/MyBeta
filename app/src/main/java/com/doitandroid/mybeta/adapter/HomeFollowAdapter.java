@@ -64,7 +64,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.feedItemArrayList = feedItemArrayList;
         this.context = context;
 
-        apiInterface = getApiInterface();
+        apiInterface = singleton.apiInterface;
     }
 
     @NonNull
@@ -92,7 +92,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)){
             case ConstantIntegers.OPT_DEFAULT_PING:
                 final FeedItem feeditem = feedItemArrayList.get(position);
@@ -173,10 +173,22 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
 
+                Log.d(TAG, "isReacted" + feeditem.getReacted());
+                if (feeditem.getReacted()){
+                    ((HomeFollowDefaultPingViewHolder) holder).dpi_react_btn_lav.setMinAndMaxProgress(0f, 1f);
+                    ((HomeFollowDefaultPingViewHolder) holder).dpi_react_btn_lav.setProgress(1f);
+                } else {
+                    ((HomeFollowDefaultPingViewHolder) holder).dpi_react_btn_lav.setMinAndMaxProgress(0f, 1f);
+                    ((HomeFollowDefaultPingViewHolder) holder).dpi_react_btn_lav.setProgress(0f);
+
+                }
+
+
                 ((HomeFollowDefaultPingViewHolder) holder).dpi_react_btn_lav.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        react(feeditem.getPostID());
+
+                        react(feeditem.getPostID(), ((HomeFollowDefaultPingViewHolder)holder).dpi_react_btn_lav, feeditem.getReacted(), feeditem);
                     }
                 });
 
@@ -277,6 +289,10 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return position;
     }
 
+    //todo: 자바에서 팔로우 요청시에 요청하는 시간을 넣어서 요청한다. 요청하는 시간을 넣어서 요청할 시에 장고에서 시간을 받은 후
+    // 팔로우를 생성할 시에 그 요청시간을 넣는다. 만약 새로운 팔로우 정보가 왔는데 그것이 지난 요청시간과 비교하여 10초이내
+    // 차이이며 지난 요청시간보다 이전의 요청일 경우 기각한다. 리액트도 마찬가지이다. 그리고 자바 석세스풀에선 따로 변경을 하지
+    // 않는다. 후자의 요청만이 처리되었을 것이므로. 대신 콜이 실패했을 경우만 그 전 상태로 되돌린다.
 
     public static int getAdjustedTimeDifference(String dateString) {
         int SEC = 60;
@@ -316,9 +332,35 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
 
-    public void react(String postID){
+    public void react(String postID, LottieAnimationView lottieAnimationView, boolean isReacted, final FeedItem feedItem){
+
+        lottieAnimationView.pauseAnimation();
+        lottieAnimationView.setMinAndMaxProgress(0f, 1f);
+        Log.d(TAG, isReacted +"");
+        if (!isReacted){
+            lottieAnimationView.setSpeed(2.4f);
+            lottieAnimationView.playAnimation();
+
+        } else {
+            lottieAnimationView.setSpeed(-2.4f);
+            lottieAnimationView.playAnimation();
+
+        }
+
+//        lottieAnimationView.playAnimation();
+
+
         RequestBody requestPostID = RequestBody.create(MediaType.parse("multipart/form-data"), postID);
-        Call<JsonObject> call = apiInterface.react(requestPostID);
+        RequestBody requestBoolean;
+        if (isReacted){
+            feedItem.setReacted(false);
+            requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "false");
+        } else {
+            feedItem.setReacted(true);
+            requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "true");
+
+        }
+        Call<JsonObject> call = apiInterface.reactBoolean(requestPostID, requestBoolean);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -331,12 +373,6 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             call.cancel();
                             return;
                         }
-
-                        Boolean result = jsonObject.get("content").getAsBoolean();
-
-                        Log.d(TAG, result.toString());
-
-
                     }
                 }
             }
@@ -347,11 +383,5 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             }
         });
-    }
-    private APIInterface getApiInterface(){
-        SharedPreferences sp = context.getSharedPreferences(ConstantStrings.SP_INIT_APP, Context.MODE_PRIVATE);
-        String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
-        APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
-        return apiInterface;
     }
 }

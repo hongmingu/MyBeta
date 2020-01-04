@@ -18,6 +18,7 @@ import com.doitandroid.mybeta.rest.LoggedInAPIClient;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class InitializationOnDemandHolderIdiom {
 
@@ -49,7 +50,6 @@ public class InitializationOnDemandHolderIdiom {
     }
 
 
-
     private static class Singleton {
         private static final InitializationOnDemandHolderIdiom instance = new InitializationOnDemandHolderIdiom();
     }
@@ -60,32 +60,30 @@ public class InitializationOnDemandHolderIdiom {
     }
 
 
-
     public void setApiInterface(APIInterface apiInterface) {
         this.apiInterface = apiInterface;
     }
 
 
-
     public void updateUserList(UserItem userItem, Boolean followUpdate) {
         boolean isUpdated = false;
-        for (UserItem item: userList){
-            if(item.isSameUserItem(userItem)){
+        for (UserItem item : userList) {
+            if (item.isSameUserItem(userItem)) {
                 // 같은 것이 존재.
                 item.updateItem(userItem, followUpdate);
                 isUpdated = true;
             }
         }
-        if (!isUpdated){
+        if (!isUpdated) {
             userList.add(userItem);
         }
 
     }
 
-    public UserItem getUserItemFromSingletonByJsonObject(JsonObject jsonObject){
+    public UserItem getUserItemFromSingletonByJsonObject(JsonObject jsonObject) {
         UserItem userItem = new UserItem(jsonObject);
         UserItem foundUserItem = findUserItemFromSingleton(userItem);
-        if (foundUserItem != null){
+        if (foundUserItem != null) {
             return foundUserItem;
         } else {
             userList.add(userItem);
@@ -93,9 +91,9 @@ public class InitializationOnDemandHolderIdiom {
         }
     }
 
-    public UserItem getUserItemFromSingletonByUserItem(UserItem userItem){
+    public UserItem getUserItemFromSingletonByUserItem(UserItem userItem) {
         UserItem foundUserItem = findUserItemFromSingleton(userItem);
-        if (foundUserItem != null){
+        if (foundUserItem != null) {
             return foundUserItem;
         } else {
             userList.add(userItem);
@@ -104,27 +102,47 @@ public class InitializationOnDemandHolderIdiom {
     }
 
 
-    public UserItem findUserItemFromSingleton(UserItem userItem){
-        for (UserItem item: userList){
-            if(item.isSameUserItem(userItem)){
+    public UserItem findUserItemFromSingleton(UserItem userItem) {
+        for (UserItem item : userList) {
+            if (item.isSameUserItem(userItem)) {
+                updateUserList(userItem, false);
                 return item;
             }
         }
         return null;
     }
 
-    public UserItem getUserItemFromSingletonByUserID(String userID){
-        for (UserItem item: userList){
-            if(item.getUserID().equals(userID)){
+    public UserItem getUserItemFromSingletonByUserID(String userID) {
+        for (UserItem item : userList) {
+            if (item.getUserID().equals(userID)) {
                 return item;
             }
         }
         return null;
     }
 
-    public void removeUserItemfromUserList(UserItem userItem){
-        for (UserItem item: userList){
-            if (item.isSameUserItem(userItem)){
+    public UserItem getOrCreateUserItemFromSingletonByUserID(String userID) {
+        for (UserItem item : userList) {
+            if (item.getUserID().equals(userID)) {
+                return item;
+            }
+        }
+
+        UserItem tempUserItem = new UserItem("tempUsername",
+                profileUserID,
+                "tempFullName",
+                "tempPhoto",
+                new CopyOnWriteArrayList<UserItem>(),
+                new CopyOnWriteArrayList<UserItem>(),
+                false,
+                false,
+                false);
+        return tempUserItem;
+    }
+
+    public void removeUserItemfromUserList(UserItem userItem) {
+        for (UserItem item : userList) {
+            if (item.isSameUserItem(userItem)) {
                 userList.remove(item);
             }
         }

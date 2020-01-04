@@ -132,6 +132,8 @@ public class HomeFollowFragment extends Fragment {
 
                             call.cancel();
                             home_follow_srl.setRefreshing(false);
+                            Toast.makeText(getActivity(), "not SUCCEEDRESPONSE", Toast.LENGTH_SHORT).show();
+
                             ((MainActivity) getActivity()).progressOFF();
 
                             return;
@@ -165,6 +167,9 @@ public class HomeFollowFragment extends Fragment {
 
                     }
 
+                } else {
+                    Toast.makeText(getActivity(), "not is successful", Toast.LENGTH_SHORT).show();
+
                 }
                 ((MainActivity) getActivity()).progressOFF();
 
@@ -173,8 +178,10 @@ public class HomeFollowFragment extends Fragment {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(getActivity(), "onFailure", Toast.LENGTH_SHORT).show();
                 call.cancel();
-                ((MainActivity) getActivity()).progressOFF();
+                init_feed();
+//                ((MainActivity) getActivity()).progressOFF();
 
             }
         });

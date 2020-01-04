@@ -31,3 +31,61 @@ public class NotLoggedInAPIClient {
         return retrofit;
     }
 }
+
+/*
+* public void getComment(String postID){
+        RequestBody requestPostID = RequestBody.create(MediaType.parse("multipart/form-data"), postID);
+        Call<JsonObject> call = apiInterface.getComment(requestPostID);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject jsonObject = response.body();
+                    if (jsonObject != null) {
+                        int rc = jsonObject.get("rc").getAsInt();
+                        if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                            // sign up 실패
+                            call.cancel();
+                            return;
+                        }
+
+                        JsonArray contentArray = jsonObject.get("content").getAsJsonArray();
+
+                        Log.d(TAG, contentArray.toString());
+
+                        for(JsonElement jsonElement: contentArray){
+                            JsonObject item = jsonElement.getAsJsonObject();
+                            CommentItem commentItem = new CommentItem(item);
+                            commentItemArrayList.add(commentItem);
+
+                        }
+
+                        Log.d(TAG, "size: "+commentItemArrayList.size() + "");
+
+
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                        // 어댑터를 연결시킨다.
+                        commentAdapter = new CommentAdapter(commentItemArrayList, context);
+
+                        // 리사이클러뷰에 연결한다.
+                        comment_content_rv.setLayoutManager(layoutManager);
+                        comment_content_rv.setAdapter(commentAdapter);
+
+                        comment_content_rv.setNestedScrollingEnabled(false);
+
+                        commentAdapter.notifyDataSetChanged();
+
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                call.cancel();
+
+            }
+        });
+
+    }
+* */

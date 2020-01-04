@@ -41,8 +41,6 @@ import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.doitandroid.mybeta.Cropper.CropImage;
 import com.doitandroid.mybeta.Cropper.CropImageView;
-import com.doitandroid.mybeta.customview.MyDialog;
-import com.doitandroid.mybeta.customview.MyDialogListener;
 import com.doitandroid.mybeta.fragment.HomeReceivedFragment;
 import com.doitandroid.mybeta.fragment.NotiFragment;
 import com.doitandroid.mybeta.fragment.SearchFragment;
@@ -50,6 +48,7 @@ import com.doitandroid.mybeta.fragment.UserFragment;
 import com.doitandroid.mybeta.homeping.HomePingAdapater;
 import com.doitandroid.mybeta.fragment.HomeFollowFragment;
 import com.doitandroid.mybeta.itemclass.FeedItem;
+import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.ping.PingShownItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.LoggedInAPIClient;
@@ -193,6 +192,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             // main whole wrapper cover on
 
+            // init animation
+            lottie_tb_clicked_case(ConstantStrings.FRAGMENT_HOME);
+
+
+            userFullyUpdateAndUserFragmentUpdate(singleton.getOrCreateUserItemFromSingletonByUserID(singleton.getProfileUserID()));
             FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                 @Override
                 public void onComplete(@NonNull Task<InstanceIdResult> task) {
@@ -644,17 +648,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void lottie_tb_released_case(String tb_tab_before) {
         switch (tb_tab_before) {
             case "home":
-                lottie_tb_play(lav_home, 2.4f);
+                lottie_tb_play(lav_home, -2.4f);
                 break;
             case "noti":
-                lottie_tb_play(lav_noti, 2.4f);
+                lottie_tb_play(lav_noti, -2.4f);
                 break;
             case "search":
-                lottie_tb_play(lav_search, 2.4f);
+                lottie_tb_play(lav_search, -2.4f);
 
                 break;
             case "user":
-                lottie_tb_play(lav_user, 2.4f);
+                lottie_tb_play(lav_user, -2.4f);
                 break;
             default:
                 break;
@@ -665,16 +669,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (tb_tab) {
             case "home":
-                lottie_tb_play(lav_home, -2.4f);
+                lottie_tb_play(lav_home, 2.4f);
                 break;
             case "noti":
-                lottie_tb_play(lav_noti, -2.4f);
+                lottie_tb_play(lav_noti, 2.4f);
                 break;
             case "search":
-                lottie_tb_play(lav_search, -2.4f);
+                lottie_tb_play(lav_search, 2.4f);
                 break;
             case "user":
-                lottie_tb_play(lav_user, -2.4f);
+                lottie_tb_play(lav_user, 2.4f);
 
                 break;
             default:
@@ -1359,6 +1363,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             progressDialog.dismiss();
         }
     }
+
+    public void userFullyUpdateAndUserFragmentUpdate(final UserItem userItem) {
+        if (!userItem.isFullyUpdated()) {
+
+            RequestBody requestPostID = RequestBody.create(MediaType.parse("multipart/form-data"), userItem.getUserID());
+            Call<JsonObject> call = apiInterface.userFullyUpdate(requestPostID);
+            call.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (response.isSuccessful()) {
+                        JsonObject jsonObject = response.body();
+                        if (jsonObject != null) {
+                            int rc = jsonObject.get("rc").getAsInt();
+                            if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                                // sign up 실패
+                                call.cancel();
+                                return;
+                            }
+
+                            UserItem getUserItem = singleton.getUserItemFromSingletonByJsonObject(jsonObject.get("user").getAsJsonObject());
+
+
+                            JsonArray contentFollowerArray = jsonObject.get("content_follower").getAsJsonArray();
+
+                            for (JsonElement jsonFollowerElement : contentFollowerArray) {
+                                JsonObject followerItem = jsonFollowerElement.getAsJsonObject();
+                                UserItem followerUserItem = singleton.getUserItemFromSingletonByJsonObject(followerItem);
+                                userItem.addFollower(followerUserItem);
+
+                            }
+                            JsonArray contentFollowingArray = jsonObject.get("content_following").getAsJsonArray();
+
+
+                            for (JsonElement jsonFollowingElement : contentFollowingArray) {
+                                JsonObject followingItem = jsonFollowingElement.getAsJsonObject();
+                                UserItem followingUserItem = singleton.getUserItemFromSingletonByJsonObject(followingItem);
+                                userItem.addFollowing(followingUserItem);
+
+                            }
+
+
+                            userItem.setFullyUpdated(true);
+                            ((UserFragment)fragment_user).setFollowCount();
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    call.cancel();
+
+                }
+            });
+        } else {
+        }
+
+    }
+
 }
 
 

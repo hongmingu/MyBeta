@@ -195,7 +195,26 @@ public class ContentListFollowerAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void follow_user(final String userID, final View follow_iv){
         RequestBody requestUserID = RequestBody.create(MediaType.parse("multipart/form-data"), userID);
-        Call<JsonObject> call = apiInterface.follow(requestUserID);
+        RequestBody requestBoolean;
+        final UserItem userItem = singleton.getUserItemFromSingletonByUserID(userID);
+        if (userItem.isFollowed()){
+            requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "false");
+            userItem.setFollowed(false);
+            singleton.updateUserList(userItem, false);
+            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+            // 일단 팔로우취소해
+
+        } else {
+            requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "true");
+            userItem.setFollowed(true);
+            singleton.updateUserList(userItem, true);
+            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+        }
+
+
+        Call<JsonObject> call = apiInterface.followBoolean(requestUserID, requestBoolean);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -206,31 +225,46 @@ public class ContentListFollowerAdapter extends RecyclerView.Adapter<RecyclerVie
 
                         if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
                             // sign up 실패
+
+                            if (userItem.isFollowed()){
+                                userItem.setFollowed(false);
+                                singleton.updateUserList(userItem, false);
+                                follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+                                // 일단 팔로우취소해
+
+                            } else {
+                                userItem.setFollowed(true);
+                                singleton.updateUserList(userItem, true);
+                                follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+                            }
+
                             call.cancel();
                             return;
                         }
 
                         // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
-                        if (jsonObject.get("content").getAsBoolean()){
-                            // follow
-                            UserItem userItem = singleton.getUserItemFromSingletonByUserID(userID);
-                            if (userItem != null){
-                                userItem.setFollowed(true);
-                            }
-                            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-                        } else {
-                            // not follow
-                            UserItem userItem = singleton.getUserItemFromSingletonByUserID(userID);
-                            if (userItem != null){
-                                userItem.setFollowed(false);
-                            }
-                            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
-                        }
+
 
                         // 접속 성공.
 
                     }
 
+                } else {
+                    if (userItem.isFollowed()){
+                        userItem.setFollowed(false);
+                        singleton.updateUserList(userItem, false);
+                        follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+                        // 일단 팔로우취소해
+
+                    } else {
+                        userItem.setFollowed(true);
+                        singleton.updateUserList(userItem, true);
+                        follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+                    }
                 }
 
             }
@@ -239,6 +273,20 @@ public class ContentListFollowerAdapter extends RecyclerView.Adapter<RecyclerVie
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 call.cancel();
 
+
+                if (userItem.isFollowed()){
+                    userItem.setFollowed(false);
+                    singleton.updateUserList(userItem, false);
+                    follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+                    // 일단 팔로우취소해
+
+                } else {
+                    userItem.setFollowed(true);
+                    singleton.updateUserList(userItem, true);
+                    follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+                }
             }
         });
     }

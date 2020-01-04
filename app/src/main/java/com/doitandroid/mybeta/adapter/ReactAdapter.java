@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -107,6 +108,41 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
                         .into(reactViewHolder.react_user_photo_civ);
 
+                reactViewHolder.react_user_photo_civ.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ContentActivity.class);
+                        intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
+
+                        intent.putExtra("userID", userItem.getUserID());
+                        ((ReactActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
+                        ((ReactActivity) context).overridePendingTransition(0, 0); //
+
+                    }
+                });
+                if (userItem.isFollowed()){
+                    reactViewHolder.react_follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+                } else {
+                    reactViewHolder.react_follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+                }
+                userItem.setOnUserItemChangedListener(new UserItem.OnUserItemChangedCallback() {
+                    @Override
+                    public void onItemChanged(UserItem userItem) {
+                        Log.d(TAG, "follow from list follower: "+ userItem.isFollowed()+ this.getClass().toString());
+
+                        Toast.makeText(context, "follower: "+ userItem.isFollowed()+ this.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
+                        if (userItem.isFollowed()){
+                            reactViewHolder.react_follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+                        } else {
+                            reactViewHolder.react_follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+                        }
+
+                    }
+                });
+
                 reactViewHolder.react_follow_iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -114,7 +150,9 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     }
                 });
 
-
+                if(userItem.isSameUserItem(singleton.getUserItemFromSingletonByUserID(singleton.profileUserID))){
+                    reactViewHolder.react_follow_iv.setVisibility(View.INVISIBLE);
+                }
                 break;
         }
     }
@@ -180,9 +218,28 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return apiInterface;
     }
 
-    public void follow_user(String userID, final View follow_iv){
+    public void follow_user(final String userID, final View follow_iv){
         RequestBody requestUserID = RequestBody.create(MediaType.parse("multipart/form-data"), userID);
-        Call<JsonObject> call = apiInterface.follow(requestUserID);
+        RequestBody requestBoolean;
+        final UserItem userItem = singleton.getUserItemFromSingletonByUserID(userID);
+        if (userItem.isFollowed()){
+            requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "false");
+            userItem.setFollowed(false);
+            singleton.updateUserList(userItem, false);
+            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+            // 일단 팔로우취소해
+
+        } else {
+            requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "true");
+            userItem.setFollowed(true);
+            singleton.updateUserList(userItem, true);
+            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+        }
+
+
+        Call<JsonObject> call = apiInterface.followBoolean(requestUserID, requestBoolean);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -193,29 +250,61 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
                             // sign up 실패
+                            if (userItem.isFollowed()){
+                                userItem.setFollowed(false);
+                                singleton.updateUserList(userItem, false);
+                                follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+                                // 일단 팔로우취소해
+
+                            } else {
+                                userItem.setFollowed(true);
+                                singleton.updateUserList(userItem, true);
+                                follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+                            }
                             call.cancel();
                             return;
                         }
 
-                        // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
-                        if (jsonObject.get("content").getAsBoolean()){
-                            // follow
-                            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
-                        } else {
-                            // not follow
-                            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-                        }
 
                         // 접속 성공.
 
                     }
 
+                } else {
+                    if (userItem.isFollowed()){
+                        userItem.setFollowed(false);
+                        singleton.updateUserList(userItem, false);
+                        follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+                        // 일단 팔로우취소해
+
+                    } else {
+                        userItem.setFollowed(true);
+                        singleton.updateUserList(userItem, true);
+                        follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+                    }
                 }
 
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                if (userItem.isFollowed()){
+                    userItem.setFollowed(false);
+                    singleton.updateUserList(userItem, false);
+                    follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+
+                    // 일단 팔로우취소해
+
+                } else {
+                    userItem.setFollowed(true);
+                    singleton.updateUserList(userItem, true);
+                    follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+
+                }
                 call.cancel();
 
             }

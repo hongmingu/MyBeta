@@ -1,7 +1,5 @@
 package com.doitandroid.mybeta.rest;
 
-
-
 import android.content.SharedPreferences;
 
 import com.doitandroid.mybeta.ConstantIntegers;
@@ -50,8 +48,6 @@ public class LoggedInAPIClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
-
-
 
         return retrofit;
     }

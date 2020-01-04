@@ -13,7 +13,7 @@ public class NotiItem {
 
     int noticeKind;
     // post info
-    String created, noticeID, commentText;
+    String created, noticeID, commentText, postID;
 
     // creator
     UserItem user;
@@ -22,8 +22,7 @@ public class NotiItem {
     public NotiItem(JsonObject jsonObject) {
 
 
-        // todo: 이제 서버에서 노티스 받아와서 처리해야함, 유저아이템 유저리스트에 넣는 것 등 잊지마.
-        // todo: 아마 apiinterfcae랑 url처리하고 진행하면 될 거야.
+        // todo: notiitem에 postid가 필요하다..
         this.jsonObject = jsonObject;
         JsonObject item = jsonObject;
 
@@ -33,6 +32,7 @@ public class NotiItem {
         if (noticeKind == ConstantIntegers.NOTICE_POST_COMMENT){
             this.commentText = item.get("comment_text").getAsString();
         }
+        this.postID = item.get("post_id").getAsString();
 
         this.created = item.get("created").getAsString();
 
@@ -99,4 +99,12 @@ public class NotiItem {
         this.user = user;
     }
 
+
+    public String getPostID() {
+        return postID;
+    }
+
+    public void setPostID(String postID) {
+        this.postID = postID;
+    }
 }

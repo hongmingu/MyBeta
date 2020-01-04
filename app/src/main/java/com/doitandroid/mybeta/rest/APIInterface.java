@@ -120,6 +120,18 @@ public interface APIInterface {
     @POST("r/rest/react/")
     Call<JsonObject> react(@Part("post_id") RequestBody post_id);
 
+    /* react boolean */
+    @Multipart
+    @POST("r/rest/react_boolean/")
+    Call<JsonObject> reactBoolean(@Part("post_id") RequestBody post_id, @Part("boolean") RequestBody boolean_type);
+    /* follow boolean */
+    @Multipart
+    @POST("r/rest/follow_boolean/")
+    Call<JsonObject> followBoolean(@Part("user_id") RequestBody user_id,
+                                   @Part("boolean") RequestBody boolean_type);
+
+
+
     /* fcmPush */
     @Multipart
     @POST("r/rest/fcm_push/")

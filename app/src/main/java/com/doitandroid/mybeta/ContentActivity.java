@@ -69,7 +69,7 @@ public class ContentActivity extends AppCompatActivity {
 
     public void addTestFragment(){
         UserItem userItem = singleton.getUserItemFromSingletonByUserItem((UserItem) gotIntent.getSerializableExtra("userItem"));
-        ContentUserFragment contentUserFragment = new ContentUserFragment(userItem);
+        ContentUserFragment contentUserFragment = new ContentUserFragment(userItem, this);
 
         singleton.contentFragmentList.add(contentUserFragment);
         ArrayList<Fragment> fragments  = (ArrayList<Fragment>) fragmentManager.getFragments();
@@ -90,7 +90,7 @@ public class ContentActivity extends AppCompatActivity {
 
     public void addUserFragment(UserItem userItem){
 
-        ContentUserFragment contentUserFragment = new ContentUserFragment(userItem);
+        ContentUserFragment contentUserFragment = new ContentUserFragment(userItem, this);
 
         singleton.contentFragmentList.add(contentUserFragment);
         fragmentManager.beginTransaction().add(R.id.content_frame_cl, contentUserFragment).commit();

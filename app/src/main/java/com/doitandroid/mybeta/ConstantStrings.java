@@ -25,7 +25,9 @@ public class ConstantStrings {
 
 
     /* Fragment */
-    public static final String FRAGMENT_HOME = "home_follow";
+    public static final String FRAGMENT_INIT = "init";
+
+    public static final String FRAGMENT_HOME = "home";
     public static final String FRAGMENT_NOTI = "noti";
     public static final String FRAGMENT_SEARCH = "search";
     public static final String FRAGMENT_USER = "user";

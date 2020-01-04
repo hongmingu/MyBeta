@@ -81,7 +81,6 @@
                         android:textStyle="normal"
                         android:textColor="#202020"
                         android:lineSpacingExtra="5sp"
-                        android:text="101"
                         />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -125,7 +124,6 @@
                         android:textStyle="normal"
                         android:textColor="#202020"
                         android:lineSpacingExtra="5sp"
-                        android:text="101"
                         />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
