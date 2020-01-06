@@ -28,7 +28,7 @@ public class InitializationOnDemandHolderIdiom {
 
     public ArrayList<Fragment> contentFragmentList;
 
-    public APIInterface apiInterface;
+    public APIInterface apiInterface, notiApiInterface;
 
     public HomeFollowAdapter homeFollowAdapter;
     public NotiAdapter notiAdapter;
@@ -62,6 +62,9 @@ public class InitializationOnDemandHolderIdiom {
 
     public void setApiInterface(APIInterface apiInterface) {
         this.apiInterface = apiInterface;
+    }
+    public void setNotiApiInterface(APIInterface notiApiInterface) {
+        this.notiApiInterface= notiApiInterface;
     }
 
 

@@ -110,6 +110,7 @@ public class HomeFollowFragment extends Fragment {
 
         ((MainActivity) getActivity()).progressON((MainActivity) getActivity(), "loading...");
         singleton.followFeedList.clear();
+        home_follow_srl.setRefreshing(false);
 
         if (singleton.homeFollowAdapter != null){
             singleton.homeFollowAdapter.notifyDataSetChanged();
@@ -161,7 +162,6 @@ public class HomeFollowFragment extends Fragment {
 
                         }
                         singleton.homeFollowAdapter.notifyDataSetChanged();
-                        home_follow_srl.setRefreshing(false);
 
                         // 접속 성공.
 

@@ -7,12 +7,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.MainActivity;
@@ -38,6 +43,11 @@ public class NotiFragment extends Fragment implements View.OnClickListener {
     String endID;
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
+    RecyclerView recyclerView;
+    CoordinatorLayout fragment_noti_loading_cl;
+    LottieAnimationView fragment_noti_loading_lav;
+
+    Call<JsonObject> mainCall;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -49,18 +59,16 @@ public class NotiFragment extends Fragment implements View.OnClickListener {
         //  그리고 정규액티비티로 노티 화면, 근데 다른 팔로잉의 글을 볼 떄는 중첩하지 말고 뜨게 하되 누를 떄마다 뷰 액티비티에 따로 뜨게
         //  하자. 그런 후 거기서 컨텐트 액티비티로 넘어갈 수 있게 하면 될 것 같다.
 
+        fragment_noti_loading_lav = rootView.findViewById(R.id.fragment_noti_loading_lav);
+        fragment_noti_loading_cl = rootView.findViewById(R.id.fragment_noti_loading_cl);
 
-        apiInterface = singleton.apiInterface;
 
-        getNotice();
+        apiInterface = singleton.notiApiInterface;
 
-        RecyclerView recyclerView = rootView.findViewById(R.id.fragment_noti_recyclerview);
-
+        recyclerView = rootView.findViewById(R.id.fragment_noti_recyclerview);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // 어댑터를 연결시킨다.
         singleton.notiAdapter = new NotiAdapter(singleton.notiList, ((MainActivity) getContext()));
-
-        Log.d(TAG, singleton.notiList.size() + "");
         // 리사이클러뷰에 연결한다.
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(singleton.notiAdapter);
@@ -75,23 +83,60 @@ public class NotiFragment extends Fragment implements View.OnClickListener {
     }
 
     public void getNotice(){
-        singleton.notiList.clear();
-        Call<JsonObject> call;
-        if (endID != null){
-            RequestBody requestEndID = RequestBody.create(MediaType.parse("multipart/form-data"), endID);
-            call = apiInterface.getNotice(requestEndID);
-        } else {
-            call = apiInterface.getNotice();
+        Log.d(TAG, "getnotice");
+
+        if(mainCall != null){
+            if(!mainCall.isCanceled()){
+                return;
+            }
+            mainCall = null;
+        }
+        Log.d(TAG, "getnotice");
+        if(singleton.notiApiInterface != null){
+            singleton.setNotiApiInterface(null);
+            singleton.setNotiApiInterface(((MainActivity) getActivity()).getApiInterface());
+            apiInterface = singleton.notiApiInterface;
         }
 
-        call.enqueue(new Callback<JsonObject>() {
+//        ((MainActivity) getActivity()).progressON((MainActivity) getActivity(), "loading...");
+
+
+        singleton.notiList.clear();
+
+        if(singleton.notiAdapter != null){
+            singleton.notiAdapter.notifyDataSetChanged();
+        }
+
+        if (fragment_noti_loading_cl.getVisibility() != View.VISIBLE){
+            fragment_noti_loading_cl.setVisibility(View.VISIBLE);
+            if (!fragment_noti_loading_lav.isAnimating()) {
+                fragment_noti_loading_lav.setMinAndMaxProgress(0f, 1f);
+                fragment_noti_loading_lav.loop(true);
+                fragment_noti_loading_lav.playAnimation();
+            }
+        }
+
+        if (endID != null){
+            RequestBody requestEndID = RequestBody.create(MediaType.parse("multipart/form-data"), endID);
+            mainCall = apiInterface.getNotice(requestEndID);
+        } else {
+            mainCall = apiInterface.getNotice();
+        }
+        if (mainCall.isCanceled()){
+            getNotice();
+            return;
+        }
+
+        mainCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.isSuccessful()) {
+                    Log.d(TAG, "onsuccessful");
                     JsonObject jsonObject = response.body();
                     if (jsonObject != null) {
                         int rc = jsonObject.get("rc").getAsInt();
                         if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                            mainCall.cancel();
                             // sign up 실패
                             call.cancel();
                             return;
@@ -99,11 +144,8 @@ public class NotiFragment extends Fragment implements View.OnClickListener {
 
                         JsonArray contentArray = jsonObject.get("content").getAsJsonArray();
 
-                        Log.d(TAG, "contentArray: " + contentArray.toString());
                         for (JsonElement notiElement: contentArray){
-                            Log.d(TAG, "notiElement: "+notiElement.toString());
                             JsonObject itemObject = notiElement.getAsJsonObject();
-                            Log.d(TAG, "itemObject: "+notiElement.toString());
                             NotiItem notiItem = new NotiItem(itemObject);
 
                             boolean isExist = false;
@@ -114,10 +156,8 @@ public class NotiFragment extends Fragment implements View.OnClickListener {
                             }
                             if(!isExist){
                                 singleton.notiList.add(notiItem);
-                                Log.d(TAG, "called");
                             }
 
-                            Log.d(TAG, singleton.notiList.size() + "");
 
 
                         }
@@ -126,16 +166,36 @@ public class NotiFragment extends Fragment implements View.OnClickListener {
 
                         // 접속 성공.
                     }
+                } else {
+
                 }
+
+                fragment_noti_loading_cl.setVisibility(View.GONE);
+                fragment_noti_loading_lav.setMinAndMaxProgress(0f, 1f);
+                fragment_noti_loading_lav.pauseAnimation();
+                Log.d(TAG, "onresponse end");
+                mainCall.cancel();
+
+//                ((MainActivity) getActivity()).progressOFF();
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                Log.d(TAG, "onFailure");
+                Log.d(TAG, t.toString());
+                mainCall.cancel();
                 call.cancel();
+
+
+                getNotice();
 
             }
         });
     }
 
+
+    public void cancelCall(){
+    }
 
 }

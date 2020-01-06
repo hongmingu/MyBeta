@@ -90,9 +90,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int window_width, ping_small_wrapper_width, space_width, pingXdiffer, pingXdifferPx, pingAndSpacePx, pingPxDp;
     Toolbar toolbar;
 
-    FrameLayout btn_home, btn_noti, btn_search, btn_user, home_follow, home_received;
+    FrameLayout btn_home, btn_noti, btn_search, btn_user, home_follow_fl, home_received_fl;
 
-    CoordinatorLayout btn_add_post;
+    CoordinatorLayout home_add_post_iv;
 
     LinearLayoutCompat main_ping_for_you_ll, main_ping_recommend_ll;
 
@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             singleton.setProfileUserID(getProfileUserID());
 
             singleton.setApiInterface(getApiInterface());
+            singleton.setNotiApiInterface(getApiInterface());
 
             apiInterface = singleton.apiInterface;
 
@@ -223,6 +224,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void hideHomeInterface(){
+        home_add_post_iv.setVisibility(View.INVISIBLE);
+        home_received_fl.setVisibility(View.INVISIBLE);
+        home_follow_fl.setVisibility(View.INVISIBLE);
+        main_ping_for_you_ll.setVisibility(View.INVISIBLE);
+    }
+    private void showHomeInterface(){
+        home_add_post_iv.setVisibility(View.VISIBLE);
+        home_received_fl.setVisibility(View.VISIBLE);
+        home_follow_fl.setVisibility(View.VISIBLE);
+        main_ping_for_you_ll.setVisibility(View.VISIBLE);
+    }
+
     private void openPingDimWrapper() {
         home_ping_dim_wrapper_cl.setVisibility(View.VISIBLE);
         home_overlay_wrapper_cl.setVisibility(View.VISIBLE);
@@ -230,8 +244,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (home_ping_dim_wrapper_cl.getVisibility() == View.VISIBLE){
+
+            closePingDimWrapper();
+        } else {
+            super.onBackPressed();
+
+        }
+    }
+
     private void closePingDimWrapper() {
-        if (btn_add_post.isPressed() || currentPingIsPressed) {
+        if (home_add_post_iv.isPressed() || currentPingIsPressed) {
             return;
         }
         home_ping_dim_wrapper_cl.setVisibility(View.INVISIBLE);
@@ -398,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private APIInterface getApiInterface() {
+    public APIInterface getApiInterface() {
         SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
         String auth_token = sp.getString(ConstantStrings.SP_ARG_TOKEN, ConstantStrings.SP_ARG_REMOVE_TOKEN);
         APIInterface apiInterface = LoggedInAPIClient.getClient(auth_token).create(APIInterface.class);
@@ -598,11 +623,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_search.setOnClickListener(this);
         btn_user.setOnClickListener(this);
 
-        home_follow = findViewById(R.id.home_follow_feed);
-        home_received = findViewById(R.id.home_received_feed);
+        home_follow_fl = findViewById(R.id.home_follow_feed);
+        home_received_fl = findViewById(R.id.home_received_feed);
 
-        home_follow.setOnClickListener(this);
-        home_received.setOnClickListener(this);
+        home_follow_fl.setOnClickListener(this);
+        home_received_fl.setOnClickListener(this);
 
         // main ping ll
         main_ping_for_you_ll = findViewById(R.id.main_ping_for_you_ll);
@@ -633,8 +658,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         home_ping_preview_tv = findViewById(R.id.home_ping_preview_tv);
         // add post main button
-        btn_add_post = findViewById(R.id.main_addpost);
-        btn_add_post.setOnClickListener(this);
+        home_add_post_iv = findViewById(R.id.main_addpost);
+        home_add_post_iv.setOnClickListener(this);
 
         lav_home = findViewById(R.id.tb_lav_home);
         lav_noti = findViewById(R.id.tb_lav_notification);
@@ -709,29 +734,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
+        NotiFragment notiFragment;
         switch (v.getId()) {
 
             case R.id.tb_fl_home:
 //                home_btn_clicked();
                 tb_btn_clicked(ConstantStrings.FRAGMENT_HOME);
-                ping_side_invisible();
-
+                showHomeInterface();
                 break;
 
             case R.id.tb_fl_notification:
                 tb_btn_clicked(ConstantStrings.FRAGMENT_NOTI);
-                ping_side_visible();
 
+                hideHomeInterface();
                 Log.d(TAG, singleton.followFeedList.toString());
 //                noti_btn_clicked();
                 break;
             case R.id.tb_fl_search:
+
                 tb_btn_clicked(ConstantStrings.FRAGMENT_SEARCH);
+                hideHomeInterface();
+
                 break;
 
 
             case R.id.tb_fl_user:
                 tb_btn_clicked(ConstantStrings.FRAGMENT_USER);
+                hideHomeInterface();
 
 
                 // narrower 일 때 space비롯해서 invisible 걸어버리자. tag 붙이면 됨.
