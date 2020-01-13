@@ -487,6 +487,7 @@ public final class CropImage {
     public void start(@NonNull Activity activity) {
       mOptions.validate();
       activity.startActivityForResult(getIntent(activity), CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+
     }
 
     /**
@@ -497,6 +498,7 @@ public final class CropImage {
     public void start(@NonNull Activity activity, @Nullable Class<?> cls) {
       mOptions.validate();
       activity.startActivityForResult(getIntent(activity, cls), CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+
     }
 
     /**
@@ -506,6 +508,7 @@ public final class CropImage {
      */
     public void start(@NonNull Context context, @NonNull Fragment fragment) {
       fragment.startActivityForResult(getIntent(context), CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+
     }
 
     /**

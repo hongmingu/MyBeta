@@ -305,6 +305,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             }
         });
+
+        ((MainActivity) context).setFollowCountOnUserFragment();
     }
 
 }

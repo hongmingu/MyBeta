@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.doitandroid.mybeta.fragment.ContentListFragment;
 import com.doitandroid.mybeta.fragment.ContentUserFragment;
+import com.doitandroid.mybeta.fragment.UserFragment;
 import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 
@@ -151,6 +152,8 @@ public class ContentActivity extends AppCompatActivity {
             Fragment fragment = fragmentManager.getFragments().get(fragmentManager.getFragments().size()-1);
             fragmentManager.beginTransaction().remove(fragment).commit();
             super.finish();
+            overridePendingTransition(0, 0);
+
         } else {
             super.finish();
 //        overridePendingTransition(R.anim.stay, R.anim.slide_down);

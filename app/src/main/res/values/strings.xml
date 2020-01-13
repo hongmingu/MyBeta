@@ -2,6 +2,7 @@
     <string name="app_name">MyBeta</string>
 
     <string name="feed_following">following</string>
+    <string name="feed_received">received</string>
 
     <!-- Ted Permission -->
     <string name="permission_1">[설정] > [권한] 에서 권한을 허용할 수 있습니다.</string>

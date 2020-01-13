@@ -90,6 +90,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         user_fragment_following_cl.setOnClickListener(this);
 
         user_fragment_profile_photo_civ = rootView.findViewById(R.id.fragment_user_photo_civ);
+        user_fragment_profile_photo_civ.setOnClickListener(this);
 
         user_fragment_change_profile_iv = rootView.findViewById(R.id.fragment_user_change_profile_iv);
         user_fragment_change_profile_iv.setOnClickListener(this);
@@ -111,6 +112,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             case R.id.fragment_user_change_photo_iv:
 
                 // 그리드뷰로 만든다.
+                ((MainActivity) getActivity()).getCroppedImage();
+                break;
+            case R.id.fragment_user_photo_civ:
                 ((MainActivity) getActivity()).getCroppedImage();
                 break;
 
@@ -239,7 +243,16 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         UserItem userItem = singleton.getUserItemFromSingletonByUserID(singleton.getProfileUserID());
 
         Log.d(TAG, "setFollowCount: + " + userItem.getFollowingList().size());
-        user_fragment_profile_following_count_tv.setText(userItem.getFollowingList().size() + "");
+
+
+        int index = 0;
+        for (UserItem item: userItem.getFollowingList()){
+            if(item.isFollowed()){
+                index ++;
+            }
+        }
+
+        user_fragment_profile_following_count_tv.setText(index + "");
         user_fragment_profile_follower_count_tv.setText(userItem.getFollowerList().size()+"");
 
     }

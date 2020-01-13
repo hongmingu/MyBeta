@@ -421,6 +421,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (fragment_user != null) {
             fragmentManager.beginTransaction().hide(fragment_user).commit();
         }
+
     }
 
     public APIInterface getApiInterface() {
@@ -748,6 +749,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 hideHomeInterface();
                 Log.d(TAG, singleton.followFeedList.toString());
+
+                Log.d(TAG, fragmentManager.getFragments().size()+"");
 //                noti_btn_clicked();
                 break;
             case R.id.tb_fl_search:
@@ -961,7 +964,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void openSettingActivity() {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivityForResult(intent, ConstantIntegers.REQUEST_SETTING_ACTIVITY);
-        overridePendingTransition(R.anim.slide_left_in, R.anim.stay); //
+        overridePendingTransition(0, 0); //
+//        overridePendingTransition(R.anim.slide_left_in, R.anim.stay); //
 
     }
 
@@ -969,7 +973,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         // cropper 에서 fragment 데이터 받기 위해 super.~ 필요.
         super.onActivityResult(requestCode, resultCode, data);
-
+        setFollowCountOnUserFragment();
 
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
@@ -1035,6 +1039,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void setFollowCountOnUserFragment() {
+        ((UserFragment) fragment_user).setFollowCount();
+    }
+
     public void changeProfilePhoto(Uri imageUri) {
 
         File imageFile = new File(imageUri.getPath());
@@ -1083,6 +1091,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setCropShape(CropImageView.CropShape.OVAL)
                 .setRequestedSize(400, 400)
                 .start(this);
+        overridePendingTransition(0,0);
     }
 
     private void logout() {
@@ -1434,7 +1443,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                             userItem.setFullyUpdated(true);
-                            ((UserFragment)fragment_user).setFollowCount();
+                            setFollowCountOnUserFragment();
 
                         }
                     }

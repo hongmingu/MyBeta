@@ -292,6 +292,9 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                call.cancel();
+
                 if (userItem.isFollowed()){
                     userItem.setFollowed(false);
                     singleton.updateUserList(userItem, false);
@@ -305,8 +308,6 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
 
                 }
-                call.cancel();
-
             }
         });
     }

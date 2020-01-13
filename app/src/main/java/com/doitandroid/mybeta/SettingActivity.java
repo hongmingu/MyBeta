@@ -44,6 +44,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 Intent passwordIntent = new Intent(this, PasswordSetActivity.class);
 
                 startActivity(passwordIntent);
+                overridePendingTransition(0, 0);
+
             default:
                 break;
         }
@@ -54,6 +56,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     public void finish() {
         super.finish();
 //        overridePendingTransition(R.anim.stay, R.anim.slide_down);
-        overridePendingTransition(R.anim.stay, R.anim.slide_right_out); // 오른쪽으로 빠짐
+//        overridePendingTransition(R.anim.stay, R.anim.slide_right_out); // 오른쪽으로 빠짐
+        overridePendingTransition(0, 0);
+
     }
 }

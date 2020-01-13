@@ -100,6 +100,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             case R.id.fragment_search_back_iv:
 
                 fragment_search_back_iv.setVisibility(View.GONE);
+                fragment_search_et.setText("");
 
                 if (searchDefaultFragment == null) {
                     searchDefaultFragment = new SearchDefaultFragment();

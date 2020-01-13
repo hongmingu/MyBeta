@@ -341,6 +341,13 @@ public class CropImageActivity extends AppCompatActivity
     finish();
   }
 
+  @Override
+  public void finish() {
+    super.finish();
+    overridePendingTransition(0, 0);
+
+  }
+
   /** Cancel of cropping activity. */
   protected void setResultCancel() {
     setResult(RESULT_CANCELED);

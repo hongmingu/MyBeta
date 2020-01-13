@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.adapter.HomeFollowAdapter;
+import com.doitandroid.mybeta.adapter.HomeReceivedAdapter;
 import com.doitandroid.mybeta.adapter.NotiAdapter;
 import com.doitandroid.mybeta.itemclass.FeedItem;
 import com.doitandroid.mybeta.itemclass.NotiItem;
@@ -31,6 +32,7 @@ public class InitializationOnDemandHolderIdiom {
     public APIInterface apiInterface, notiApiInterface;
 
     public HomeFollowAdapter homeFollowAdapter;
+    public HomeReceivedAdapter homeReceivedAdapter;
     public NotiAdapter notiAdapter;
 
     public String profileUserID;
@@ -40,6 +42,7 @@ public class InitializationOnDemandHolderIdiom {
 
     private InitializationOnDemandHolderIdiom() {
         followFeedList = new ArrayList<>();
+        receivedFeedList = new ArrayList<>();
 
         contentFragmentList = new ArrayList<>();
         userList = new ArrayList<>();

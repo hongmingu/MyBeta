@@ -126,7 +126,8 @@ public class PasswordSetActivity extends AppCompatActivity implements View.OnCli
     public void finish() {
         super.finish();
 //        overridePendingTransition(R.anim.stay, R.anim.slide_down);
-        overridePendingTransition(R.anim.stay, R.anim.slide_right_out); // 오른쪽으로 빠짐
+//        overridePendingTransition(R.anim.stay, R.anim.slide_right_out); // 오른쪽으로 빠짐
+        overridePendingTransition(0, 0);
     }
 
 }

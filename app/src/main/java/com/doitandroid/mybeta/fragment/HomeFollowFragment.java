@@ -67,7 +67,7 @@ public class HomeFollowFragment extends Fragment {
                 init_feed();
 
                 Toast.makeText(getContext(), "swipe refresh layout", Toast.LENGTH_SHORT).show();
-                //home_follow_srl.setEnabled(true);
+                //home_received_srl.setEnabled(true);
             }
         });
 

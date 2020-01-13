@@ -43,8 +43,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = "HomeFollowAdapterTAG";
+public class HomeReceivedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "HomeReceivedAdapterTAG";
     ArrayList<FeedItem> feedItemArrayList;
 
     Context context;
@@ -53,7 +53,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
-    public HomeFollowAdapter(ArrayList<FeedItem> feedItemArrayList, Context context) {
+    public HomeReceivedAdapter(ArrayList<FeedItem> feedItemArrayList, Context context) {
         this.feedItemArrayList = feedItemArrayList;
         this.context = context;
 
@@ -235,9 +235,9 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return feedItemArrayList.size();
     }
 
-    private class HomeToClickViewHolder extends RecyclerView.ViewHolder {
+    private class HomeDefaultToClickViewHolder extends RecyclerView.ViewHolder {
         LinearLayout home_layout;
-        public HomeToClickViewHolder(View view) {
+        public HomeDefaultToClickViewHolder(View view) {
             super(view);
             home_layout = view.findViewById(R.id.home_f_rv_i_ll);
 
