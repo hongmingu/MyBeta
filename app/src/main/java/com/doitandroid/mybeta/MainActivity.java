@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -75,15 +76,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "MainActivityTAG";
 
-    final static int REQUEST_PING_SEARCH = 10002;
-
     Context context;
 
-    String current_fragment = "home";
+    String current_fragment = "init";
     String current_ping_num;
     Boolean is_logined, currentPingIsWide, currentPingIsPressed, currentFragmentHomeFollow, isPermission;
 
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Toolbar toolbar;
 
     FrameLayout btn_home, btn_noti, btn_search, btn_user, home_follow_fl, home_received_fl;
+    FrameLayout btn_logo;
 
     CoordinatorLayout home_add_post_iv;
 
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     CoordinatorLayout main_ping_fl, main_ping_swiping_text_cl, home_overlay_wrapper_cl, home_ping_dim_wrapper_cl, main_ping_progress_bar_cl, main_ping_search, home_ping_instant_send_btn;
 
     LottieAnimationView lav_home, lav_noti, lav_search, lav_user;
+    LottieAnimationView lav_logo;
 
     ProgressBar home_ping_dim_wrapper_pb;
     ProgressThread progressThread;
@@ -168,7 +170,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             // todo: 각 포스트 내용 받을 클래스 만들고 그 클래스를 이용한 어레이리스트 설정.
 
-            setFragments();
+            try{
+                if(getIntent().getExtras().containsKey("notification")){
+                    setFragments_noti();
+                } else {
+                    setFragments();
+                }
+            }catch (Exception e){
+                setFragments();
+                e.printStackTrace(); //오류 출력(방법은 여러가지)
+
+            }
 
 
             DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -194,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // main whole wrapper cover on
 
             // init animation
-            lottie_tb_clicked_case(ConstantStrings.FRAGMENT_HOME);
+            Toast.makeText(MainActivity.this, "onCreate", Toast.LENGTH_SHORT).show();
 
 
             userFullyUpdateAndUserFragmentUpdate(singleton.getOrCreateUserItemFromSingletonByUserID(singleton.getProfileUserID()));
@@ -217,6 +229,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                 }
             });
+
+            if(getIntent()!=null){
+
+                Bundle extras = getIntent().getExtras();
+                if(extras != null){
+                    if(extras.containsKey("notification"))
+                    {
+                        Toast.makeText(getApplicationContext(), "notification", Toast.LENGTH_SHORT).show();
+                        new Handler().post(new Runnable() { // new Handler and Runnable
+                            @Override
+                            public void run() {
+                                hideHomeInterface();
+                            }
+                        });
+
+
+                    }
+                }
+            }
+
             // Log.d(TAG, FirebaseInstanceId.getInstance().getToken());
 
         }
@@ -250,6 +282,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             closePingDimWrapper();
         } else {
+
             super.onBackPressed();
 
         }
@@ -290,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         JsonArray jsonArray = content.getAsJsonArray("ping_ids");
                         for (JsonElement item : jsonArray) {
                             String gotPingID = item.getAsString();
-                            List<PingItem> pingConstant = ConstantAnimations.pingList;
+                            List<PingItem> pingConstant = ConstantPings.defaultPingList;
                             // Constant 리스트에서 정보를 파악함.
                             for (PingItem pingItem : pingConstant) {
                                 if (pingItem.getPingID().equals(gotPingID)) {
@@ -385,20 +418,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setFragments() {
-        fragment_home_follow = new HomeFollowFragment();
-        fragment_home_received = new HomeReceivedFragment();
-        fragment_notification = new NotiFragment();
-        fragment_search = new SearchFragment();
-        fragment_user = new UserFragment();
+        if (fragment_home_follow == null){
+            fragment_home_follow = new HomeFollowFragment();
+        }
+        if (fragment_home_received == null){
+            fragment_home_received = new HomeReceivedFragment();
+        }
+        if (fragment_notification == null){
+            fragment_notification = new NotiFragment();
 
-        fragmentManager = getSupportFragmentManager();
+        }
+        if(fragment_search == null){
+            fragment_search = new SearchFragment();
 
-        fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_user).commit();
-        fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_search).commit();
-        fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_notification).commit();
-        fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_received).commit();
-        fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_follow).commit();
+        }
+        if (fragment_user == null){
+            fragment_user = new UserFragment();
+        }
 
+
+        if (fragmentManager == null){
+            fragmentManager = getSupportFragmentManager();
+
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_user).commit();
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_search).commit();
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_notification).commit();
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_received).commit();
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_follow).commit();
+        }
         if (fragment_home_follow == null) {
             fragment_home_follow = new HomeFollowFragment();
             fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_follow).commit();
@@ -421,6 +468,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (fragment_user != null) {
             fragmentManager.beginTransaction().hide(fragment_user).commit();
         }
+        tb_btn_clicked(ConstantStrings.FRAGMENT_HOME);
+
+    }
+    private void setFragments_noti() {
+        if (fragment_home_follow == null){
+            fragment_home_follow = new HomeFollowFragment();
+        }
+        if (fragment_home_received == null){
+            fragment_home_received = new HomeReceivedFragment();
+        }
+        if (fragment_notification == null){
+            fragment_notification = new NotiFragment();
+
+        }
+        if(fragment_search == null){
+            fragment_search = new SearchFragment();
+
+        }
+        if (fragment_user == null){
+            fragment_user = new UserFragment();
+        }
+
+
+        if (fragmentManager == null){
+            fragmentManager = getSupportFragmentManager();
+
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_user).commit();
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_search).commit();
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_notification).commit();
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_received).commit();
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_follow).commit();
+        }
+        if (fragment_notification == null) {
+            fragment_notification = new NotiFragment();
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_notification).commit();
+        }
+
+        if (fragment_notification != null) {
+            fragmentManager.beginTransaction().show(fragment_notification).commit();
+
+        }
+
+        if (fragment_home_received != null) {
+            fragmentManager.beginTransaction().hide(fragment_home_received).commit();
+        }
+        if (fragment_home_follow != null) {
+            fragmentManager.beginTransaction().hide(fragment_home_follow).commit();
+        }
+        if (fragment_search != null) {
+            fragmentManager.beginTransaction().hide(fragment_search).commit();
+        }
+        if (fragment_user != null) {
+            fragmentManager.beginTransaction().hide(fragment_user).commit();
+        }
+        tb_btn_clicked(ConstantStrings.FRAGMENT_NOTI);
+
 
     }
 
@@ -458,7 +561,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         JsonArray jsonArray = content.getAsJsonArray("ping_ids");
                         for (JsonElement item : jsonArray) {
                             String gotPingID = item.getAsString();
-                            List<PingItem> pingConstant = ConstantAnimations.pingList;
+                            List<PingItem> pingConstant = ConstantPings.defaultPingList;
                             // Constant 리스트에서 정보를 파악함.
                             for (PingItem pingItem : pingConstant) {
                                 if (pingItem.getPingID().equals(gotPingID)) {
@@ -618,11 +721,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_noti = findViewById(R.id.tb_fl_notification);
         btn_search = findViewById(R.id.tb_fl_search);
         btn_user = findViewById(R.id.tb_fl_user);
+        btn_logo = findViewById(R.id.tb_fl_logo);
 
         btn_home.setOnClickListener(this);
         btn_noti.setOnClickListener(this);
         btn_search.setOnClickListener(this);
         btn_user.setOnClickListener(this);
+        btn_logo.setOnClickListener(this);
 
         home_follow_fl = findViewById(R.id.home_follow_feed);
         home_received_fl = findViewById(R.id.home_received_feed);
@@ -666,6 +771,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lav_noti = findViewById(R.id.tb_lav_notification);
         lav_search = findViewById(R.id.tb_lav_search);
         lav_user = findViewById(R.id.tb_lav_user);
+        lav_logo = findViewById(R.id.tb_lav_logo);
 
 
     }
@@ -674,17 +780,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void lottie_tb_released_case(String tb_tab_before) {
         switch (tb_tab_before) {
             case "home":
-                lottie_tb_play(lav_home, -2.4f);
+                lottie_tb_play(lav_home, ConstantFloat.TOOLBAR_REVERSE);
                 break;
             case "noti":
-                lottie_tb_play(lav_noti, -2.4f);
+                lottie_tb_play(lav_noti, ConstantFloat.TOOLBAR_REVERSE);
                 break;
             case "search":
-                lottie_tb_play(lav_search, -2.4f);
+                lottie_tb_play(lav_search, ConstantFloat.TOOLBAR_REVERSE);
 
                 break;
             case "user":
-                lottie_tb_play(lav_user, -2.4f);
+                lottie_tb_play(lav_user, ConstantFloat.TOOLBAR_REVERSE);
                 break;
             default:
                 break;
@@ -695,16 +801,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (tb_tab) {
             case "home":
-                lottie_tb_play(lav_home, 2.4f);
+                lottie_tb_play(lav_home, ConstantFloat.TOOLBAR);
                 break;
             case "noti":
-                lottie_tb_play(lav_noti, 2.4f);
+                lottie_tb_play(lav_noti, ConstantFloat.TOOLBAR);
                 break;
             case "search":
-                lottie_tb_play(lav_search, 2.4f);
+                lottie_tb_play(lav_search, ConstantFloat.TOOLBAR);
                 break;
             case "user":
-                lottie_tb_play(lav_user, 2.4f);
+                lottie_tb_play(lav_user, ConstantFloat.TOOLBAR);
 
                 break;
             default:
@@ -769,6 +875,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // narrower 일 때 space비롯해서 invisible 걸어버리자. tag 붙이면 됨.
                 break;
 
+            case R.id.tb_fl_logo:
+                lottie_tb_play(lav_logo, ConstantFloat.TOOLBAR);
+
+                break;
 
             case R.id.main_addpost: /* add post activity open */
 
@@ -796,7 +906,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.main_dim_wrapper_search_cl:
                 Intent intent_ping_search = new Intent(this, PingSearchActivity.class);
 
-                startActivityForResult(intent_ping_search, REQUEST_PING_SEARCH);
+                startActivityForResult(intent_ping_search, ConstantIntegers.REQUEST_PING_SEARCH);
                 overridePendingTransition(0, 0); // 아무것도 없는 전환
 
                 break;
@@ -840,12 +950,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     fragmentManager.beginTransaction().show(fragment_home_received).commit();
                 }
                 currentFragmentHomeFollow = false;
+
+
                 break;
 
             default:
 
                 break;
         }
+    }
+
+    private void home_follow_feed_click(){
+        if (fragment_home_follow == null) {
+            fragment_home_follow = new HomeFollowFragment();
+            fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_follow).commit();
+        }
+        fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
+        for (Fragment fragment : fragments) {
+            if (fragment != null && fragment.isVisible()) {
+                fragmentManager.beginTransaction().hide(fragment).commit();
+
+            }
+        }
+
+        //todo: signup에서 에러수정, notifragment에서 progress방식으로 바꾸고, 포스트30분간, 1번도 안본건 1번 보되 팔로우건 뭐건 30분은 유지된다. 그 다음엔 1번보면 끝.follow등 알림 30분간 볼 수 있게.
+        if (fragment_home_follow != null) {
+            fragmentManager.beginTransaction().show(fragment_home_follow).commit();
+        }
+        currentFragmentHomeFollow = true;
+        ((HomeFollowFragment)fragment_home_follow).scrollToTop();
+
     }
 
 
@@ -867,8 +1001,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         fragment_home_follow = new HomeFollowFragment();
                         fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_follow).commit();
                     }
-                    fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
-                    for (Fragment fragment : fragments) {
+//                    fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
+                    for (Fragment fragment : fragmentManager.getFragments()) {
                         if (fragment != null && fragment.isVisible()) {
                             fragmentManager.beginTransaction().hide(fragment).commit();
 
@@ -885,8 +1019,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         fragment_home_received = new HomeReceivedFragment();
                         fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_home_received).commit();
                     }
-                    fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
-                    for (Fragment fragment : fragments) {
+//                    fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
+                    for (Fragment fragment : fragmentManager.getFragments()) {
                         if (fragment != null && fragment.isVisible()) {
                             fragmentManager.beginTransaction().hide(fragment).commit();
 
@@ -904,8 +1038,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     fragment_notification = new NotiFragment();
                     fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_notification).commit();
                 }
-                fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
+//                fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
+                for (Fragment fragment : fragmentManager.getFragments()) {
                     if (fragment != null && fragment.isVisible()) {
                         fragmentManager.beginTransaction().hide(fragment).commit();
 
@@ -916,7 +1050,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 NotiFragment notiFragment = (NotiFragment) fragment_notification;
-                notiFragment.getNotice();
+//                notiFragment.getNotice();
+                notiFragment.clearCallAndList();
 
                 break;
             case ConstantStrings.FRAGMENT_SEARCH:
@@ -940,8 +1075,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     fragment_user = new UserFragment();
                     fragmentManager.beginTransaction().add(R.id.main_frame_cl, fragment_user).commit();
                 }
-                fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
+//                fragments = (ArrayList<Fragment>) fragmentManager.getFragments();
+                for (Fragment fragment : fragmentManager.getFragments()) {
                     if (fragment != null && fragment.isVisible()) {
                         fragmentManager.beginTransaction().hide(fragment).commit();
 
@@ -995,8 +1130,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (data.getIntExtra(ConstantStrings.INTENT_ADD_POST_INFO, ConstantIntegers.RESULT_CANCELED) == ConstantIntegers.RESULT_SUCCESS) {
                         // 글이 올라감.
                         // singleton.homeFollowAdapter.notifyDataSetChanged();
-
-                        Toast.makeText(this, "is logout", Toast.LENGTH_SHORT).show();
+                        closePingDimWrapper();
+                        home_follow_feed_click();
 
                     } else {
                         //logout 안됨
@@ -1032,9 +1167,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //profile has not changed
                     }
                     break;
+                case ConstantIntegers.REQUEST_PING_SEARCH:
+                    if (data.getIntExtra(ConstantStrings.INTENT_CLOSE_DIM_WRAPPER, ConstantIntegers.RESULT_CANCELED)
+                            == ConstantIntegers.RESULT_SUCCESS) {
+
+                        closePingDimWrapper();
+                        home_follow_feed_click();
+
+                        //close dim wrapper
+                    } else {
+                        //not changed
+                    }
 
                 default:
                     break;
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Toast.makeText(getApplicationContext(), "onNewIntent", Toast.LENGTH_SHORT).show();
+        Bundle extras = intent.getExtras();
+        if(extras != null){
+            if(extras.containsKey("notification"))
+            {
+                new Handler().post(new Runnable() { // new Handler and Runnable
+                    @Override
+                    public void run() {
+                        tb_btn_clicked(ConstantStrings.FRAGMENT_NOTI);
+
+                        hideHomeInterface();
+                    }
+                });
+
+
             }
         }
     }
@@ -1165,6 +1332,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         FeedItem feedItem = new FeedItem(contentObject);
                         singleton.followFeedList.add(0, feedItem);
+                        for(FeedItem item: singleton.followFeedList){
+                            if (item.getOpt() == ConstantIntegers.OPT_EMPTY){
+                                singleton.followFeedList.remove(item);
+                            }
+                        }
                         singleton.homeFollowAdapter.notifyDataSetChanged();
 
                         // 접속 성공.
@@ -1174,6 +1346,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 progressOFF();
                 closePingDimWrapper();
+                home_follow_feed_click();
 
             }
 
@@ -1316,6 +1489,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Intent gotIntent = getIntent();
+        if (gotIntent != null){
+            if(gotIntent.getStringExtra("notification")!= null && gotIntent.getStringExtra("notification").equals("fromNotification")){
+                // Clear all notification
+                Log.d(TAG, "from notification called");
+
+                new Handler().post(new Runnable() { // new Handler and Runnable
+                    @Override
+                    public void run() {
+                        tb_btn_clicked(ConstantStrings.FRAGMENT_NOTI);
+                    }
+                });
+
+            }
+        }
+    }
+
+
     private void tedPermission() {
         PermissionListener permissionListener = new PermissionListener() {
             @Override
@@ -1340,7 +1535,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setPermissionListener(permissionListener)
                 .setRationaleMessage("RationaleMessage")
                 .setDeniedMessage("DeniedMessage")
-                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA)
                 .check();
 
     }
@@ -1468,8 +1664,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
  * ArrayList<Integer> rawArrayList = new ArrayList<>();
  * <p>
  * while (rawArrayList.size()<8){
- * Integer randomInt = utilsCollection.randomInt(0, ConstantAnimations.list.size() - 1);
- * Integer rawInteger = ConstantAnimations.list.get(randomInt);
+ * Integer randomInt = utilsCollection.randomInt(0, ConstantPings.list.size() - 1);
+ * Integer rawInteger = ConstantPings.list.get(randomInt);
  * if(!rawArrayList.contains(rawInteger)){
  * rawArrayList.add(rawInteger);
  * }

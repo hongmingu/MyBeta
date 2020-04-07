@@ -30,6 +30,7 @@
                     android:paddingTop="@dimen/default12"
                     android:paddingBottom="@dimen/default12"
                     android:layout_height="48dp"
+                    android:maxLines="1"
                     android:hint="search"
                     android:background="@drawable/bg_white_border_skyblue"/>
                 <androidx.appcompat.widget.AppCompatImageView

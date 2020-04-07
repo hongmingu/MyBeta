@@ -3,27 +3,23 @@ package com.doitandroid.mybeta.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.doitandroid.mybeta.CommentActivity;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.ContentActivity;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.ReactActivity;
-import com.doitandroid.mybeta.itemclass.CommentItem;
 import com.doitandroid.mybeta.itemclass.ReactItem;
 import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
@@ -33,7 +29,6 @@ import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
@@ -68,6 +63,11 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         RecyclerView.ViewHolder viewHolder = null;
         View view = null;
         switch (viewType){
+            case ConstantIntegers.OPT_LOADING:
+                view = inflater.inflate(R.layout.item_loading, parent, false);
+                viewHolder = new LoadingViewHolder(view);
+                break;
+
             default:
                 view = inflater.inflate(R.layout.item_react, parent, false);
                 viewHolder = new ReactViewHolder(view);
@@ -83,9 +83,15 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final ReactItem reactItem = reactItemArrayList.get(position);
-        final UserItem userItem = singleton.getUserItemFromSingletonByUserItem(reactItem.getUser());
-
+        final UserItem userItem;
+        if (reactItem != null) {
+            userItem = singleton.getUserItemFromSingletonByUserItem(reactItem.getUser());
+        } else {
+            userItem = null;
+        }
         switch (getItemViewType(position)){
+            case ConstantIntegers.OPT_LOADING:
+                break;
 
             default:
                 final ReactViewHolder reactViewHolder = ((ReactViewHolder) holder);
@@ -121,9 +127,11 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     }
                 });
                 if (userItem.isFollowed()){
-                    reactViewHolder.react_follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+                    reactViewHolder.react_follow_tv.setBackground(context.getResources().getDrawable(R.drawable.bg_black40_radius4dp));
+                    ((AppCompatTextView) reactViewHolder.react_follow_tv).setText(context.getResources().getString(R.string.following));
                 } else {
-                    reactViewHolder.react_follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
+                    reactViewHolder.react_follow_tv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_radius4dp));
+                    ((AppCompatTextView) reactViewHolder.react_follow_tv).setText(context.getResources().getString(R.string.follow));
 
                 }
                 userItem.setOnUserItemChangedListener(new UserItem.OnUserItemChangedCallback() {
@@ -133,74 +141,61 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         Toast.makeText(context, "follower: "+ userItem.isFollowed()+ this.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
                         if (userItem.isFollowed()){
-                            reactViewHolder.react_follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-
+                            reactViewHolder.react_follow_tv.setBackground(context.getResources().getDrawable(R.drawable.bg_black40_radius4dp));
+                            ((AppCompatTextView) reactViewHolder.react_follow_tv).setText(context.getResources().getString(R.string.following));
                         } else {
-                            reactViewHolder.react_follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
-
+                            reactViewHolder.react_follow_tv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_radius4dp));
+                            ((AppCompatTextView) reactViewHolder.react_follow_tv).setText(context.getResources().getString(R.string.follow));
                         }
 
                     }
                 });
 
-                reactViewHolder.react_follow_iv.setOnClickListener(new View.OnClickListener() {
+                reactViewHolder.react_follow_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        follow_user(userItem.getUserID(), reactViewHolder.react_follow_iv);
+                        follow_user(userItem.getUserID(), reactViewHolder.react_follow_tv);
                     }
                 });
 
                 if(userItem.isSameUserItem(singleton.getUserItemFromSingletonByUserID(singleton.profileUserID))){
-                    reactViewHolder.react_follow_iv.setVisibility(View.INVISIBLE);
+                    reactViewHolder.react_follow_tv.setVisibility(View.INVISIBLE);
                 }
                 break;
         }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if (payloads.isEmpty()) {
-            super.onBindViewHolder(holder, position, payloads);
-        }else {
-            for (Object payload : payloads) {
-                if (payload instanceof String) {
-                    String type = (String) payload;
-                    if (TextUtils.equals(type, "color_red")) {
-/*                        LinearLayout layout = ((HomeFollowingViewHolder) holder).home_layout;
-                        View view = layout.findViewWithTag("idis_"+holder.getAdapterPosition());
-                        Context context = layout.getContext();
-                        view.setBackgroundColor(context.getResources().getColor(R.color.red));*/
-
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
     public int getItemCount() {
-        return reactItemArrayList.size();
+        return reactItemArrayList == null ? 0 : reactItemArrayList.size();
     }
 
 
     private class ReactViewHolder extends RecyclerView.ViewHolder {
         AppCompatTextView react_full_name_tv;
-        AppCompatImageView react_follow_iv;
+        AppCompatTextView react_follow_tv;
         CircleImageView react_user_photo_civ;
 
         public ReactViewHolder(View view) {
             super(view);
             react_full_name_tv = view.findViewById(R.id.item_react_full_name_tv);
-            react_follow_iv = view.findViewById(R.id.item_react_follow_iv);
+            react_follow_tv = view.findViewById(R.id.item_react_follow_tv);
             react_user_photo_civ = view.findViewById(R.id.item_react_user_photo_civ);
+
+        }
+    }
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar loading_pb;
+        public LoadingViewHolder(View view) {
+            super(view);
+            loading_pb = view.findViewById(R.id.item_loading_pb);
 
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
-        //return commentItemArrayList.get(position).getNoticeKind();
+        return reactItemArrayList.get(position) == null ? ConstantIntegers.OPT_LOADING : super.getItemViewType(position);
     }
 
     @Override
@@ -218,7 +213,7 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return apiInterface;
     }
 
-    public void follow_user(final String userID, final View follow_iv){
+    public void follow_user(final String userID, final View follow_tv){
         RequestBody requestUserID = RequestBody.create(MediaType.parse("multipart/form-data"), userID);
         RequestBody requestBoolean;
         final UserItem userItem = singleton.getUserItemFromSingletonByUserID(userID);
@@ -226,16 +221,16 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "false");
             userItem.setFollowed(false);
             singleton.updateUserList(userItem, false);
-            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
-
+            follow_tv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_radius4dp));
+            ((AppCompatTextView)follow_tv).setText(context.getResources().getString(R.string.follow));
             // 일단 팔로우취소해
 
         } else {
             requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "true");
             userItem.setFollowed(true);
             singleton.updateUserList(userItem, true);
-            follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-
+            follow_tv.setBackground(context.getResources().getDrawable(R.drawable.bg_black40_radius4dp));
+            ((AppCompatTextView)follow_tv).setText(context.getResources().getString(R.string.following));
         }
 
 
@@ -253,15 +248,15 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             if (userItem.isFollowed()){
                                 userItem.setFollowed(false);
                                 singleton.updateUserList(userItem, false);
-                                follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
-
+                                follow_tv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_radius4dp));
+                                ((AppCompatTextView)follow_tv).setText(context.getResources().getString(R.string.follow));
                                 // 일단 팔로우취소해
 
                             } else {
                                 userItem.setFollowed(true);
                                 singleton.updateUserList(userItem, true);
-                                follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-
+                                follow_tv.setBackground(context.getResources().getDrawable(R.drawable.bg_black40_radius4dp));
+                                ((AppCompatTextView)follow_tv).setText(context.getResources().getString(R.string.following));
                             }
                             call.cancel();
                             return;
@@ -276,15 +271,15 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     if (userItem.isFollowed()){
                         userItem.setFollowed(false);
                         singleton.updateUserList(userItem, false);
-                        follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
-
+                        follow_tv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_radius4dp));
+                        ((AppCompatTextView)follow_tv).setText(context.getResources().getString(R.string.follow));
                         // 일단 팔로우취소해
 
                     } else {
                         userItem.setFollowed(true);
                         singleton.updateUserList(userItem, true);
-                        follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-
+                        follow_tv.setBackground(context.getResources().getDrawable(R.drawable.bg_black40_radius4dp));
+                        ((AppCompatTextView)follow_tv).setText(context.getResources().getString(R.string.following));
                     }
                 }
 
@@ -298,15 +293,15 @@ public class ReactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if (userItem.isFollowed()){
                     userItem.setFollowed(false);
                     singleton.updateUserList(userItem, false);
-                    follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_skyblue));
-
+                    follow_tv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_radius4dp));
+                    ((AppCompatTextView)follow_tv).setText(context.getResources().getString(R.string.follow));
                     // 일단 팔로우취소해
 
                 } else {
                     userItem.setFollowed(true);
                     singleton.updateUserList(userItem, true);
-                    follow_iv.setBackground(context.getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-
+                    follow_tv.setBackground(context.getResources().getDrawable(R.drawable.bg_black40_radius4dp));
+                    ((AppCompatTextView)follow_tv).setText(context.getResources().getString(R.string.following));
                 }
             }
         });

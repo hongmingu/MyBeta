@@ -101,8 +101,13 @@ public class PasswordSetActivity extends AppCompatActivity implements View.OnCli
                     if (jsonObject != null) {
                         int rc = jsonObject.get("rc").getAsInt();
                         if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                            JsonObject content = jsonObject.get("content").getAsJsonObject();
+                            int code = content.get("code").getAsInt();
+
                             // sign up 실패
                             call.cancel();
+                            Toast.makeText(getApplicationContext(), getValidateErrorFromCode(code), Toast.LENGTH_SHORT).show();
+
 
                             return;
                         }
@@ -129,5 +134,56 @@ public class PasswordSetActivity extends AppCompatActivity implements View.OnCli
 //        overridePendingTransition(R.anim.stay, R.anim.slide_right_out); // 오른쪽으로 빠짐
         overridePendingTransition(0, 0);
     }
+    private String getValidateErrorFromCode(int code) {
 
+        String codeToString = "fill it differently";
+        switch (code){
+            case ConstantIntegers.USER_USERNAME_VALIDATE_REGEX_PROBLEM:
+                codeToString = "other username please";
+                break;
+
+            case ConstantIntegers.USER_USERNAME_VALIDATE_LENGTH_PROBLEM:
+                codeToString = "username length is not available";
+                break;
+            case ConstantIntegers.USER_USERNAME_VALIDATE_DIGIT_PROBLEM:
+                codeToString = "digit username is not available";
+                break;
+            case ConstantIntegers.USER_USERNAME_VALIDATE_BANNED_PROBLEM:
+                codeToString = "unavailable username...";
+                break;
+
+            case ConstantIntegers.USER_FULL_NAME_VALIDATE_LENGTH_PROBLEM:
+                codeToString = "too long fullname";
+                break;
+
+
+            case ConstantIntegers.USER_EMAIL_VALIDATE_REGEX_PROBLEM:
+                codeToString = "email is not available";
+                break;
+            case ConstantIntegers.USER_EMAIL_VALIDATE_LENGTH_PROBLEM:
+                codeToString = "plz change email length";
+                break;
+            case ConstantIntegers.USER_EMAIL_EXIST_PROBLEM:
+                codeToString = "email is already using";
+                break;
+
+            case ConstantIntegers.USER_PASSWORD_VALIDATE_SELF_EQUAL_PROBLEM:
+                codeToString = "password not match correctly ";
+                break;
+            case ConstantIntegers.USER_PASSWORD_VALIDATE_USERNAME_EQUAL_PROBLEM:
+                codeToString = "password and username cannot be the same";
+                break;
+            case ConstantIntegers.USER_PASSWORD_VALIDATE_LENGTH_PROBLEM:
+                codeToString = "plz change password length";
+                break;
+            case ConstantIntegers.USER_PASSWORD_VALIDATE_BANNED_PROBLEM:
+                codeToString = "password unavailable";
+                break;
+            default:
+                break;
+
+        }
+        return codeToString;
+
+    }
 }

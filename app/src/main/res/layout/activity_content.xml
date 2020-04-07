@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ContentActivity">
 
-    <include layout="@layout/tool_bar" />
+    <include layout="@layout/tool_bar_back" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/content_frame_cl"

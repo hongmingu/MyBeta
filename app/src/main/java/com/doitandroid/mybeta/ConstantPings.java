@@ -6,8 +6,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ConstantAnimations {
+public class ConstantPings {
     public static final Integer ACTION = R.raw.data;
+
+    public static final List<PingItem> defaultPingList = Collections.unmodifiableList(
+            new ArrayList<PingItem>() {
+                {
+                    add(new PingItem("de_1", "안녕하세요", R.raw.icon_home, R.raw.ping_base_hi5));
+                    add(new PingItem("de_2", "싸인을보내", R.raw.home_sample_bodymovin, R.raw.ping_base_hi5));
+                    add(new PingItem("de_3", "소용이없네 \n 헤이헤이", R.raw.home_test, R.raw.heart_48));
+                    add(new PingItem("de_4", "cause Im lost in", R.raw.icon_home, R.raw.heart_48));
+                    add(new PingItem("de_5", "sleep", R.raw.ping_base_hi, R.raw.ping_base_hi));
+                    add(new PingItem("de_6", "The feeling wont let me", R.raw.ping_base_hi2, R.raw.ping_base_hi2));
+                    add(new PingItem("de_7", "Lit up heaven in me", R.raw.ping_base_hi3, R.raw.ping_base_hi3));
+                    add(new PingItem("de_8", "Something in you", R.raw.ping_base_hi4, R.raw.heart_48));
+                    add(new PingItem("de_9", "안녕하세요 추워", R.raw.ping_base_hi5, R.raw.ping_base_hi5));
+                    add(new PingItem("de_10", "넘넘추워 아 더워", R.raw.ping_base_hi6));
+                    add(new PingItem("de_11", "안녕하세요 찌리찌리찌리 더워", R.raw.ping_base_hi7));
+                    add(new PingItem("de_12", "안녕하세요 아 더워", R.raw.ping_base_hi8));
+                    add(new PingItem("de_13", "이대로 사라져버리면안되염이대로 사라져버리면안되염이대로 사라져버리면안되염", R.raw.ping_base_hi9));
+                    // etc
+                }
+            }
+    );
+}
+
+
+
+/*
     public static final List<Integer> list = Collections.unmodifiableList(
             new ArrayList<Integer>() {{
                 add(R.raw.icon_home);
@@ -64,26 +90,4 @@ public class ConstantAnimations {
                 }
             }
     );
-
-    public static final List<PingItem> pingList = Collections.unmodifiableList(
-            new ArrayList<PingItem>() {
-                {
-                    add(new PingItem("1", "안녕하세요", R.raw.icon_home));
-                    add(new PingItem("2", "싸인을보내", R.raw.home_sample_bodymovin));
-                    add(new PingItem("3", "소용이없네 \n 헤이헤이", R.raw.home_test));
-                    add(new PingItem("4", "cause Im lost in", R.raw.icon_home));
-                    add(new PingItem("5", "sleep", R.raw.ping_base_hi));
-                    add(new PingItem("6", "The feeling wont let me", R.raw.ping_base_hi2));
-                    add(new PingItem("7", "Lit up heaven in me", R.raw.ping_base_hi3));
-                    add(new PingItem("8", "Something in you", R.raw.ping_base_hi4));
-                    add(new PingItem("9", "안녕하세요 추워", R.raw.ping_base_hi5));
-                    add(new PingItem("10", "넘넘추워 아 더워", R.raw.ping_base_hi6));
-                    add(new PingItem("11", "안녕하세요 찌리찌리찌리 더워", R.raw.ping_base_hi7));
-                    add(new PingItem("12", "안녕하세요 아 더워", R.raw.ping_base_hi8));
-                    add(new PingItem("13", "이대로 사라져버리면안되염이대로 사라져버리면안되염이대로 사라져버리면안되염", R.raw.ping_base_hi9));
-                    // etc
-                }
-            }
-    );
-}
-
+*/

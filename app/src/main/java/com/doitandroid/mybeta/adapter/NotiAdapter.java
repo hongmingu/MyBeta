@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -59,7 +60,7 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         RecyclerView.ViewHolder viewHolder = null;
         View view = null;
-        switch (viewType){
+        switch (viewType) {
             case ConstantIntegers.NOTICE_FOLLOW:
                 view = inflater.inflate(R.layout.item_noti_follow, parent, false);
                 viewHolder = new NotiFollowViewHolder(view);
@@ -87,11 +88,26 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             //todo: 노티리스트에 추가할 때 타임바 아이템을 따로 넣어서
             // 작업하도록 notifragment에서 jsonarray처리
+            case ConstantIntegers.OPT_LOADING:
+                view = inflater.inflate(R.layout.item_loading, parent, false);
+                viewHolder = new LoadingViewHolder(view);
+                break;
+            case ConstantIntegers.OPT_EMPTY:
+                view = inflater.inflate(R.layout.item_empty_noti, parent, false);
+                viewHolder = new EmptyNotiViewHolder(view);
+                //todo: onbind뷰홀더 따지기
+
+                break;
+
             default:
+                Toast.makeText(context, "Last Two", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Last Feed Two");
                 break;
         }
 
-        Log.d(TAG, viewHolder.toString());
+        if (viewHolder != null) {
+            Log.d(TAG, viewHolder.toString() + "create");
+        }
 
         return viewHolder;
 
@@ -100,13 +116,22 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final NotiItem notiItem = notiItemArrayList.get(position);
-        final UserItem userItem = singleton.getUserItemFromSingletonByUserItem(notiItem.getUser());
+        final UserItem userItem;
+        if (notiItem != null && notiItem.getNoticeKind() != ConstantIntegers.OPT_EMPTY) {
+            userItem = singleton.getUserItemFromSingletonByUserItem(notiItem.getUser());
+        } else {
+            userItem = null;
+        }
 
 
-        switch (getItemViewType(position)){
+        Log.d(TAG, ConstantIntegers.NOTICE_FOLLOW + "");
+        //todo: 이거 아무것도 없을때 에러난다 .
+        switch (getItemViewType(position)) {
 
             case ConstantIntegers.NOTICE_FOLLOW:
                 NotiFollowViewHolder followHolder = ((NotiFollowViewHolder) holder);
+                Log.d(TAG, ConstantIntegers.NOTICE_FOLLOW + "followHolder");
+
                 followHolder.follow_wrapper_ll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -137,7 +162,7 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 });
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())
-                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + userItem.getUserPhoto())
                         .into(followHolder.follow_user_photo_civ);
 
                 Log.d(TAG, "post text: " + notiItem.getCommentText());
@@ -159,7 +184,7 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())
-                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + userItem.getUserPhoto())
                         .into(postCommentHolder.post_comment_user_photo_civ);
 
                 postCommentHolder.post_comment_text_tv.setText(notiItem.getCommentText());
@@ -226,7 +251,7 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())
-                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + userItem.getUserPhoto())
                         .into(postReactHolder.post_react_user_photo_civ);
 
                 postReactHolder.post_react_user_photo_civ.setOnClickListener(new View.OnClickListener() {
@@ -250,12 +275,20 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             case ConstantIntegers.NOTICE_TIMEBAR_DAY:
                 break;
+            case ConstantIntegers.OPT_LOADING:
+
+
+                break;
+            case ConstantIntegers.OPT_EMPTY:
+
+
+                break;
             default:
                 break;
         }
     }
 
-    @Override
+/*    @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
         if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads);
@@ -264,20 +297,20 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if (payload instanceof String) {
                     String type = (String) payload;
                     if (TextUtils.equals(type, "color_red")) {
-/*                        LinearLayout layout = ((HomeFollowingViewHolder) holder).home_layout;
+*//*                        LinearLayout layout = ((HomeFollowingViewHolder) holder).home_layout;
                         View view = layout.findViewWithTag("idis_"+holder.getAdapterPosition());
                         Context context = layout.getContext();
-                        view.setBackgroundColor(context.getResources().getColor(R.color.red));*/
+                        view.setBackgroundColor(context.getResources().getColor(R.color.red));*//*
 
                     }
                 }
             }
         }
-    }
+    }*/
 
     @Override
     public int getItemCount() {
-        return notiItemArrayList.size();
+        return notiItemArrayList == null ? 0 : notiItemArrayList.size();
     }
 
 
@@ -294,6 +327,7 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         }
     }
+
     private class NotiPostCommentViewHolder extends RecyclerView.ViewHolder {
         LinearLayoutCompat post_comment_wrapper_ll;
 
@@ -310,6 +344,7 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         }
     }
+
     private class NotiPostReactViewHolder extends RecyclerView.ViewHolder {
         LinearLayoutCompat post_react_wrapper_ll;
         AppCompatTextView post_react_name_tv;
@@ -324,6 +359,16 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         }
     }
+    private class EmptyNotiViewHolder extends RecyclerView.ViewHolder {
+
+        AppCompatTextView empty_tv;
+        public EmptyNotiViewHolder(View view) {
+            super(view);
+            empty_tv = view.findViewById(R.id.item_empty_noti_tv);
+
+        }
+    }
+
     private class NotiTimeBarQuarterDayViewHolder extends RecyclerView.ViewHolder {
         public NotiTimeBarQuarterDayViewHolder(View view) {
             super(view);
@@ -335,10 +380,21 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(view);
         }
     }
+
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar loading_pb;
+
+        public LoadingViewHolder(View view) {
+            super(view);
+            loading_pb = view.findViewById(R.id.item_loading_pb);
+
+        }
+    }
+
     @Override
     public int getItemViewType(int position) {
 //        return super.getItemViewType(position);
-        return notiItemArrayList.get(position).getNoticeKind();
+        return notiItemArrayList.get(position) == null ? ConstantIntegers.OPT_LOADING : notiItemArrayList.get(position).getNoticeKind();
     }
 
     @Override
@@ -355,7 +411,7 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         int HOUR = 24;
         int DAY = 30;
         int MONTH = 12;
-        String slicedDate = dateString.substring(0, dateString.length()-1);
+        String slicedDate = dateString.substring(0, dateString.length() - 1);
 
         java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
         format.setTimeZone(TimeZone.getTimeZone("GMT"));

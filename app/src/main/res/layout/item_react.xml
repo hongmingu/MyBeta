@@ -48,11 +48,18 @@
                     android:text="Sana twice pretty"
                     />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/item_react_follow_iv"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/item_react_follow_tv"
                     android:layout_gravity="bottom|end"
                     android:layout_width="72dp"
                     android:layout_height="32dp"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textStyle="normal"
+                    android:textColor="#ffffff"
+                    android:lineSpacingExtra="5sp"
+                    android:text="follow"
                     android:background="@drawable/bg_darkblue_radius4dp"/>
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

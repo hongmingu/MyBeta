@@ -152,6 +152,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
                                     // sign up 실패
                                     call.cancel();
+                                    Toast.makeText(getApplicationContext(), "can't login, try again", Toast.LENGTH_SHORT).show();
+
                                     return;
                                 }
                                 SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);

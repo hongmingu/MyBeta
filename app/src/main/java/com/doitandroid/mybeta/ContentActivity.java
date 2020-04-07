@@ -1,12 +1,14 @@
 package com.doitandroid.mybeta;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.doitandroid.mybeta.fragment.ContentListFragment;
@@ -17,17 +19,20 @@ import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 
 import java.util.ArrayList;
 
-public class ContentActivity extends AppCompatActivity {
+public class ContentActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = "ContentActivityTAG";
     FragmentManager fragmentManager;
     Intent gotIntent;
     ArrayList<Fragment> fragments;
+    CoordinatorLayout back_cl;
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
+
+        setViews();
 
         fragmentManager = getSupportFragmentManager();
 
@@ -68,6 +73,11 @@ public class ContentActivity extends AppCompatActivity {
                 } else finish();*/
 
 
+    private void setViews(){
+        back_cl = findViewById(R.id.tb_back_cl);
+        back_cl.setOnClickListener(this);
+
+    }
     public void addTestFragment(){
         UserItem userItem = singleton.getUserItemFromSingletonByUserItem((UserItem) gotIntent.getSerializableExtra("userItem"));
         ContentUserFragment contentUserFragment = new ContentUserFragment(userItem, this);
@@ -167,5 +177,16 @@ public class ContentActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         finish();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.tb_back_cl:
+                finish();
+                break;
+            default:
+                break;
+        }
     }
 }

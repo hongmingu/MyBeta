@@ -33,6 +33,7 @@
                             android:id="@+id/ping_search_et"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
+                            android:maxLines="1"
                             android:background="@drawable/bg_white_border_skyblue"/>
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_alignParentEnd="true"
@@ -55,11 +56,12 @@
                 android:visibility="visible">
                 <!--scaleY = target Height dp / 4-->
                 <ProgressBar
+                    android:id="@+id/ping_search_pb"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/home_ping_progress_bar_height"
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:max="1000"
-                    android:progress="600"
+                    android:progress="0"
                     android:progressBackgroundTint="@color/transparent"
                     android:scaleY="4"
                     android:progressTint="@color/darkblue"/>
@@ -159,6 +161,7 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/ping_search_instant_send_btn"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:background="@color/green"

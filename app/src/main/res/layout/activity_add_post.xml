@@ -36,8 +36,7 @@
                     android:lines="2"
                     android:text=""
                     android:hint=""
-                    android:textColorHint="@color/skyblue"
-                    android:maxLength="10"
+                    android:textColorHint="@color/black_40"
                     android:textColor="@color/darkblue"
                     android:textSize="@dimen/text_normal"
                     android:textStyle="normal"
@@ -59,9 +58,12 @@
                 android:layout_height="match_parent"
                 android:padding="@dimen/add_post_et_padding"
                 android:hint="add text"
+                android:textColorHint="@color/black_40"
                 android:textColor="@color/black"
                 android:gravity="top"
-                android:backgroundTint="@color/transparent"/>
+                android:backgroundTint="@color/transparent">
+                <requestFocus></requestFocus>
+            </androidx.appcompat.widget.AppCompatEditText>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

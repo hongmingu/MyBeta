@@ -86,6 +86,17 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         commentItemArrayList = new ArrayList<>();
 
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        // 어댑터를 연결시킨다.
+        commentAdapter = new CommentAdapter(commentItemArrayList, context);
+
+        // 리사이클러뷰에 연결한다.
+        comment_content_rv.setLayoutManager(layoutManager);
+        comment_content_rv.setAdapter(commentAdapter);
+
+        comment_content_rv.setNestedScrollingEnabled(false);
+
         apiInterface = getApiInterface();
 
 
@@ -111,6 +122,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.comment_send_iv:
+                if(comment_et.getText().toString().trim().equals("")){
+                    return;
+                }
                 String commentText = comment_et.getText().toString();
 
 
@@ -147,12 +161,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                         commentAdapter.notifyDataSetChanged();
 
-
-
-
-
-
                     }
+                    comment_content_rv.scrollToPosition(comment_content_rv.getAdapter().getItemCount() - 1);
                 }
             }
 
@@ -201,16 +211,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                         Log.d(TAG, "size: "+commentItemArrayList.size() + "");
 
-
-                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-                        // 어댑터를 연결시킨다.
-                        commentAdapter = new CommentAdapter(commentItemArrayList, context);
-
-                        // 리사이클러뷰에 연결한다.
-                        comment_content_rv.setLayoutManager(layoutManager);
-                        comment_content_rv.setAdapter(commentAdapter);
-
-                        comment_content_rv.setNestedScrollingEnabled(false);
 
                         commentAdapter.notifyDataSetChanged();
 

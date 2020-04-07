@@ -52,6 +52,10 @@ public interface APIInterface {
     @Multipart
     @POST("r/rest/log_in/")
     Call<JsonObject> log_in(@Part("account") RequestBody account, @Part("password") RequestBody password);
+    /* log out  */
+    @Multipart
+    @POST("r/rest/log_out/")
+    Call<JsonObject> logOut(@Part("fcm_token") RequestBody fcm_token);
 
     /* refresh for you Pings */
 
@@ -82,6 +86,21 @@ public interface APIInterface {
     /* get follow feed */
     @POST("r/rest/get_follow_feed/")
     Call<JsonObject> get_follow_feed();
+
+    /* get follow feed */
+    @Multipart
+    @POST("r/rest/get_follow_feed/")
+    Call<JsonObject> get_follow_feed(@Part("end_id") RequestBody end_id);
+
+
+    /* get received feed */
+    @POST("r/rest/get_received_feed/")
+    Call<JsonObject> get_received_feed();
+
+    /* get received feed */
+    @Multipart
+    @POST("r/rest/get_received_feed/")
+    Call<JsonObject> get_received_feed(@Part("end_id") RequestBody end_id);
 
 
     /* follow */
@@ -215,4 +234,8 @@ public interface APIInterface {
     Call<JsonObject> userFullyUpdate(@Part("user_id") RequestBody userID);
 
 
+    /* registerFCMToken */
+    @Multipart
+    @POST("r/rest/register_fcm_token/")
+    Call<JsonObject> registerFCMToken(@Part("user_id") RequestBody userID, @Part("fcm_token") RequestBody fcmToken);
 }

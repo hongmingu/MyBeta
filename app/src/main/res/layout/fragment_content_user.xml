@@ -15,10 +15,10 @@
         android:id="@+id/fragment_content_user_photo_civ"
         android:layout_width="224dp"
         android:layout_height="224dp" />
-    
+
     <Space
         android:layout_width="match_parent"
-        android:layout_height="24dp" />
+        android:layout_height="16dp" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_gravity="center"
@@ -55,7 +55,7 @@ twice_sana_unofficial"
         />
     <Space
         android:layout_width="match_parent"
-        android:layout_height="24dp" />
+        android:layout_height="16dp" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/fragment_content_user_followed_by_wrapper_cl"
@@ -91,7 +91,7 @@ twice_sana_unofficial"
 
 
                     <Space
-                        android:layout_width="16dp"
+                        android:layout_width="12dp"
                         android:layout_height="match_parent">
 
                     </Space>
@@ -133,7 +133,7 @@ twice_sana_unofficial"
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="24dp" />
+        android:layout_height="16dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -182,13 +182,20 @@ twice_sana_unofficial"
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="56dp" />
+        android:layout_height="24dp" />
     
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/fragment_content_user_follow_iv"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fragment_content_user_follow_tv"
         android:layout_gravity="center"
         android:layout_width="88dp"
         android:layout_height="42dp"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="normal"
+        android:textColor="#ffffff"
+        android:lineSpacingExtra="5sp"
+        android:text="follow"
         android:background="@color/green"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

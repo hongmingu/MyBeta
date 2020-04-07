@@ -18,6 +18,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -155,27 +156,30 @@ public class SignUpActivity extends AppCompatActivity {
 
                             if (jsonObject != null) {
                                 int rc = jsonObject.get("rc").getAsInt();
-                                JsonObject content = jsonObject.get("content").getAsJsonObject();
+                                JsonObject jsonObjectContent = jsonObject.get("content").getAsJsonObject();
 
                                 if (rc != ConstantIntegers.SUCCESS){
                                     // sign up 실패
                                     call.cancel();
 
                                     progressOFF();
-                                    Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), getValidateErrorFromCode(jsonObjectContent.get("code").getAsInt()), Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                                 SharedPreferences sp = getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);
 
+                                //todo: 로그인실패시 코드처리해줘야한다.
+                                Log.d(TAG, jsonObjectContent.toString());
                                 SharedPreferences.Editor editor = sp.edit();
-                                editor.putInt(ConstantStrings.SP_ARG_AUTO_LOGIN, ConstantIntegers.IS_LOGINED);
-                                editor.putString(ConstantStrings.SP_ARG_TOKEN, content.get("token").getAsString());
 
-                                editor.putString(ConstantStrings.SP_ARG_PROFILE_PHOTO, content.get("profile_photo").getAsString());
-                                editor.putString(ConstantStrings.SP_ARG_PROFILE_USERNAME, content.get("profile_username").getAsString());
-                                editor.putString(ConstantStrings.SP_ARG_PROFILE_FULLNAME, content.get("profile_full_name").getAsString());
-                                editor.putString(ConstantStrings.SP_ARG_PROFILE_USERID, content.get("profile_user_id").getAsString());
-                                editor.putString(ConstantStrings.SP_ARG_PROFILE_EMAIL, content.get("profile_email").getAsString());
+                                editor.putInt(ConstantStrings.SP_ARG_AUTO_LOGIN, ConstantIntegers.IS_LOGINED);
+
+                                editor.putString(ConstantStrings.SP_ARG_TOKEN, jsonObjectContent.get("token").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_PHOTO, jsonObjectContent.get("profile_photo").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_USERNAME, jsonObjectContent.get("profile_username").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_FULLNAME, jsonObjectContent.get("profile_full_name").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_USERID, jsonObjectContent.get("profile_user_id").getAsString());
+                                editor.putString(ConstantStrings.SP_ARG_PROFILE_EMAIL, jsonObjectContent.get("profile_email").getAsString());
 
                                 editor.commit();
 
@@ -304,6 +308,59 @@ public class SignUpActivity extends AppCompatActivity {
                 progressOFF();
             }
         }, 3500);*/
+
+    }
+
+    private String getValidateErrorFromCode(int code) {
+
+        String codeToString = "fill it differently";
+        switch (code){
+            case ConstantIntegers.USER_USERNAME_VALIDATE_REGEX_PROBLEM:
+                codeToString = "other username please";
+                break;
+
+            case ConstantIntegers.USER_USERNAME_VALIDATE_LENGTH_PROBLEM:
+                codeToString = "username length is not available";
+                break;
+            case ConstantIntegers.USER_USERNAME_VALIDATE_DIGIT_PROBLEM:
+                codeToString = "digit username is not available";
+                break;
+            case ConstantIntegers.USER_USERNAME_VALIDATE_BANNED_PROBLEM:
+                codeToString = "unavailable username...";
+                break;
+
+            case ConstantIntegers.USER_FULL_NAME_VALIDATE_LENGTH_PROBLEM:
+                codeToString = "too long fullname";
+                break;
+
+
+            case ConstantIntegers.USER_EMAIL_VALIDATE_REGEX_PROBLEM:
+                codeToString = "email is not available";
+                break;
+            case ConstantIntegers.USER_EMAIL_VALIDATE_LENGTH_PROBLEM:
+                codeToString = "plz change email length";
+                break;
+            case ConstantIntegers.USER_EMAIL_EXIST_PROBLEM:
+                codeToString = "email is already using";
+                break;
+
+            case ConstantIntegers.USER_PASSWORD_VALIDATE_SELF_EQUAL_PROBLEM:
+                codeToString = "password not match correctly ";
+                break;
+            case ConstantIntegers.USER_PASSWORD_VALIDATE_USERNAME_EQUAL_PROBLEM:
+                codeToString = "password and username cannot be the same";
+                break;
+            case ConstantIntegers.USER_PASSWORD_VALIDATE_LENGTH_PROBLEM:
+                codeToString = "plz change password length";
+                break;
+            case ConstantIntegers.USER_PASSWORD_VALIDATE_BANNED_PROBLEM:
+                codeToString = "password unavailable";
+                break;
+            default:
+                break;
+
+        }
+        return codeToString;
 
     }
 }

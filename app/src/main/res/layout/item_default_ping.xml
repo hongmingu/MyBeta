@@ -76,7 +76,6 @@
                     android:textStyle="normal"
                     android:textColor="#0072b1"
                     android:lineSpacingExtra="5sp"
-                    android:maxLines="2"
                     android:text="인사합니다!\n 하이 헬로"
                     />
                 <com.airbnb.lottie.LottieAnimationView
@@ -136,7 +135,7 @@
                     android:layout_centerVertical="true"
                     android:layout_width="32dp"
                     android:layout_height="24dp"
-                    android:background="@color/black"/>
+                    android:src="@drawable/ic_react_display"/>
                 <RelativeLayout
                     android:id="@+id/default_ping_item_react_content_rl"
                     android:layout_marginStart="8dp"
@@ -173,7 +172,7 @@
                 android:layout_centerVertical="true"
                 android:layout_width="32dp"
                 android:layout_height="24dp"
-                android:background="@color/black"/>
+                android:src="@drawable/ic_comment_display"/>
             <RelativeLayout
                 android:id="@+id/default_ping_item_comment_content_rl"
                 android:layout_marginStart="8dp"

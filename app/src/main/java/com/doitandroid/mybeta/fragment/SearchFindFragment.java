@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +23,7 @@ import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.R;
 import com.doitandroid.mybeta.adapter.ContentListFollowerAdapter;
 import com.doitandroid.mybeta.adapter.SearchResultAdapter;
+import com.doitandroid.mybeta.itemclass.NotiItem;
 import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
@@ -54,7 +57,8 @@ public class SearchFindFragment extends Fragment {
     RecyclerView fragment_search_find_rv;
 
     View rootView;
-
+    int retry;
+    boolean isLoading = false;
     public static SearchFindFragment newInstance(){
         return new SearchFindFragment();
     }
@@ -183,5 +187,115 @@ public class SearchFindFragment extends Fragment {
         });
     }
 
+    public void setOnScrollListener(RecyclerView recyclerView){
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                // Toast.makeText(getActivity().getApplicationContext(), "Last", Toast.LENGTH_SHORT).show();
+                if (!isLoading) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == singleton.notiList.size() - 1) {
+                        if(singleton.notiList.size() == 0){
+                            //현재 아무것도 없음.
+                            loadMore();
+                        } else if (singleton.notiList.get(singleton.notiList.size() - 1 - 1) != null && !singleton.notiList.get(singleton.notiList.size() - 1 - 1).isEnd()) {
+                            //현재 아무것도 없진 않은데 끝은 아닌 상태
+                            loadMore();
+                        } else {
+                            //뭐든간 리스트 끝임
+                            Toast.makeText(getActivity().getApplicationContext(), "Last", Toast.LENGTH_SHORT).show();
+                        }
+//                        isLoading = true;
+                    }
+                }
+            }
+        });
+    }
+    public void loadMore() {
+        isLoading = true;
+        singleton.notiList.add(null);
+        singleton.notiAdapter.notifyItemInserted(singleton.notiList.size() - 1);
+        retry = 0;
+        Call<JsonObject> call;
+        if (singleton.notiList.size() - 1 - 1 < 0) {
+            call = apiInterface.getNotice();
+        } else if (singleton.notiList.get(singleton.notiList.size() - 1 - 1) != null && !singleton.notiList.get(singleton.notiList.size() - 1 - 1).isEnd()) {
+            RequestBody requestEndID = RequestBody.create(MediaType.parse("multipart/form-data"), singleton.notiList.get(singleton.notiList.size() - 1 - 1).getNoticeID());
+            call = apiInterface.getNotice(requestEndID);
+        } else {
+            call = apiInterface.getNotice();
+        }
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!singleton.notiList.isEmpty()){
+                    singleton.notiList.remove(singleton.notiList.size() - 1);
+                    int scrollPosition = singleton.notiList.size();
+                    singleton.notiAdapter.notifyItemRemoved(scrollPosition);
+                }
+
+//                singleton.homeFollowAdapter.notifyDataSetChanged();
+
+                if (response.isSuccessful()) {
+                    JsonObject jsonObject = response.body();
+                    if (jsonObject != null) {
+                        int rc = jsonObject.get("rc").getAsInt();
+                        if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                            // sign up 실패
+                            call.cancel();
+                            return;
+                        }
+
+                        JsonArray contentArray = jsonObject.get("content").getAsJsonArray();
+
+                        for (JsonElement notiElement : contentArray) {
+                            JsonObject itemObject = notiElement.getAsJsonObject();
+                            NotiItem notiItem = new NotiItem(itemObject);
+
+                            boolean isExist = false;
+                            for (NotiItem item : singleton.notiList) {
+                                if (notiItem.getNoticeID().equals(item.getNoticeID())) {
+                                    isExist = true;
+                                }
+                            }
+                            if (!isExist) {
+                                singleton.notiList.add(notiItem);
+                            }
+
+
+                        }
+                        singleton.notiAdapter.notifyDataSetChanged();
+
+
+                        // 접속 성공.
+                    }
+                } else {
+
+                    Toast.makeText(getActivity().getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
+                }
+                isLoading = false;
+
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                if (retry < 4) {
+                    call.clone().enqueue(this);
+                    retry++;
+                } else {
+                    call.cancel();
+                    isLoading = false;
+                }
+            }
+        });
+    }
 
 }

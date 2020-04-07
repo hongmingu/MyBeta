@@ -3,6 +3,7 @@ package com.doitandroid.mybeta.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,6 +34,8 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,13 +49,16 @@ public class HomeFollowFragment extends Fragment {
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     SwipeRefreshLayout home_follow_srl;
-    TextView tv_count;
+    int retry;
 
     APIInterface apiInterface;
 
     ArrayList<UserItem> usingUserItemArrayList;
 
     ViewGroup rootView;
+
+    RecyclerView recyclerView;
+    boolean isLoading = false;
 
     @Nullable
     @Override
@@ -64,8 +71,9 @@ public class HomeFollowFragment extends Fragment {
         home_follow_srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                init_feed();
+                clearHomeFollowFeed();
 
+                loadMore();
                 Toast.makeText(getContext(), "swipe refresh layout", Toast.LENGTH_SHORT).show();
                 //home_received_srl.setEnabled(true);
             }
@@ -73,10 +81,10 @@ public class HomeFollowFragment extends Fragment {
 
         apiInterface = singleton.apiInterface;
 
-        init_feed();
+        // init_feed();
 
 
-        RecyclerView recyclerView = rootView.findViewById(R.id.home_follow_recyclerview);
+        recyclerView = rootView.findViewById(R.id.home_follow_recyclerview);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // 어댑터를 연결시킨다.
@@ -88,6 +96,42 @@ public class HomeFollowFragment extends Fragment {
         recyclerView.setAdapter(singleton.homeFollowAdapter);
 
         recyclerView.setNestedScrollingEnabled(false);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                // Toast.makeText(getActivity().getApplicationContext(), "Last", Toast.LENGTH_SHORT).show();
+
+                if (!isLoading) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == singleton.followFeedList.size() - 1) {
+//                        loadMore();
+/*                        if(singleton.followFeedList.size()>0 && !singleton.followFeedList.get(singleton.followFeedList.size()-1).isList()){
+                            //bottom of list!
+                            singleton.homeFollowAdapter.notifyItemInserted(singleton.followFeedList.size() - 1);
+//                            singleton.homeFollowAdapter.notifyDataSetChanged();
+
+
+
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), "Last", Toast.LENGTH_SHORT).show();
+
+                        }*/
+
+//                        isLoading = true;
+                    }
+                }
+            }
+        });
+        clearHomeFollowFeed();
+        loadMore();
         return rootView;
         // return inflater.inflate(R.layout.fragment1, container, false);
         //return super.onCreateView(inflater, container, savedInstanceState);
@@ -95,7 +139,116 @@ public class HomeFollowFragment extends Fragment {
 
     }
 
+    public void clearHomeFollowFeed() {
+        singleton.followFeedList.clear();
+        home_follow_srl.setRefreshing(false);
 
+        if (singleton.homeFollowAdapter != null) {
+            singleton.homeFollowAdapter.notifyDataSetChanged();
+        }
+    }
+
+
+    public void loadMore(){
+        isLoading = true;
+
+        retry = 0;
+        Call<JsonObject> call;
+        singleton.followFeedList.add(null);
+        singleton.homeFollowAdapter.notifyItemInserted(singleton.followFeedList.size() - 1);
+
+        /*if (singleton.followFeedList.get(singleton.followFeedList.size()-1-1) != null && !singleton.followFeedList.get(singleton.followFeedList.size()-1-1).isList()){
+            RequestBody requestEndID = RequestBody.create(MediaType.parse("multipart/form-data"), singleton.followFeedList.get(singleton.followFeedList.size()-1-1).getPostID());
+            call = apiInterface.get_follow_feed(requestEndID);
+        } else {
+            call = apiInterface.get_follow_feed();
+        }*/
+        call = apiInterface.get_follow_feed();
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                singleton.followFeedList.remove(singleton.followFeedList.size() - 1);
+                int scrollPosition = singleton.followFeedList.size();
+                singleton.homeFollowAdapter.notifyItemRemoved(scrollPosition);
+//                singleton.homeFollowAdapter.notifyDataSetChanged();
+
+                if (response.isSuccessful()) {
+                    JsonObject jsonObject = response.body();
+                    if (jsonObject != null) {
+                        int rc = jsonObject.get("rc").getAsInt();
+                        JsonArray content = jsonObject.get("content").getAsJsonArray();
+
+                        if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                            // sign up 실패
+                            call.cancel();
+                            return;
+                        }
+
+                        // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
+                        Log.d(TAG, content.toString());
+                        for (JsonElement feedElement: content){
+                            JsonObject feedObject = feedElement.getAsJsonObject();
+                            FeedItem feedItem = new FeedItem(feedObject);
+
+                            boolean isExist = false;
+                            for(FeedItem item : singleton.followFeedList){
+                                if(!feedItem.isList()){
+                                    if(feedItem.getPostID().equals(item.getPostID())){
+                                        isExist = true;
+                                    }
+                                }
+                            }
+                            if(!isExist){
+                                singleton.followFeedList.add(feedItem);
+                                Log.d(TAG, "called");
+                            }
+
+                            Log.d(TAG, singleton.followFeedList.size() + "");
+
+
+                        }
+
+
+                        singleton.homeFollowAdapter.notifyDataSetChanged();
+
+
+
+                        // 접속 성공.
+
+                    }
+
+                } else {
+                    Toast.makeText(getActivity(), "not is successful", Toast.LENGTH_SHORT).show();
+
+                }
+                isLoading = false;
+
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(getActivity(), "onFailure", Toast.LENGTH_SHORT).show();
+
+
+                if (retry < 4){
+                    call.clone().enqueue(this);
+                    retry ++;
+
+                } else {
+                    call.cancel();
+                    isLoading = false;
+
+                }
+//                call.cancel();
+//                init_feed();
+//                ((MainActivity) getActivity()).progressOFF();
+
+            }
+        });
+
+    }
     /**
         final Activity activity = (MainActivity)getActivity();
         Button button = rootView.findViewById(R.id.fragment1_btn);
@@ -109,15 +262,10 @@ public class HomeFollowFragment extends Fragment {
     public void init_feed(){
 
         ((MainActivity) getActivity()).progressON((MainActivity) getActivity(), "loading...");
-        singleton.followFeedList.clear();
-        home_follow_srl.setRefreshing(false);
-
-        if (singleton.homeFollowAdapter != null){
-            singleton.homeFollowAdapter.notifyDataSetChanged();
-        }
+        clearHomeFollowFeed();
 
 
-
+        retry = 0;
         Call<JsonObject> call = apiInterface.get_follow_feed();
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -148,8 +296,10 @@ public class HomeFollowFragment extends Fragment {
 
                             boolean isExist = false;
                             for(FeedItem item : singleton.followFeedList){
-                                if(feedItem.getPostID().equals(item.getPostID())){
-                                    isExist = true;
+                                if(!feedItem.isList()){
+                                    if(feedItem.getPostID().equals(item.getPostID())){
+                                        isExist = true;
+                                    }
                                 }
                             }
                             if(!isExist){
@@ -179,12 +329,25 @@ public class HomeFollowFragment extends Fragment {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 Toast.makeText(getActivity(), "onFailure", Toast.LENGTH_SHORT).show();
-                call.cancel();
-                init_feed();
+
+
+                if (retry < 4){
+                    call.clone().enqueue(this);
+                    retry ++;
+
+                } else {
+                    call.cancel();
+                }
+//                call.cancel();
+//                init_feed();
 //                ((MainActivity) getActivity()).progressOFF();
 
             }
         });
+    }
+
+    public void scrollToTop(){
+        recyclerView.smoothScrollToPosition(0);
     }
     private APIInterface getApiInterface(){
         SharedPreferences sp = getActivity().getSharedPreferences(ConstantStrings.SP_INIT_APP, MODE_PRIVATE);

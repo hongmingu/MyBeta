@@ -3,7 +3,7 @@
     android:id="@+id/tb_tb"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="#9C27B0"
+    android:background="@color/skyblue"
     android:elevation="4dp"
     android:outlineProvider="none"
     app:contentInsetStart="0dp"
@@ -13,14 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <FrameLayout
+            android:id="@+id/tb_fl_logo"
             android:layout_width="52dp"
             android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/tb_lav_logo"
+                app:lottie_rawRes="@raw/logo_48"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_bluelogo"/>
+                android:layout_gravity="center"/>
         </FrameLayout>
         <FrameLayout
             android:id="@+id/tb_fl_home"
@@ -30,7 +32,7 @@
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/tb_lav_home"
-                app:lottie_rawRes="@raw/icon_home"
+                app:lottie_rawRes="@raw/home_48"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"/>
@@ -43,7 +45,7 @@
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/tb_lav_notification"
-                app:lottie_rawRes="@raw/icon_home"
+                app:lottie_rawRes="@raw/noti_48"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"/>
@@ -59,7 +61,7 @@
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/tb_lav_search"
-                app:lottie_rawRes="@raw/icon_home"
+                app:lottie_rawRes="@raw/search_48"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"/>
@@ -74,7 +76,7 @@
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/tb_lav_user"
-                app:lottie_rawRes="@raw/icon_home"
+                app:lottie_rawRes="@raw/user_48"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"/>

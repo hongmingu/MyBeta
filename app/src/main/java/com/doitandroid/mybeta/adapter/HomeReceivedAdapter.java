@@ -7,17 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Space;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
-import com.doitandroid.mybeta.ConstantAnimations;
+import com.doitandroid.mybeta.ConstantFloat;
+import com.doitandroid.mybeta.ConstantPings;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.ContentActivity;
@@ -32,9 +37,9 @@ import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonObject;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
@@ -45,7 +50,7 @@ import retrofit2.Response;
 
 public class HomeReceivedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "HomeReceivedAdapterTAG";
-    ArrayList<FeedItem> feedItemArrayList;
+    CopyOnWriteArrayList<FeedItem> feedItemArrayList;
 
     Context context;
 
@@ -53,7 +58,7 @@ public class HomeReceivedAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
-    public HomeReceivedAdapter(ArrayList<FeedItem> feedItemArrayList, Context context) {
+    public HomeReceivedAdapter(CopyOnWriteArrayList<FeedItem> feedItemArrayList, Context context) {
         this.feedItemArrayList = feedItemArrayList;
         this.context = context;
 
@@ -72,10 +77,20 @@ public class HomeReceivedAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 view = inflater.inflate(R.layout.item_default_ping, parent, false);
                 viewHolder = new HomeDefaultPingViewHolder(view);
                 break;
-            case ConstantIntegers.OPT_TO_CLICK:
-                view = inflater.inflate(R.layout.home_following_recyclerview_item, parent, false);
-                viewHolder = new HomeDefaultPingViewHolder(view);
+            case ConstantIntegers.OPT_LIST:
+                view = inflater.inflate(R.layout.item_following_user_list_rv, parent, false);
+                viewHolder = new HomeFollowingUserListViewHolder(view);
 
+                break;
+            case ConstantIntegers.OPT_LOADING:
+                view = inflater.inflate(R.layout.item_loading, parent, false);
+                viewHolder = new LoadingViewHolder(view);
+                break;
+
+            case ConstantIntegers.OPT_EMPTY:
+                view = inflater.inflate(R.layout.item_empty, parent, false);
+                viewHolder = new EmptyViewHolder(view);
+                //todo: onbind뷰홀더 따지기
                 break;
             default:
                 break;
@@ -86,9 +101,10 @@ public class HomeReceivedAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
+        final FeedItem feeditem = feedItemArrayList.get(position);
+
         switch (getItemViewType(position)){
             case ConstantIntegers.OPT_DEFAULT_PING:
-                final FeedItem feeditem = feedItemArrayList.get(position);
                 final UserItem userItem = singleton.getUserItemFromSingletonByUserID(feeditem.getUser().getUserID());
                 ((HomeDefaultPingViewHolder) holder).dpi_full_name_tv.setText(userItem.getFullName());
                 ((HomeDefaultPingViewHolder) holder).dpi_full_name_tv.setOnClickListener(new View.OnClickListener() {
@@ -105,13 +121,15 @@ public class HomeReceivedAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                 });
 
-                for (PingItem pingConstantItem: ConstantAnimations.pingList){
+                for (PingItem pingConstantItem: ConstantPings.defaultPingList){
                     if (pingConstantItem.getPingID().equals(feeditem.getPingID())){
                         ((HomeDefaultPingViewHolder) holder).dpi_ping_lav.setAnimation(feeditem.getPingRes());
                         ((HomeDefaultPingViewHolder) holder).dpi_ping_lav.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
+                                ((HomeDefaultPingViewHolder) holder).dpi_ping_lav.setMinAndMaxProgress(0f, 1f);
+                                ((HomeDefaultPingViewHolder) holder).dpi_ping_lav.setSpeed(2.4f);
+                                ((HomeDefaultPingViewHolder) holder).dpi_ping_lav.playAnimation();
                             }
                         });
 
@@ -131,7 +149,19 @@ public class HomeReceivedAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
 
                         .into(((HomeDefaultPingViewHolder) holder).dpi_user_photo_civ);
+                ((HomeDefaultPingViewHolder) holder).dpi_user_photo_civ.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ContentActivity.class);
+                        intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
 
+                        intent.putExtra("userID", userItem.getUserID());
+
+                        ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
+                        ((MainActivity) context).overridePendingTransition(0, 0); //
+
+                    }
+                });
                 Log.d(TAG, ConstantREST.URL_HOME + userItem.getUserPhoto());
                 switch (getAdjustedTimeDifference(feeditem.getCreated())){
                     case ConstantIntegers.TIME_DEFAULT:
@@ -202,9 +232,48 @@ public class HomeReceivedAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
                 break;
-            case ConstantIntegers.OPT_TO_CLICK:
+            case ConstantIntegers.OPT_LIST:
+
+                //todo: 이제 여기에 리사이클러뷰 내 만들어주는 바인드.
+                if (feeditem.getRecentUserList().size() != 0) {
+                    ((HomeFollowingUserListViewHolder) holder).ful_tv.setVisibility(View.VISIBLE);
+                    ((HomeFollowingUserListViewHolder) holder).ful_rv.setVisibility(View.VISIBLE);
+                    ((HomeFollowingUserListViewHolder) holder).ful_ll.setVisibility(View.VISIBLE);
+
+                    ((HomeFollowingUserListViewHolder) holder).ful_tv.setText(feeditem.getRecentDate());
+                    RecyclerView recyclerView = ((HomeFollowingUserListViewHolder) holder).ful_rv;
+
+                    RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context, ConstantIntegers.GRID_SPAN);
+                    // 어댑터를 연결시킨다.
+                    HomeFollowingUserListAdapter homeFollowingUserListAdapter = new HomeFollowingUserListAdapter(feeditem.getRecentUserList(), context);
+
+                    // 리사이클러뷰에 연결한다.
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.setAdapter(homeFollowingUserListAdapter);
+
+                    recyclerView.setNestedScrollingEnabled(false);
+                } else {
+                    ((HomeFollowingUserListViewHolder) holder).ful_tv.setVisibility(View.GONE);
+                    ((HomeFollowingUserListViewHolder) holder).ful_rv.setVisibility(View.GONE);
+                    ((HomeFollowingUserListViewHolder) holder).ful_ll.setVisibility(View.GONE);
+                    ((HomeFollowingUserListViewHolder) holder).ful_space.setVisibility(View.GONE);
+
+                }
+
+                if (position == feedItemArrayList.size() - 1) {
+                    ((HomeFollowingUserListViewHolder) holder).ful_space.setVisibility(View.VISIBLE);
+                }
+                break;
+            case ConstantIntegers.OPT_LOADING:
+
+                break;
+            case ConstantIntegers.OPT_EMPTY:
+
                 break;
             default:
+                Toast.makeText(context, "Last Two", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Last Feed Two");
+
                 break;
         }
     }
@@ -232,7 +301,7 @@ public class HomeReceivedAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return feedItemArrayList.size();
+        return feedItemArrayList == null ? 0 : feedItemArrayList.size();
     }
 
     private class HomeDefaultToClickViewHolder extends RecyclerView.ViewHolder {
@@ -268,11 +337,46 @@ public class HomeReceivedAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }
     }
+    private class HomeFollowingUserListViewHolder extends RecyclerView.ViewHolder {
+        LinearLayoutCompat ful_ll;
 
+        RecyclerView ful_rv;
+        AppCompatTextView ful_tv;
+        Space ful_space;
+
+        public HomeFollowingUserListViewHolder(View view) {
+            super(view);
+            ful_ll = view.findViewById(R.id.item_following_users_ll);
+
+            ful_rv = view.findViewById(R.id.item_following_users_rv);
+            ful_tv = view.findViewById(R.id.item_following_users_tv);
+            ful_space = view.findViewById(R.id.item_following_users_space);
+
+        }
+    }
+
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar loading_pb;
+        public LoadingViewHolder(View view) {
+            super(view);
+            loading_pb = view.findViewById(R.id.item_loading_pb);
+
+        }
+    }
+
+    private class EmptyViewHolder extends RecyclerView.ViewHolder {
+
+        AppCompatTextView empty_tv;
+        public EmptyViewHolder(View view) {
+            super(view);
+            empty_tv = view.findViewById(R.id.item_empty_tv);
+
+        }
+    }
     @Override
     public int getItemViewType(int position) {
 //        return super.getItemViewType(position);
-        return feedItemArrayList.get(position).getOpt();
+        return feedItemArrayList.get(position) == null ? ConstantIntegers.OPT_LOADING : feedItemArrayList.get(position).getOpt();
     }
 
     @Override
@@ -331,11 +435,11 @@ public class HomeReceivedAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         lottieAnimationView.setMinAndMaxProgress(0f, 1f);
         Log.d(TAG, isReacted +"");
         if (!isReacted){
-            lottieAnimationView.setSpeed(2.4f);
+            lottieAnimationView.setSpeed(ConstantFloat.REACT);
             lottieAnimationView.playAnimation();
 
         } else {
-            lottieAnimationView.setSpeed(-2.4f);
+            lottieAnimationView.setSpeed(ConstantFloat.REACT_REVERSE);
             lottieAnimationView.playAnimation();
 
         }

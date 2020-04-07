@@ -51,15 +51,22 @@ public class ReactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_react);
         gotIntent = getIntent();
 
+        react_content_rv = findViewById(R.id.react_content_rv);
         context = this;
 
         reactItemArrayList = new ArrayList<>();
 
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        // 어댑터를 연결시킨다.
+        reactAdapter = new ReactAdapter(reactItemArrayList, context);
+
+        // 리사이클러뷰에 연결한다.
+        react_content_rv.setLayoutManager(layoutManager);
+        react_content_rv.setAdapter(reactAdapter);
+
+        react_content_rv.setNestedScrollingEnabled(false);
 
         apiInterface = singleton.apiInterface;
-        react_content_rv = findViewById(R.id.react_content_rv);
-
-
 
         getReact(gotIntent.getStringExtra(ConstantStrings.INTENT_POST_ID));
         //todo: 이제 commentActivity 에서 내용 가져오고 adapter 구성한다.
@@ -96,15 +103,6 @@ public class ReactActivity extends AppCompatActivity {
                         Log.d(TAG, "size: " + reactItemArrayList.size() + "");
 
 
-                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-                        // 어댑터를 연결시킨다.
-                        reactAdapter = new ReactAdapter(reactItemArrayList, context);
-
-                        // 리사이클러뷰에 연결한다.
-                        react_content_rv.setLayoutManager(layoutManager);
-                        react_content_rv.setAdapter(reactAdapter);
-
-                        react_content_rv.setNestedScrollingEnabled(false);
 
                         reactAdapter.notifyDataSetChanged();
 

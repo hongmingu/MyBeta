@@ -2,7 +2,6 @@ package com.doitandroid.mybeta.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,23 +17,17 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.ConstantIntegers;
-import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.ContentActivity;
 import com.doitandroid.mybeta.R;
-import com.doitandroid.mybeta.itemclass.FeedItem;
 import com.doitandroid.mybeta.itemclass.UserItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
-import com.doitandroid.mybeta.rest.LoggedInAPIClient;
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,8 +36,6 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class ContentUserFragment extends Fragment {
 
@@ -60,7 +51,7 @@ public class ContentUserFragment extends Fragment {
     UserItem userItem;
 
     CircleImageView user_photo_civ, related_follower_1_civ, related_follower_2_civ, related_follower_3_civ;
-    AppCompatImageView follow_iv;
+    AppCompatTextView follow_tv;
     AppCompatTextView full_name_tv, username_tv;
     CoordinatorLayout following_cl, follower_cl, related_follower_wrapper_cl;
 
@@ -87,11 +78,12 @@ public class ContentUserFragment extends Fragment {
 
         if (userItem.isFollowed()) {
             // is following
-            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
+            follow_tv.setBackground(getResources().getDrawable(R.drawable.bg_black40_radius4dp));
+            ((AppCompatTextView) follow_tv).setText(getActivity().getResources().getString(R.string.following));
         } else {
             // not following
-            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
-
+            follow_tv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_radius4dp));
+            ((AppCompatTextView)follow_tv).setText(getActivity().getResources().getString(R.string.follow));
         }
 
         userItem.setOnUserItemChangedListener(new UserItem.OnUserItemChangedCallback() {
@@ -99,17 +91,17 @@ public class ContentUserFragment extends Fragment {
             public void onItemChanged(UserItem userItem) {
 
                 if (userItem.isFollowed()) {
-                    follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-
+                    follow_tv.setBackground(getResources().getDrawable(R.drawable.bg_black40_radius4dp));
+                    ((AppCompatTextView) follow_tv).setText(getActivity().getResources().getString(R.string.following));
                 } else {
-                    follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
-
+                    follow_tv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_radius4dp));
+                    ((AppCompatTextView)follow_tv).setText(getActivity().getResources().getString(R.string.follow));
                 }
 
             }
         });
 
-        follow_iv.setOnClickListener(new View.OnClickListener() {
+        follow_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 follow_user();
@@ -117,7 +109,6 @@ public class ContentUserFragment extends Fragment {
         });
 
         userFullyUpdate(userItem);
-
 
 
         following_cl.setOnClickListener(new View.OnClickListener() {
@@ -142,8 +133,8 @@ public class ContentUserFragment extends Fragment {
         });
 
 
-        if(userItem.isSameUserItem(singleton.getUserItemFromSingletonByUserID(singleton.profileUserID))){
-            follow_iv.setVisibility(View.INVISIBLE);
+        if (userItem.isSameUserItem(singleton.getUserItemFromSingletonByUserID(singleton.profileUserID))) {
+            follow_tv.setVisibility(View.INVISIBLE);
             related_follower_wrapper_cl.setVisibility(View.INVISIBLE);
         }
         //todo: 이제 fully updated 가 아니면 받아오는 코드.
@@ -155,20 +146,20 @@ public class ContentUserFragment extends Fragment {
     public void follow_user() {
         RequestBody userID = RequestBody.create(MediaType.parse("multipart/form-data"), userItem.getUserID());
         RequestBody requestBoolean;
-        if (userItem.isFollowed()){
+        if (userItem.isFollowed()) {
             requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "false");
             userItem.setFollowed(false);
             singleton.updateUserList(userItem, false);
-            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
-
+            follow_tv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_radius4dp));
+            ((AppCompatTextView)follow_tv).setText(getActivity().getResources().getString(R.string.follow));
             // 일단 팔로우취소해
 
         } else {
             requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "true");
             userItem.setFollowed(true);
             singleton.updateUserList(userItem, true);
-            follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-
+            follow_tv.setBackground(getResources().getDrawable(R.drawable.bg_black40_radius4dp));
+            ((AppCompatTextView) follow_tv).setText(getActivity().getResources().getString(R.string.following));
         }
 
 
@@ -185,18 +176,18 @@ public class ContentUserFragment extends Fragment {
                         if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
                             Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
 
-                            if (userItem.isFollowed()){
+                            if (userItem.isFollowed()) {
                                 userItem.setFollowed(false);
                                 singleton.updateUserList(userItem, false);
-                                follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
-
+                                follow_tv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_radius4dp));
+                                ((AppCompatTextView)follow_tv).setText(getActivity().getResources().getString(R.string.follow));
                                 // 일단 팔로우취소해
 
                             } else {
                                 userItem.setFollowed(true);
                                 singleton.updateUserList(userItem, true);
-                                follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-
+                                follow_tv.setBackground(getResources().getDrawable(R.drawable.bg_black40_radius4dp));
+                                ((AppCompatTextView) follow_tv).setText(getActivity().getResources().getString(R.string.following));
                             }
 
                             call.cancel();
@@ -210,18 +201,18 @@ public class ContentUserFragment extends Fragment {
                     }
 
                 } else {
-                    if (userItem.isFollowed()){
+                    if (userItem.isFollowed()) {
                         userItem.setFollowed(false);
                         singleton.updateUserList(userItem, false);
-                        follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
-
+                        follow_tv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_radius4dp));
+                        ((AppCompatTextView)follow_tv).setText(getActivity().getResources().getString(R.string.follow));
                         // 일단 팔로우취소해
 
                     } else {
                         userItem.setFollowed(true);
                         singleton.updateUserList(userItem, true);
-                        follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-
+                        follow_tv.setBackground(getResources().getDrawable(R.drawable.bg_black40_radius4dp));
+                        ((AppCompatTextView) follow_tv).setText(getActivity().getResources().getString(R.string.following));
                     }
 
                 }
@@ -232,18 +223,18 @@ public class ContentUserFragment extends Fragment {
             public void onFailure(Call<JsonObject> call, Throwable t) {
 
                 Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
-                if (userItem.isFollowed()){
+                if (userItem.isFollowed()) {
                     userItem.setFollowed(false);
                     singleton.updateUserList(userItem, false);
-                    follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_skyblue));
-
+                    follow_tv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_radius4dp));
+                    ((AppCompatTextView)follow_tv).setText(getActivity().getResources().getString(R.string.follow));
                     // 일단 팔로우취소해
 
                 } else {
                     userItem.setFollowed(true);
                     singleton.updateUserList(userItem, true);
-                    follow_iv.setBackground(getResources().getDrawable(R.drawable.bg_darkblue_border_radius4dp));
-
+                    follow_tv.setBackground(getResources().getDrawable(R.drawable.bg_black40_radius4dp));
+                    ((AppCompatTextView) follow_tv).setText(getActivity().getResources().getString(R.string.following));
                 }
 
                 call.cancel();
@@ -285,7 +276,6 @@ public class ContentUserFragment extends Fragment {
                 relatedUserItemArrayList.add(userItem);
             }
         }
-
 
 
         switch (relatedUserItemArrayList.size()) {
@@ -332,7 +322,7 @@ public class ContentUserFragment extends Fragment {
         user_photo_civ = rootView.findViewById(R.id.fragment_content_user_photo_civ);
         full_name_tv = rootView.findViewById(R.id.fragment_content_user_full_name_tv);
         username_tv = rootView.findViewById(R.id.fragment_content_user_username_tv);
-        follow_iv = rootView.findViewById(R.id.fragment_content_user_follow_iv);
+        follow_tv = rootView.findViewById(R.id.fragment_content_user_follow_tv);
 
         follower_cl = rootView.findViewById(R.id.fragment_content_user_follower_cl);
         following_cl = rootView.findViewById(R.id.fragment_content_user_following_cl);
@@ -355,64 +345,6 @@ public class ContentUserFragment extends Fragment {
      * }
      * });
      */
-    public void init_feed() {
-
-
-        Call<JsonObject> call = apiInterface.get_follow_feed();
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    JsonObject jsonObject = response.body();
-                    if (jsonObject != null) {
-                        int rc = jsonObject.get("rc").getAsInt();
-                        JsonArray content = jsonObject.get("content").getAsJsonArray();
-
-                        if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
-                            // sign up 실패
-                            call.cancel();
-                            return;
-                        }
-
-                        // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
-                        Log.d(TAG, content.toString());
-                        for (JsonElement feedElement : content) {
-                            JsonObject feedObject = feedElement.getAsJsonObject();
-                            FeedItem feedItem = new FeedItem(feedObject);
-
-                            boolean isExist = false;
-                            for (FeedItem item : singleton.followFeedList) {
-                                if (feedItem.getPostID().equals(item.getPostID())) {
-                                    isExist = true;
-                                }
-                            }
-                            if (!isExist) {
-                                singleton.followFeedList.add(feedItem);
-                                Log.d(TAG, "called");
-                            }
-
-                            Log.d(TAG, singleton.followFeedList.size() + "");
-
-
-                        }
-                        singleton.homeFollowAdapter.notifyDataSetChanged();
-
-                        // 접속 성공.
-
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                call.cancel();
-
-            }
-        });
-    }
-
 
     public void userFullyUpdate(final UserItem userItem) {
         if (!userItem.isFullyUpdated()) {
@@ -562,4 +494,6 @@ public class ContentUserFragment extends Fragment {
         this.userItem = userItem;
         this.activity = activity;
     }
+
+
 }

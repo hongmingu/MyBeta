@@ -27,4 +27,8 @@
     <string name="main_button_select_image">Select Image</string>
     <string name="main_activity_desciption">Sample activity to start image cropping.\nExample: User profile activity to select avatar.</string>
 
+    <!-- follow-->
+    <string name="follow">follow</string>
+    <string name="following">following</string>
+
 </resources>

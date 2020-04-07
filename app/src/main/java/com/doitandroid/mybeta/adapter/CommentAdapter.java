@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -63,6 +64,11 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         RecyclerView.ViewHolder viewHolder = null;
         View view = null;
         switch (viewType){
+            case ConstantIntegers.OPT_LOADING:
+                view = inflater.inflate(R.layout.item_loading, parent, false);
+                viewHolder = new LoadingViewHolder(view);
+                break;
+
             default:
                 view = inflater.inflate(R.layout.item_comment, parent, false);
                 viewHolder = new CommentViewHolder(view);
@@ -78,10 +84,16 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final CommentItem commentItem = commentItemArrayList.get(position);
-        final UserItem userItem = singleton.getUserItemFromSingletonByUserItem(commentItem.getUser());
+        final UserItem userItem;
+        if (commentItem != null) {
+            userItem = singleton.getUserItemFromSingletonByUserItem(commentItem.getUser());
+        } else {
+            userItem = null;
+        }
 
         switch (getItemViewType(position)){
-
+            case ConstantIntegers.OPT_LOADING:
+                break;
             default:
                 CommentViewHolder commentViewHolder = ((CommentViewHolder) holder);
                 commentViewHolder.comment_full_name_tv.setText(userItem.getFullName());
@@ -110,28 +122,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if (payloads.isEmpty()) {
-            super.onBindViewHolder(holder, position, payloads);
-        }else {
-            for (Object payload : payloads) {
-                if (payload instanceof String) {
-                    String type = (String) payload;
-                    if (TextUtils.equals(type, "color_red")) {
-/*                        LinearLayout layout = ((HomeFollowingViewHolder) holder).home_layout;
-                        View view = layout.findViewWithTag("idis_"+holder.getAdapterPosition());
-                        Context context = layout.getContext();
-                        view.setBackgroundColor(context.getResources().getColor(R.color.red));*/
-
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
     public int getItemCount() {
-        return commentItemArrayList.size();
+        return commentItemArrayList == null ? 0 : commentItemArrayList.size();
     }
 
 
@@ -147,10 +139,19 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         }
     }
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar loading_pb;
+        public LoadingViewHolder(View view) {
+            super(view);
+            loading_pb = view.findViewById(R.id.item_loading_pb);
+
+        }
+    }
 
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+        return commentItemArrayList.get(position) == null ? ConstantIntegers.OPT_LOADING : super.getItemViewType(position);
+
         //return commentItemArrayList.get(position).getNoticeKind();
     }
 

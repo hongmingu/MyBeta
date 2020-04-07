@@ -1,5 +1,6 @@
 package com.doitandroid.mybeta.service;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,6 +18,7 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,18 +30,31 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.doitandroid.mybeta.ConstantIntegers;
+import com.doitandroid.mybeta.ConstantPings;
 import com.doitandroid.mybeta.MainActivity;
+import com.doitandroid.mybeta.PingItem;
 import com.doitandroid.mybeta.R;
+import com.doitandroid.mybeta.itemclass.CommentItem;
+import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import com.doitandroid.mybeta.ConstantStrings;
+import com.google.gson.JsonObject;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BetaFirebaseService extends FirebaseMessagingService {
     private static final String TAG = "BetaFirebaseServiceTAG";
 
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
+    APIInterface apiInterface;
 
     // [START receive_message]
     @Override
@@ -81,16 +96,19 @@ public class BetaFirebaseService extends FirebaseMessagingService {
             //String title = remoteMessage.getNotification().getTitle();
             //String body = remoteMessage.getNotification().getBody();
             Handler mHandler = new Handler(Looper.getMainLooper());
-            switch (opt){
+            switch (opt) {
                 case ConstantStrings.FCM_OPT_NOTICE_FOLLOW:
 
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             // 사용하고자 하는 코드
-                            Toast.makeText(getApplicationContext(), remoteMessage.getData().get("full_name"), Toast.LENGTH_SHORT).show();
 
-                            sendNotification(remoteMessage.getData().get("full_name"), "reacted");
+                            sendNotification("SallyPing",
+                                    remoteMessage.getData().get("full_name") + " started follow you",
+                                    ConstantIntegers.NOTIFICATION_FOLLOW,
+                                    remoteMessage.getData().get("full_name"));
+                            Log.d(TAG, "FOLLOW");
 
                         }
                     }, 0);
@@ -100,10 +118,15 @@ public class BetaFirebaseService extends FirebaseMessagingService {
                         @Override
                         public void run() {
                             // 사용하고자 하는 코드
-                            Toast.makeText(getApplicationContext(), remoteMessage.getData().get("full_name"), Toast.LENGTH_SHORT).show();
+                            sendNotification(remoteMessage.getData().get("full_name") + " added comment", remoteMessage.getData().get("text"),
+                                    ConstantIntegers.NOTIFICATION_POST_COMMENT,
+                                    remoteMessage.getData().get("instance_id"));
+                            Log.d(TAG, "COMMENT");
 
                         }
                     }, 0);
+
+                    //todo: 왜 쌓이질 않을까. 쌓아야한다.
                     break;
                 case ConstantStrings.FCM_OPT_NOTICE_REACT:
 
@@ -111,9 +134,35 @@ public class BetaFirebaseService extends FirebaseMessagingService {
                         @Override
                         public void run() {
                             // 사용하고자 하는 코드
-                            Toast.makeText(getApplicationContext(), remoteMessage.getData().get("full_name"), Toast.LENGTH_SHORT).show();
+                            sendNotification("SallyPing",
+                                    remoteMessage.getData().get("full_name") + " reacted to you",
+                                    ConstantIntegers.NOTIFICATION_POST_REACT,
+                                    remoteMessage.getData().get("instance_id"));
 
-                            sendNotification(remoteMessage.getData().get("full_name"), "reacted");
+                        }
+                    }, 0);
+                    break;
+                case ConstantStrings.FCM_OPT_POST:
+                    String text = "some ping";
+
+                    if (remoteMessage.getData().get("text").equals("need_ping_text")) {
+                        for (PingItem pingConstantItem : ConstantPings.defaultPingList) {
+                            if (pingConstantItem.getPingID().equals(remoteMessage.getData().get("ping_id"))) {
+                                text = pingConstantItem.getPingText();
+                            }
+                        }
+                    } else {
+                        text = remoteMessage.getData().get("text");
+                    }
+                    final String finalText = text;
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 사용하고자 하는 코드
+                            sendNotification(remoteMessage.getData().get("full_name") + " added new ping",
+                                    finalText,
+                                    ConstantIntegers.NOTIFICATION_POST,
+                                    remoteMessage.getData().get("instance_id"));
 
                         }
                     }, 0);
@@ -139,12 +188,10 @@ public class BetaFirebaseService extends FirebaseMessagingService {
             // 노티피케이션 메시지가 없으면 작동하지 않는다. 장고에서 message_body 가 없으니 작동하지 않았다.
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
-        singleton.accumulatedNum = singleton.accumulatedNum + 1;
-        Log.d(TAG, "Accumulated: " + singleton.accumulatedNum);
-
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
     }
+
     // [END receive_message]
     @Override
     public void onNewToken(String token) {
@@ -156,14 +203,58 @@ public class BetaFirebaseService extends FirebaseMessagingService {
         sendRegistrationToServer(token);
     }
 
-    public void sendRegistrationToServer(String token){
+
+    public void fcmPush(String token) {
+
+        RequestBody requestToken = RequestBody.create(MediaType.parse("multipart/form-data"), token);
+        if (apiInterface == null) {
+            apiInterface = singleton.apiInterface;
+        }
+
+        Call<JsonObject> call = apiInterface.fcmPush(requestToken);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject jsonObject = response.body();
+                    if (jsonObject != null) {
+                        int rc = jsonObject.get("rc").getAsInt();
+
+                        if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                            // sign up 실패
+                            call.cancel();
+                            return;
+                        }
+
+                        // 접속 성공.
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                call.cancel();
+
+            }
+        });
+    }
+
+    public void sendRegistrationToServer(String token) {
+        //todo: 여기 만들자.
+        fcmPush(token);
+
         // 로그인 된 상태, 로그인 안 된 상태 분기/
     }
 
-    private void sendNotification(String title, String messageBody) {
-        if (title == null){
+    private void sendNotification(String title, String messageBody, int notificationOption, String instanceID) {
+
+
+        if (title == null) {
             //제목이 없는 payload이면
-            title = "FCM Noti"; //기본제목을 적어 주자.
+            title = "SallyPing"; //기본제목을 적어 주자.
         }
         //전달된 액티비티에 따라 분기하여 해당 액티비티를 오픈하도록 한다.
 //        Intent intent;
@@ -185,16 +276,42 @@ public class BetaFirebaseService extends FirebaseMessagingService {
 //        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
 //                PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String channelID;
+        String channelName;
 
-        String channelID="channelID";
-        String channelName = "channelName";
+        switch (notificationOption) {
+            case (ConstantIntegers.NOTIFICATION_FOLLOW):
+                channelID = instanceID;
+                channelName = "sallyFollow";
+                break;
+            case (ConstantIntegers.NOTIFICATION_POST_COMMENT):
+                channelID = instanceID;
+                channelName = "sallyComment";
+                break;
+            case (ConstantIntegers.NOTIFICATION_POST_REACT):
+                channelID = instanceID;
+                channelName = "sallyReact";
+                break;
+            case (ConstantIntegers.NOTIFICATION_POST):
+                channelID = instanceID;
+                channelName = "sallyPost";
+                break;
+
+            default:
+                channelID = instanceID;
+                channelName = "sallyPing";
+                break;
+        }
+
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder notificationBuilder;
 
 
         Intent notifyIntent = new Intent(this, MainActivity.class);
+        notifyIntent.putExtra("notification", "fromNotification");
 
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                 Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -220,14 +337,15 @@ public class BetaFirebaseService extends FirebaseMessagingService {
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setVibrate(new long[]{1000, 1000})
-                    .setLights(Color.BLUE, 1,1)
+                    .setLights(Color.BLUE, 1, 1)
                     .setShowWhen(true)
+
                     .setContentIntent(notifyPendingIntent);
-            notificationManager.notify("do_not1",0 /* ID of notification */, notificationBuilder.build());
+            notificationManager.notify("do_not1", (int) (Math.random() * 10000000)/* ID of notification */, notificationBuilder.build());
         } else {
 
             // 낮은 버전
-            notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+            notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), channelID);
 
             notificationBuilder
                     .setSmallIcon(R.drawable.ic_add_post)
@@ -236,10 +354,13 @@ public class BetaFirebaseService extends FirebaseMessagingService {
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setVibrate(new long[]{1000, 1000})
-                    .setLights(Color.BLUE, 1,1)
+                    .setLights(Color.BLUE, 1, 1)
                     .setPriority(NotificationManager.IMPORTANCE_HIGH)
                     .setContentIntent(notifyPendingIntent);
-            notificationManager.notify("do_not1",0 /* ID of notification */, notificationBuilder.build());
+
+
+            notificationManager.notify("do_not1", (int) (Math.random() * 10000000)/* ID of notification */, notificationBuilder.build());
+
         }
 
 

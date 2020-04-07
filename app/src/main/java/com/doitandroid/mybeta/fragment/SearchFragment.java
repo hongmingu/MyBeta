@@ -2,10 +2,12 @@ package com.doitandroid.mybeta.fragment;
 
 import android.app.Service;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
@@ -18,7 +20,7 @@ import com.doitandroid.mybeta.R;
 
 import java.util.ArrayList;
 
-public class SearchFragment extends Fragment implements View.OnClickListener {
+public class SearchFragment extends Fragment implements View.OnClickListener, View.OnKeyListener {
 
     AppCompatImageView fragment_search_search_iv, fragment_search_back_iv;
     AppCompatEditText fragment_search_et;
@@ -44,6 +46,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         fragment_search_search_iv.setOnClickListener(this);
         fragment_search_back_iv.setOnClickListener(this);
 
+        fragment_search_et.setOnKeyListener(this);
 
         now = true;
 
@@ -75,26 +78,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.fragment_search_search_iv:
-                fragment_search_back_iv.setVisibility(View.VISIBLE);
-                if (searchFindFragment == null) {
-                    searchFindFragment = new SearchFindFragment();
-                    childFragmentManager.beginTransaction().add(R.id.fragment_search_child_container, searchFindFragment).commit();
-                }
-                fragments = (ArrayList<Fragment>) childFragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment != null && fragment.isVisible()) {
-                        childFragmentManager.beginTransaction().hide(fragment).commit();
-
-                    }
-                }
-                if (searchFindFragment != null) {
-                    childFragmentManager.beginTransaction().show(searchFindFragment).commit();
-                }
-                inputMethodManager = (InputMethodManager)getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
-                // imm.showSoftInput(fragment_search_et, 0);
-                inputMethodManager.hideSoftInputFromWindow(fragment_search_et.getWindowToken(), 0);
-
-                searchFindFragment.search(fragment_search_et.getText().toString());
+                searchClick();
 
                 break;
             case R.id.fragment_search_back_iv:
@@ -128,6 +112,53 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    public void searchClick() {
+        fragment_search_back_iv.setVisibility(View.VISIBLE);
+        if (searchFindFragment == null) {
+            searchFindFragment = new SearchFindFragment();
+            childFragmentManager.beginTransaction().add(R.id.fragment_search_child_container, searchFindFragment).commit();
+        }
+        fragments = (ArrayList<Fragment>) childFragmentManager.getFragments();
+        for (Fragment fragment : fragments) {
+            if (fragment != null && fragment.isVisible()) {
+                childFragmentManager.beginTransaction().hide(fragment).commit();
+
+            }
+        }
+        if (searchFindFragment != null) {
+            childFragmentManager.beginTransaction().show(searchFindFragment).commit();
+        }
+        inputMethodManager = (InputMethodManager)getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
+        // imm.showSoftInput(fragment_search_et, 0);
+        inputMethodManager.hideSoftInputFromWindow(fragment_search_et.getWindowToken(), 0);
+
+        searchFindFragment.search(fragment_search_et.getText().toString());
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        switch (v.getId()){
+            case R.id.fragment_search_et:
+                if (event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    switch (keyCode)
+                    {
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+                            searchClick();
+                            Toast.makeText(getActivity().getApplicationContext(), "Enter Click", Toast.LENGTH_SHORT).show();
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        return false;
+    }
     private void setChildFragment(Fragment child) {
         FragmentTransaction childFt = getChildFragmentManager().beginTransaction();
 

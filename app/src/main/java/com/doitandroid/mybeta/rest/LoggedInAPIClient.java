@@ -6,6 +6,7 @@ import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -39,6 +40,9 @@ public class LoggedInAPIClient {
 
         OkHttpClient client = new OkHttpClient
                 .Builder()
+                .connectTimeout(5, TimeUnit.MINUTES)
+                .writeTimeout(5, TimeUnit.MINUTES) // write timeout
+                .readTimeout(5, TimeUnit.MINUTES)
                 .addInterceptor(log_interceptor)
                 .addInterceptor(token_interceptor)
                 .build();

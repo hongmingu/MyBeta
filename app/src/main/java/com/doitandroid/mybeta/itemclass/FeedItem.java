@@ -1,18 +1,20 @@
 package com.doitandroid.mybeta.itemclass;
 
 import android.util.Log;
-import android.view.View;
 
-import com.doitandroid.mybeta.ConstantAnimations;
+import com.doitandroid.mybeta.ConstantPings;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.PingItem;
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
 public class FeedItem {
     JsonObject jsonObject;
+    InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     int opt;
     // post info
@@ -35,56 +37,111 @@ public class FeedItem {
 
     ArrayList<UserItem> likeUserArrayList;
 
+    ArrayList<UserItem> recentUserList;
+    String recentDate;
 
+    boolean isEmptyFlag;
+    boolean isRecentUserExist;
+    boolean isList;
 
+    public boolean isList() {
+        return isList;
+    }
+
+    public void setList(boolean list) {
+        isList = list;
+    }
+
+    public String getRecentDate() {
+        return recentDate;
+    }
+
+    public void setRecentDate(String recentDate) {
+        this.recentDate = recentDate;
+    }
+
+    public boolean isRecentUserExist() {
+        return isRecentUserExist;
+    }
+
+    public void setRecentUserExist(boolean recentUserExist) {
+        isRecentUserExist = recentUserExist;
+    }
 
     public FeedItem(JsonObject jsonObject) {
 
         this.jsonObject = jsonObject;
-        this.opt = jsonObject.get("opt").getAsInt();
-        switch (opt) {
-            case ConstantIntegers.OPT_DEFAULT_PING:
+
+        if(!jsonObject.get("is_list").getAsBoolean()){
+
+            this.isList = false;
+            JsonObject item = jsonObject.get("con").getAsJsonObject();
+            this.opt = getOptFromFeedJsonObject(item);
+
+            switch (opt) {
+                case ConstantIntegers.OPT_DEFAULT_PING:
 
 
-                JsonObject item = jsonObject.get("con").getAsJsonObject();
-                this.created = item.get("created").getAsString();
-                this.postID = item.get("post_id").getAsString();
+                    this.created = item.get("created").getAsString();
+                    this.postID = item.get("post_id").getAsString();
 
-                this.pingID = item.get("ping_id").isJsonNull() ? null : item.get("ping_id").getAsString();
-                this.pingRes = pingID != null ? getPingResByPingID(pingID) : null;
+                    this.pingID = item.get("ping_id").isJsonNull() ? null : item.get("ping_id").getAsString();
+                    this.pingRes = pingID != null ? getPingResByPingID(pingID) : null;
 
-
-                if (item.get("ping_text").isJsonNull()){
-                    for (PingItem pingConstantItem: ConstantAnimations.pingList){
-                        if (pingConstantItem.getPingID().equals(pingID)){
-                            this.pingText = pingConstantItem.getPingText();
+                    if (item.get("ping_text").isJsonNull()){
+                        for (PingItem pingConstantItem: ConstantPings.defaultPingList){
+                            if (pingConstantItem.getPingID().equals(pingID)){
+                                this.pingText = pingConstantItem.getPingText();
+                            }
                         }
+                    } else {
+                        this.pingText = item.get("ping_text").getAsString();
                     }
-                } else {
-                    this.pingText = item.get("ping_text").getAsString();
-                }
-
-                    //todo: django 에서 오타 수정 pint_id 가 아니라 ping_id, user_fullname 이 아니라 full_name, userPhoto 추가, 로그인한 사람 자신의 포토,
-
-                InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
-
-                this.user = singleton.getUserItemFromSingletonByJsonObject(item.get("user").getAsJsonObject());
 
 
 
-                this.reactCount = item.get("react_count").getAsInt();
-                this.commentCount = item.get("comment_count").getAsInt();
-
-                this.postText = item.get("post_text").isJsonNull() ? null : item.get("post_text").getAsString();
-                this.isReacted = item.get("is_reacted").getAsBoolean();
+                    this.user = singleton.getUserItemFromSingletonByJsonObject(item.get("user").getAsJsonObject());
 
 
-                break;
-            case ConstantIntegers.OPT_TO_CLICK:
 
-                break;
-            default:
-                break;
+                    this.reactCount = item.get("react_count").getAsInt();
+                    this.commentCount = item.get("comment_count").getAsInt();
+
+                    this.postText = item.get("post_text").isJsonNull() ? null : item.get("post_text").getAsString();
+                    this.isReacted = item.get("is_reacted").getAsBoolean();
+
+
+                    break;
+                case ConstantIntegers.OPT_TO_CLICK:
+
+                    break;
+
+                default:
+                    break;
+            }
+        } else {
+
+            this.isList = true;
+            this.recentUserList = new ArrayList<>();
+
+
+            JsonArray recentArray = jsonObject.get("con").getAsJsonArray();
+            this.recentDate = jsonObject.get("date").getAsString();
+
+            if(jsonObject.get("date").getAsString().equals("empty")){
+                this.isEmptyFlag = jsonObject.get("date").getAsString().equals("empty");
+                this.opt = ConstantIntegers.OPT_EMPTY;
+            } else {
+                this.isEmptyFlag = true;
+                this.opt = ConstantIntegers.OPT_LIST;
+            }
+
+
+            for (JsonElement element: recentArray){
+                this.recentUserList.add(singleton.getUserItemFromSingletonByJsonObject(element.getAsJsonObject()));
+            }
+
+            this.isRecentUserExist = recentArray.size() != 0;
         }
 
         // 여기서 이제 jsonObject 에 따라서 init 한다.
@@ -92,12 +149,27 @@ public class FeedItem {
     //todo: 장고에서 주는 JsonResponse 정하고 그거에 맞춰서 클래스 init 정리.
 
     public Integer getPingResByPingID(String pingID){
-        for (PingItem pingConstantItem: ConstantAnimations.pingList){
+        for (PingItem pingConstantItem: ConstantPings.defaultPingList){
             if (pingConstantItem.getPingID().equals(pingID)){
                 return pingConstantItem.getPingRes();
             }
         }
         return null;
+
+    }
+
+    public int getOptFromFeedJsonObject(JsonObject item){
+        String pingID = item.get("ping_id").isJsonNull() ? null : item.get("ping_id").getAsString();
+
+        if (pingID == null){
+            return ConstantIntegers.OPT_DEFAULT_PING;
+        } else {
+            if (pingID.startsWith("de")){
+                return ConstantIntegers.OPT_DEFAULT_PING;
+
+            }
+        }
+        return ConstantIntegers.OPT_DEFAULT_PING;
 
     }
 
@@ -222,5 +294,15 @@ public class FeedItem {
     public void setUser(UserItem user) {
         this.user = user;
     }
+
+    public ArrayList<UserItem> getRecentUserList() {
+        return recentUserList;
+    }
+
+    public void setRecentUserList(ArrayList<UserItem> recentUserList) {
+        this.recentUserList = recentUserList;
+    }
+
+
 
 }

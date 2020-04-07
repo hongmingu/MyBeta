@@ -7,17 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Space;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
-import com.doitandroid.mybeta.ConstantAnimations;
+import com.doitandroid.mybeta.ConstantFloat;
+import com.doitandroid.mybeta.ConstantPings;
 import com.doitandroid.mybeta.ConstantIntegers;
 import com.doitandroid.mybeta.ConstantStrings;
 import com.doitandroid.mybeta.ContentActivity;
@@ -32,9 +37,9 @@ import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonObject;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
@@ -45,7 +50,7 @@ import retrofit2.Response;
 
 public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "HomeFollowAdapterTAG";
-    ArrayList<FeedItem> feedItemArrayList;
+    CopyOnWriteArrayList<FeedItem> feedItemArrayList;
 
     Context context;
 
@@ -53,7 +58,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
-    public HomeFollowAdapter(ArrayList<FeedItem> feedItemArrayList, Context context) {
+    public HomeFollowAdapter(CopyOnWriteArrayList<FeedItem> feedItemArrayList, Context context) {
         this.feedItemArrayList = feedItemArrayList;
         this.context = context;
 
@@ -67,15 +72,24 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         RecyclerView.ViewHolder viewHolder = null;
         View view = null;
-        switch (viewType){
+        switch (viewType) {
             case ConstantIntegers.OPT_DEFAULT_PING:
                 view = inflater.inflate(R.layout.item_default_ping, parent, false);
                 viewHolder = new HomeDefaultPingViewHolder(view);
                 break;
-            case ConstantIntegers.OPT_TO_CLICK:
-                view = inflater.inflate(R.layout.home_following_recyclerview_item, parent, false);
-                viewHolder = new HomeDefaultPingViewHolder(view);
+            case ConstantIntegers.OPT_LIST:
+                view = inflater.inflate(R.layout.item_following_user_list_rv, parent, false);
+                viewHolder = new HomeFollowingUserListViewHolder(view);
 
+                break;
+            case ConstantIntegers.OPT_LOADING:
+                view = inflater.inflate(R.layout.item_loading, parent, false);
+                viewHolder = new LoadingViewHolder(view);
+                break;
+            case ConstantIntegers.OPT_EMPTY:
+                view = inflater.inflate(R.layout.item_empty, parent, false);
+                viewHolder = new EmptyViewHolder(view);
+                //todo: onbind뷰홀더 따지기
                 break;
             default:
                 break;
@@ -86,9 +100,11 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-        switch (getItemViewType(position)){
+        final FeedItem feeditem = feedItemArrayList.get(position);
+
+
+        switch (getItemViewType(position)) {
             case ConstantIntegers.OPT_DEFAULT_PING:
-                final FeedItem feeditem = feedItemArrayList.get(position);
                 final UserItem userItem = singleton.getUserItemFromSingletonByUserID(feeditem.getUser().getUserID());
                 ((HomeDefaultPingViewHolder) holder).dpi_full_name_tv.setText(userItem.getFullName());
                 ((HomeDefaultPingViewHolder) holder).dpi_full_name_tv.setOnClickListener(new View.OnClickListener() {
@@ -105,17 +121,20 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
 
-                for (PingItem pingConstantItem: ConstantAnimations.pingList){
-                    if (pingConstantItem.getPingID().equals(feeditem.getPingID())){
+                for (PingItem pingConstantItem : ConstantPings.defaultPingList) {
+                    if (pingConstantItem.getPingID().equals(feeditem.getPingID())) {
+
                         ((HomeDefaultPingViewHolder) holder).dpi_ping_lav.setAnimation(feeditem.getPingRes());
                         ((HomeDefaultPingViewHolder) holder).dpi_ping_lav.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
+                                ((HomeDefaultPingViewHolder) holder).dpi_ping_lav.setMinAndMaxProgress(0f, 1f);
+                                ((HomeDefaultPingViewHolder) holder).dpi_ping_lav.setSpeed(2.4f);
+                                ((HomeDefaultPingViewHolder) holder).dpi_ping_lav.playAnimation();
                             }
                         });
 
-                        if (feeditem.getPingText() == null){
+                        if (feeditem.getPingText() == null) {
                             ((HomeDefaultPingViewHolder) holder).dpi_ping_text_tv.setText(pingConstantItem.getPingText());
                             Log.d(TAG, "this is ping text" + pingConstantItem.getPingText());
                         } else {
@@ -123,17 +142,36 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             Log.d(TAG, "this is feed text" + feeditem.getPingText());
 
                         }
+
+                        if (pingConstantItem.getReactRes() != null) {
+                            ((HomeDefaultPingViewHolder) holder).dpi_react_btn_lav.setAnimation(pingConstantItem.getReactRes());
+                            //todo: 여기 제대로 작동되는지 콘스턴트 리스트 수정하고 테스트.
+                        }
                     }
                 }
 
                 Glide.with(context)
                         //.load(feeditem.getUser().getUserPhoto())
-                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length()-1) + userItem.getUserPhoto())
+                        .load((ConstantREST.URL_HOME).substring(0, ConstantREST.URL_HOME.length() - 1) + userItem.getUserPhoto())
 
                         .into(((HomeDefaultPingViewHolder) holder).dpi_user_photo_civ);
 
+                ((HomeDefaultPingViewHolder) holder).dpi_user_photo_civ.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ContentActivity.class);
+                        intent.putExtra(ConstantStrings.INTENT_CONTENT_START, ConstantStrings.INTENT_CONTENT_USER);
+
+                        intent.putExtra("userID", userItem.getUserID());
+
+                        ((MainActivity) context).startActivityForResult(intent, ConstantIntegers.REQUEST_CONTENT);
+                        ((MainActivity) context).overridePendingTransition(0, 0); //
+
+                    }
+                });
+
                 Log.d(TAG, ConstantREST.URL_HOME + userItem.getUserPhoto());
-                switch (getAdjustedTimeDifference(feeditem.getCreated())){
+                switch (getAdjustedTimeDifference(feeditem.getCreated())) {
                     case ConstantIntegers.TIME_DEFAULT:
                         ((HomeDefaultPingViewHolder) holder).dpi_time_indicator_iv.setBackground(context.getResources().getDrawable(R.drawable.ic_bluelogo));
                         break;
@@ -147,7 +185,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         break;
                 }
 
-                if (feeditem.getPingID() == null){
+                if (feeditem.getPingID() == null) {
                     ((HomeDefaultPingViewHolder) holder).dpi_ping_wrapper_ll.setVisibility(View.GONE);
                 } else {
                     ((HomeDefaultPingViewHolder) holder).dpi_ping_wrapper_ll.setVisibility(View.VISIBLE);
@@ -167,7 +205,8 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
 
                 Log.d(TAG, "isReacted" + feeditem.getReacted());
-                if (feeditem.getReacted()){
+
+                if (feeditem.getReacted()) {
                     ((HomeDefaultPingViewHolder) holder).dpi_react_btn_lav.setMinAndMaxProgress(0f, 1f);
                     ((HomeDefaultPingViewHolder) holder).dpi_react_btn_lav.setProgress(1f);
                 } else {
@@ -180,8 +219,9 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ((HomeDefaultPingViewHolder) holder).dpi_react_btn_lav.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Log.d(TAG, "here now: " + feeditem.getReacted());
 
-                        react(feeditem.getPostID(), ((HomeDefaultPingViewHolder)holder).dpi_react_btn_lav, feeditem.getReacted(), feeditem);
+                        react(feeditem.getPostID(), ((HomeDefaultPingViewHolder) holder).dpi_react_btn_lav, feeditem.getReacted(), feeditem);
                     }
                 });
 
@@ -200,13 +240,56 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
 
 
+                break;
+            case ConstantIntegers.OPT_LIST:
+
+                //todo: 이제 여기에 리사이클러뷰 내 만들어주는 바인드.
+                if (feeditem.getRecentUserList().size() != 0) {
+                    ((HomeFollowingUserListViewHolder) holder).ful_tv.setVisibility(View.VISIBLE);
+                    ((HomeFollowingUserListViewHolder) holder).ful_rv.setVisibility(View.VISIBLE);
+                    ((HomeFollowingUserListViewHolder) holder).ful_ll.setVisibility(View.VISIBLE);
+
+                    ((HomeFollowingUserListViewHolder) holder).ful_tv.setText(feeditem.getRecentDate());
+                    RecyclerView recyclerView = ((HomeFollowingUserListViewHolder) holder).ful_rv;
+
+                    RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context, ConstantIntegers.GRID_SPAN);
+                    // 어댑터를 연결시킨다.
+                    HomeFollowingUserListAdapter homeFollowingUserListAdapter = new HomeFollowingUserListAdapter(feeditem.getRecentUserList(), context);
+
+                    // 리사이클러뷰에 연결한다.
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.setAdapter(homeFollowingUserListAdapter);
+
+                    recyclerView.setNestedScrollingEnabled(false);
+                } else {
+                    ((HomeFollowingUserListViewHolder) holder).ful_tv.setVisibility(View.GONE);
+                    ((HomeFollowingUserListViewHolder) holder).ful_rv.setVisibility(View.GONE);
+                    ((HomeFollowingUserListViewHolder) holder).ful_ll.setVisibility(View.GONE);
+                    ((HomeFollowingUserListViewHolder) holder).ful_space.setVisibility(View.GONE);
+
+
+                }
+
+                if (position == feedItemArrayList.size() - 1) {
+                    ((HomeFollowingUserListViewHolder) holder).ful_space.setVisibility(View.VISIBLE);
+                }
 
                 break;
-            case ConstantIntegers.OPT_TO_CLICK:
+            case ConstantIntegers.OPT_LOADING:
+
                 break;
+            case ConstantIntegers.OPT_EMPTY:
+
+                break;
+
             default:
+                Toast.makeText(context, "Last Two", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Last Feed Two");
+
                 break;
         }
+
+        //todo: 마지막 아이템일 경우 로딩 아이콘을 띄우는 건 어떨까?
     }
 /*
     @Override
@@ -232,17 +315,19 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return feedItemArrayList.size();
+        return feedItemArrayList == null ? 0 : feedItemArrayList.size();
     }
 
     private class HomeToClickViewHolder extends RecyclerView.ViewHolder {
         LinearLayout home_layout;
+
         public HomeToClickViewHolder(View view) {
             super(view);
             home_layout = view.findViewById(R.id.home_f_rv_i_ll);
 
         }
     }
+
     private class HomeDefaultPingViewHolder extends RecyclerView.ViewHolder {
         LinearLayoutCompat dpi_ping_wrapper_ll;
         AppCompatTextView dpi_full_name_tv, dpi_ping_text_tv, dpi_text_tv;
@@ -269,10 +354,44 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    private class HomeFollowingUserListViewHolder extends RecyclerView.ViewHolder {
+
+        LinearLayoutCompat ful_ll;
+        RecyclerView ful_rv;
+        AppCompatTextView ful_tv;
+        Space ful_space;
+
+        public HomeFollowingUserListViewHolder(View view) {
+            super(view);
+            ful_ll = view.findViewById(R.id.item_following_users_ll);
+            ful_rv = view.findViewById(R.id.item_following_users_rv);
+            ful_tv = view.findViewById(R.id.item_following_users_tv);
+            ful_space = view.findViewById(R.id.item_following_users_space);
+
+        }
+    }
+
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar loading_pb;
+        public LoadingViewHolder(View view) {
+            super(view);
+            loading_pb = view.findViewById(R.id.item_loading_pb);
+
+        }
+    }
+    private class EmptyViewHolder extends RecyclerView.ViewHolder {
+
+        AppCompatTextView empty_tv;
+        public EmptyViewHolder(View view) {
+            super(view);
+            empty_tv = view.findViewById(R.id.item_empty_tv);
+
+        }
+    }
     @Override
     public int getItemViewType(int position) {
 //        return super.getItemViewType(position);
-        return feedItemArrayList.get(position).getOpt();
+        return feedItemArrayList.get(position) == null ? ConstantIntegers.OPT_LOADING : feedItemArrayList.get(position).getOpt();
     }
 
     @Override
@@ -293,7 +412,7 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         int HOUR = 24;
         int DAY = 30;
         int MONTH = 12;
-        String slicedDate = dateString.substring(0, dateString.length()-1);
+        String slicedDate = dateString.substring(0, dateString.length() - 1);
 
         java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -325,17 +444,17 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
 
-    public void react(String postID, LottieAnimationView lottieAnimationView, boolean isReacted, final FeedItem feedItem){
+    public void react(String postID, LottieAnimationView lottieAnimationView, boolean isReacted, final FeedItem feedItem) {
 
         lottieAnimationView.pauseAnimation();
         lottieAnimationView.setMinAndMaxProgress(0f, 1f);
-        Log.d(TAG, isReacted +"");
-        if (!isReacted){
-            lottieAnimationView.setSpeed(2.4f);
+        Log.d(TAG, "now " + isReacted);
+        if (!isReacted) {
+            lottieAnimationView.setSpeed(ConstantFloat.REACT);
             lottieAnimationView.playAnimation();
 
         } else {
-            lottieAnimationView.setSpeed(-2.4f);
+            lottieAnimationView.setSpeed(ConstantFloat.REACT_REVERSE);
             lottieAnimationView.playAnimation();
 
         }
@@ -345,12 +464,15 @@ public class HomeFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         RequestBody requestPostID = RequestBody.create(MediaType.parse("multipart/form-data"), postID);
         RequestBody requestBoolean;
-        if (isReacted){
+        if (isReacted) {
             feedItem.setReacted(false);
             requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "false");
+            Log.d(TAG, "send " + "false");
+
         } else {
             feedItem.setReacted(true);
             requestBoolean = RequestBody.create(MediaType.parse("multipart/form-data"), "true");
+            Log.d(TAG, "send " + "true");
 
         }
         Call<JsonObject> call = apiInterface.reactBoolean(requestPostID, requestBoolean);

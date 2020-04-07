@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_following_users_ll"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="12dp"></Space>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_marginStart="12dp"
+        android:id="@+id/item_following_users_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="normal"
+        android:textColor="#202020"
+        android:lineSpacingExtra="5sp"
+        android:text="RECENT"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/item_following_users_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </androidx.recyclerview.widget.RecyclerView>
+    <Space
+        android:visibility="gone"
+        android:id="@+id/item_following_users_space"
+        android:layout_width="match_parent"
+        android:layout_height="148dp">
+    </Space>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

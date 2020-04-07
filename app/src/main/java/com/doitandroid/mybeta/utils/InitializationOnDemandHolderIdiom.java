@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import androidx.fragment.app.Fragment;
 
 import com.doitandroid.mybeta.ConstantStrings;
+import com.doitandroid.mybeta.adapter.ContentListFollowerAdapter;
+import com.doitandroid.mybeta.adapter.ContentListFollowingAdapter;
 import com.doitandroid.mybeta.adapter.HomeFollowAdapter;
 import com.doitandroid.mybeta.adapter.HomeReceivedAdapter;
 import com.doitandroid.mybeta.adapter.NotiAdapter;
@@ -23,7 +25,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class InitializationOnDemandHolderIdiom {
 
-    public ArrayList<FeedItem> followFeedList, receivedFeedList;
+    public CopyOnWriteArrayList<FeedItem> followFeedList;
+    public CopyOnWriteArrayList<FeedItem> receivedFeedList;
+    public CopyOnWriteArrayList<ContentListFollowerAdapter> contentListFollowerAdapterList;
+    public CopyOnWriteArrayList<ContentListFollowingAdapter> contentListFollowingAdapterList;
     public ArrayList<UserItem> userList;
     public ArrayList<NotiItem> notiList;
 
@@ -39,10 +44,13 @@ public class InitializationOnDemandHolderIdiom {
 
 
     public int accumulatedNum;
+    public int notificationID;
 
     private InitializationOnDemandHolderIdiom() {
-        followFeedList = new ArrayList<>();
-        receivedFeedList = new ArrayList<>();
+        followFeedList = new CopyOnWriteArrayList<>();
+        receivedFeedList = new CopyOnWriteArrayList<>();
+
+        contentListFollowerAdapterList = new CopyOnWriteArrayList<>();
 
         contentFragmentList = new ArrayList<>();
         userList = new ArrayList<>();
@@ -50,6 +58,7 @@ public class InitializationOnDemandHolderIdiom {
 
         profileUserID = null;
         accumulatedNum = 0;
+        notificationID = 0;
     }
 
 

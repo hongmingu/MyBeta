@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+    <Space
+        android:layout_width="@dimen/default12"
+        android:layout_height="match_parent"></Space>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp"></Space>
+        <com.doitandroid.mybeta.customview.SquareLayout
+            android:layout_width="match_parent"
+            android:layout_height="12dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/item_following_grid_user_civ"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bg_skyblue" />
+        </com.doitandroid.mybeta.customview.SquareLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="12dp"></Space>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/item_following_grid_user_tv"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="normal"
+            android:textColor="#202020"
+            android:maxLength="10"
+            android:ellipsize="end"
+            android:lineSpacingExtra="5sp"
+            android:text="Twice Sana"
+            />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+<!--todo: 이제 연결해보자. 어댑터봐라.-->
+    <Space
+        android:layout_width="@dimen/default12"
+        android:layout_height="match_parent"></Space>
+</androidx.appcompat.widget.LinearLayoutCompat>

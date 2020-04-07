@@ -2,6 +2,8 @@ package com.doitandroid.mybeta.itemclass;
 
 import android.util.Log;
 
+import com.doitandroid.mybeta.adapter.ContentListFollowerAdapter;
+import com.doitandroid.mybeta.adapter.ContentListFollowingAdapter;
 import com.doitandroid.mybeta.utils.InitializationOnDemandHolderIdiom;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -104,6 +106,7 @@ public class UserItem implements Serializable {
         } else {
             this.isFullyUpdated = jsonObject.get("follow_update").getAsBoolean();
         }
+
         onUserItemChangedCallbackArrayList = new CopyOnWriteArrayList<>();
 
         InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
@@ -188,14 +191,35 @@ public class UserItem implements Serializable {
     }
 
     public void setFollowed(boolean followed) {
-        isFollowed = followed;
+        this.isFollowed = followed;
+
 
         InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
         UserItem userItem = singleton.getUserItemFromSingletonByUserID(singleton.getProfileUserID());
         userItem.setFullyUpdated(false);
 
+        if(followed){
+            //follow 됨
+            this.addFollower(userItem);
+        }else {
+            this.getFollowerList().remove(userItem);
+            //follow 끊어짐
+        }
+
         onUserItemChangedLoop();
+        InitializationOnDemandHolderIdiom singleton_adapter = InitializationOnDemandHolderIdiom.getInstance();
+
+        for (ContentListFollowerAdapter contentListFollowerAdapter: singleton_adapter.contentListFollowerAdapterList){
+            try {
+                contentListFollowerAdapter.notifyDataSetChanged();
+            } catch (Exception e){
+                singleton_adapter.contentListFollowerAdapterList.remove(contentListFollowerAdapter);
+                Log.d(TAG, e.toString());
+            }
+        }
+
+
     }
 
     public boolean isFullyUpdated() {

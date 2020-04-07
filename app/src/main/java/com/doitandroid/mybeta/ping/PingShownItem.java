@@ -1,11 +1,9 @@
 package com.doitandroid.mybeta.ping;
 
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.doitandroid.mybeta.ConstantAnimations;
+import com.doitandroid.mybeta.ConstantPings;
 import com.doitandroid.mybeta.PingItem;
 import com.doitandroid.mybeta.R;
 
@@ -23,7 +21,7 @@ public class PingShownItem {
         this.pingID = pingID;
 
 
-        for (PingItem pingConstantItem: ConstantAnimations.pingList){
+        for (PingItem pingConstantItem: ConstantPings.defaultPingList){
             if (pingConstantItem.getPingID().equals(pingID)){
                 this.resInteger = pingConstantItem.getPingRes();
                 this.pingText = pingConstantItem.getPingText();

@@ -59,6 +59,8 @@ public class ConstantStrings {
 
     public static final String INTENT_ADD_POST_INFO = "add_post";
 
+    public static final String INTENT_CLOSE_DIM_WRAPPER = "close_dim_wrapper";
+
 
     public static final String INTENT_CONTENT_START = "start_content_activity";
 
@@ -84,7 +86,6 @@ public class ConstantStrings {
     public static final String INTENT_PROFILE_USERNAME= "profile_username";
     public static final String INTENT_PROFILE_FULL_NAME= "profile_full_name";
     public static final String INTENT_PROFILE_EMAIL= "profile_email";
-
     /* view TAG */
 
     public static final String TAG_WIDE_VISIBLE = "tag_wide_visible";
@@ -95,4 +96,5 @@ public class ConstantStrings {
     public static final String FCM_OPT_NOTICE_REACT = "fcm_opt_notice_react";
     public static final String FCM_OPT_NOTICE_COMMENT = "fcm_opt_notice_comment";
     public static final String FCM_OPT_NOTICE_FOLLOW = "fcm_opt_notice_follow";
+    public static final String FCM_OPT_POST = "fcm_opt_post";
 }

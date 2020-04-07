@@ -1,14 +1,13 @@
 package com.doitandroid.mybeta.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,13 +38,15 @@ public class HomeReceivedFragment extends Fragment {
     InitializationOnDemandHolderIdiom singleton = InitializationOnDemandHolderIdiom.getInstance();
 
     SwipeRefreshLayout home_received_srl;
-    TextView tv_count;
+    int retry;
 
     APIInterface apiInterface;
 
     ArrayList<UserItem> usingUserItemArrayList;
-
+    RecyclerView recyclerView;
     ViewGroup rootView;
+    boolean isLoading = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -57,17 +58,18 @@ public class HomeReceivedFragment extends Fragment {
         home_received_srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                init_feed();
+                clearHomeReceivedFeed();
+                loadMore();
                 //home_received_srl.setEnabled(true);
             }
         });
 
         apiInterface = singleton.apiInterface;
 
-        init_feed();
+//        init_feed();
 
 
-        RecyclerView recyclerView = rootView.findViewById(R.id.home_received_recyclerview);
+        recyclerView = rootView.findViewById(R.id.home_received_recyclerview);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // 어댑터를 연결시킨다.
@@ -79,6 +81,37 @@ public class HomeReceivedFragment extends Fragment {
         recyclerView.setAdapter(singleton.homeReceivedAdapter);
 
         recyclerView.setNestedScrollingEnabled(false);
+//        clearHomeReceivedFeed();
+//        loadMore();
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                Log.d(TAG, "onScrolled");
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                // Toast.makeText(getActivity().getApplicationContext(), "Last", Toast.LENGTH_SHORT).show();
+
+                if (!isLoading) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == singleton.receivedFeedList.size() - 1) {
+//                            singleton.homeReceivedAdapter.notifyDataSetChanged();
+//                        clearHomeReceivedFeed();
+
+//                        isLoading = true;
+                    }
+                }
+            }
+        });
+
+        clearHomeReceivedFeed();
+        loadMore();
+
+
         return rootView;
 
         // return inflater.inflate(R.layout.fragment1, container, false);
@@ -86,19 +119,129 @@ public class HomeReceivedFragment extends Fragment {
 
 
     }
-    public void init_feed(){
+
+
+    public void clearHomeReceivedFeed() {
+        singleton.receivedFeedList.clear();
+        home_received_srl.setRefreshing(false);
+
+        if (singleton.homeReceivedAdapter != null) {
+            singleton.homeReceivedAdapter.notifyDataSetChanged();
+        }
+    }
+
+
+    public void loadMore(){
+        isLoading = true;
+
+        retry = 0;
+        Call<JsonObject> call;
+        singleton.receivedFeedList.add(null);
+        singleton.homeReceivedAdapter.notifyItemInserted(singleton.receivedFeedList.size() - 1);
+
+        /*if (singleton.receivedFeedList.get(singleton.receivedFeedList.size()-1-1) != null && !singleton.receivedFeedList.get(singleton.receivedFeedList.size()-1-1).isList()){
+            RequestBody requestEndID = RequestBody.create(MediaType.parse("multipart/form-data"), singleton.receivedFeedList.get(singleton.receivedFeedList.size()-1-1).getPostID());
+            call = apiInterface.get_follow_feed(requestEndID);
+        } else {
+            call = apiInterface.get_follow_feed();
+        }*/
+        call = apiInterface.get_received_feed();
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                singleton.receivedFeedList.remove(singleton.receivedFeedList.size() - 1);
+                int scrollPosition = singleton.receivedFeedList.size();
+                singleton.homeReceivedAdapter.notifyItemRemoved(scrollPosition);
+//                singleton.homeReceivedAdapter.notifyDataSetChanged();
+
+                if (response.isSuccessful()) {
+                    JsonObject jsonObject = response.body();
+                    if (jsonObject != null) {
+                        int rc = jsonObject.get("rc").getAsInt();
+                        JsonArray content = jsonObject.get("content").getAsJsonArray();
+
+                        if (rc != ConstantIntegers.SUCCEED_RESPONSE) {
+                            // sign up 실패
+                            call.cancel();
+                            return;
+                        }
+
+                        // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
+                        Log.d(TAG, content.toString());
+                        for (JsonElement feedElement: content){
+                            JsonObject feedObject = feedElement.getAsJsonObject();
+                            FeedItem feedItem = new FeedItem(feedObject);
+
+                            boolean isExist = false;
+                            for(FeedItem item : singleton.receivedFeedList){
+                                if(!feedItem.isList()){
+                                    if(feedItem.getPostID().equals(item.getPostID())){
+                                        isExist = true;
+                                    }
+                                }
+                            }
+                            if(!isExist){
+                                singleton.receivedFeedList.add(feedItem);
+                                Log.d(TAG, "called");
+                            }
+
+                            Log.d(TAG, singleton.receivedFeedList.size() + "");
+
+
+                        }
+                        singleton.homeReceivedAdapter.notifyDataSetChanged();
+
+
+                        // 접속 성공.
+
+                    }
+
+                } else {
+                    Toast.makeText(getActivity(), "not is successful", Toast.LENGTH_SHORT).show();
+
+                }
+                isLoading = false;
+
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(getActivity(), "onFailure", Toast.LENGTH_SHORT).show();
+
+
+                if (retry < 4){
+                    call.clone().enqueue(this);
+                    retry ++;
+
+                } else {
+                    call.cancel();
+                    isLoading = false;
+
+                }
+//                call.cancel();
+//                init_feed();
+//                ((MainActivity) getActivity()).progressOFF();
+
+            }
+        });
+
+    }
+
+    public void init_feed() {
 
         ((MainActivity) getActivity()).progressON((MainActivity) getActivity(), "loading...");
         singleton.receivedFeedList.clear();
         home_received_srl.setRefreshing(false);
 
-        if (singleton.homeReceivedAdapter != null){
+        if (singleton.homeReceivedAdapter != null) {
             singleton.homeReceivedAdapter.notifyDataSetChanged();
         }
 
 
-
-        Call<JsonObject> call = apiInterface.get_follow_feed();
+        //todo: retry 세팅 안되어있음 이쪽은.
+        Call<JsonObject> call = apiInterface.get_received_feed();
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -122,17 +265,19 @@ public class HomeReceivedFragment extends Fragment {
 
                         // todo: 이제 feedItem 만들기. inflater 를 이용해야 할 것 같다.
                         Log.d(TAG, content.toString());
-                        for (JsonElement feedElement: content){
+                        for (JsonElement feedElement : content) {
                             JsonObject feedObject = feedElement.getAsJsonObject();
                             FeedItem feedItem = new FeedItem(feedObject);
 
                             boolean isExist = false;
-                            for(FeedItem item : singleton.receivedFeedList){
-                                if(feedItem.getPostID().equals(item.getPostID())){
-                                    isExist = true;
+                            for (FeedItem item : singleton.receivedFeedList) {
+                                if (!feedItem.isList()) {
+                                    if (feedItem.getPostID().equals(item.getPostID())) {
+                                        isExist = true;
+                                    }
                                 }
                             }
-                            if(!isExist){
+                            if (!isExist) {
                                 singleton.receivedFeedList.add(feedItem);
                                 Log.d(TAG, "called");
                             }
@@ -165,91 +310,6 @@ public class HomeReceivedFragment extends Fragment {
 
             }
         });
-    }
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.d("fragment1_STATE", "onSaveInstanceState");
-
-/*        if (tv_count == null){
-            tv_count = getView().findViewById(R.id.fragment1_counter);
-        }
-
-        int counter = Integer.parseInt(tv_count.getText().toString());
-        outState.putInt("counter", counter);
-        Log.d("fragment1_OSI", "outstate: "+counter);*/
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Log.d("fragment1_STATE", "onAttach");
-
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d("fragment1_STATE", "onCreate");
-
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.d("fragment1_STATE", "onActivityCreated");
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d("fragment1_STATE", "onStart");
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("fragment1_STATE", "onResume");
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d("fragment1_STATE", "onPause");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("fragment1_STATE", "onStop");
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d("fragment1_STATE", "onDestroyView");
-
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("fragment1_STATE", "onDestroy");
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d("fragment1_STATE", "onDetach");
-
-
     }
 
 }

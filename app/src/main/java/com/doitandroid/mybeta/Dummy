@@ -51,3 +51,6 @@ public void onDestroy()
         super.onDestroy();
         softKeyboard.unRegisterSoftKeyboardCallback();
         }
+
+
+
