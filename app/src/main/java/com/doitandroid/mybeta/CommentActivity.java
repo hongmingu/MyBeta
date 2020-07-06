@@ -2,8 +2,7 @@ package com.doitandroid.mybeta;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,13 +11,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.bumptech.glide.Glide;
 import com.doitandroid.mybeta.adapter.CommentAdapter;
-import com.doitandroid.mybeta.adapter.NotiAdapter;
 import com.doitandroid.mybeta.itemclass.CommentItem;
 import com.doitandroid.mybeta.rest.APIInterface;
 import com.doitandroid.mybeta.rest.ConstantREST;
@@ -41,7 +38,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private static final String TAG = "CommentActivity";
 
     Intent gotIntent;
-    AppCompatImageView comment_send_iv;
+    CoordinatorLayout comment_send_cl;
     AppCompatEditText comment_et;
     CircleImageView comment_profile_photo;
 
@@ -61,8 +58,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         context = this;
 
-        comment_send_iv = findViewById(R.id.comment_send_iv);
-        comment_send_iv.setOnClickListener(this);
+        comment_send_cl = findViewById(R.id.comment_send_cl);
+        comment_send_cl.setOnClickListener(this);
         comment_et =findViewById(R.id.comment_et);
 
         comment_profile_photo = findViewById(R.id.comment_profile_photo_civ);
@@ -121,7 +118,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.comment_send_iv:
+            case R.id.comment_send_cl:
                 if(comment_et.getText().toString().trim().equals("")){
                     return;
                 }
